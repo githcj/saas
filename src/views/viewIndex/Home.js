@@ -37,7 +37,7 @@ export default class Home extends Component {
             <Route path={match.url + '/Zijin'} component={Zijin} />
             <Route path={match.url + '/Dongtai'} component={Dongtai} />
             </div>
-        </div>
+        </div> 
         )
     }
 }
