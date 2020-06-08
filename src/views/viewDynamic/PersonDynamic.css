@@ -1,0 +1,60 @@
+.person-dynamic{
+    width: 100vw;
+    background: #f3f3f3;
+    height: 50px;
+    border-bottom: 2px solid #e4e4e4;
+}
+.dynamic-top{
+    width: 80vw;
+    height: 100%;
+    margin: 0 auto;
+    background: #f3f3f3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.dynamic-top-left{
+    display: flex;
+    align-items: center;
+}
+.dynamic-top-leftmark{
+    height: 25px;
+    border: 2px solid #1ABC9C;
+    margin-right: 5px;
+}
+.dynamic-top-right,.dynamic-query-filteritem{
+    height: 30px;
+    width: 80px;
+    background: white;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-left: 5px;
+}
+.dynamic-top-word{
+    margin: 0;
+}
+.dynamic-query,.dynamic-dataList{
+    width: 80vw;
+    height: 50px;
+    border: 1px solid #e4e4e4;
+    margin: 20px auto 0;
+    background: #f3f3f3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px;
+}
+.dynamic-query-filter{
+    display: flex;
+
+}
+.dynamic-left-title{
+    display: flex;
+    align-items: center;
+}
+.dynamic-dataTable{
+    width: 80vw;
+    margin: 0 auto;
+}

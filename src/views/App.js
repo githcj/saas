@@ -8,14 +8,14 @@ import Login from './viewIndex/Login'
 
 function App(props) {
 
-  return (
-    <div className="App">
-        <Redirect from="/" exact to="/home" />
-            {/* <PrivateRoute path="/home" Component={Home} auth={props.token} /> */}
-        <Route path="/home" component={Home}  />
-        <Route path="/login" component={Login} />
-    </div>
-  );
+	return (
+		<div className="App">
+			<Redirect from="/" exact to="/home" />
+			{/* <PrivateRoute path="/home" Component={Home} auth={props.token} /> */}
+			<Route path="/home" component={Home} />
+			<Route path="/login" component={Login} />
+		</div>
+	);
 }
 
 export default App;

@@ -1,13 +1,13 @@
 import React from 'react'
-// import { Button, NavBar, Icon } from 'antd-mobile'
+import PersonDynamic from '../viewDynamic/PeosonDynamic'
 
-const Dongtai = (props)=> {
-  // const {match, history} = props
-  return (
-    <div className="about">
-      动态
-    </div>
-  )
+const Dongtai = (props) => {
+	return (
+		<div className="about">
+			动态
+			<PersonDynamic />
+		</div>
+	)
 }
 
 export default Dongtai
