@@ -1,0 +1,45 @@
+*{
+    box-sizing: border-box;
+}
+
+.top{
+    height:48px;
+    background: #eee;
+    padding-left: 10%;
+    
+}
+.top-title{
+    float:left
+}
+.quire{
+   width:80%;
+   margin:auto;
+   height:84px;
+   margin-top:12px;
+  
+}
+.quire-title{
+    height:38px;
+    background: #eee;
+    border:1px solid ;
+}
+.condition{
+   height: 46px;
+   background: white;
+   border:1px solid ;
+}
+.flex-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+.xiaoshou{
+    width:150px;
+    height:28px;
+}
+.table{
+    width:80%;
+    margin:auto;
+    margin-top:12px;
+}

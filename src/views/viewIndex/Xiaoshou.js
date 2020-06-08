@@ -1,11 +1,15 @@
 import React from 'react'
-// import { Button, NavBar, Icon } from 'antd-mobile'
+import { Route,NavLink } from 'react-router-dom'
+import Order from '../viewSales/order'
+
 
 const Xiaoshou = (props)=> {
-  // const {match, history} = props
+  const {match} = props
   return (
     <div className="about">
-      销售
+        <NavLink to={match.url }>订单列表</NavLink>
+
+        <Route path={match.url} component={Order} />
     </div>
   )
 }
