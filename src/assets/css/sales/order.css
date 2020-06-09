@@ -6,7 +6,7 @@
     height:48px;
     background: #eee;
     padding-left: 10%;
-    
+    line-height: 48px;
 }
 .top-title{
     float:left
@@ -14,17 +14,17 @@
 .quire{
    width:80%;
    margin:auto;
-   height:84px;
    margin-top:12px;
-  
 }
 .quire-title{
     height:38px;
     background: #eee;
     border:1px solid ;
+    line-height: 38px;;
+    padding-left: 12px;
 }
 .condition{
-   height: 46px;
+   height: 60px;
    background: white;
    border:1px solid ;
 }
@@ -42,4 +42,14 @@
     width:80%;
     margin:auto;
     margin-top:12px;
+}
+.list{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    background: #ccc;
+}
+a{
+    color:black
 }

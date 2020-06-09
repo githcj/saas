@@ -1,0 +1,37 @@
+.condition2{
+    height:100px;
+    justify-content: start;
+    flex-wrap: wrap;
+    
+}
+.condition3{
+    height:auto;
+    padding:10px 0 10px 0;
+    justify-content: start;
+    flex-wrap: wrap;
+}
+.bianju{
+    margin-left:30px;
+}
+.bianju2{
+    margin-left:94px;
+}
+.line-height{
+    line-height: auto;
+}
+.query-title2{
+    width:80%；
+}
+.quire2{
+    width:95%;
+    margin:auto;
+    margin-top:12px;
+  
+ }
+ .quire3{
+    width:80%;
+    margin:auto;
+    margin-top:12px;
+    height:auto;
+    border:1px solid #eee;
+ }
