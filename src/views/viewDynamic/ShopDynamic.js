@@ -8,7 +8,7 @@ import {
 import { Table, Select } from 'antd'
 import axios from 'axios'
 
-class PersonDynamic extends React.Component {
+class ShopDynamic extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -20,7 +20,7 @@ class PersonDynamic extends React.Component {
     componentWillMount() {
         axios({
             method:'GET',
-            url:'http://119.23.228.238:3031/mock/47/personDynamic'
+            url:'http://119.23.228.238:3031/mock/47/shopdynamic'
         })
         .then(res => {
             this.setState({
@@ -52,16 +52,21 @@ class PersonDynamic extends React.Component {
     render() {
         const { Option } = Select
         const { data, eachPage } = this.state
-        let columns = [
+        const columns = [
             {
                 title: '序号',
                 dataIndex: 'serialNum',
                 key: 'serialNum',
             },
             {
-                title: '人员名称',
-                dataIndex: 'name',
-                key: 'name',
+                title: '门店名称',
+                dataIndex: 'shopname',
+                key: 'shopname',
+            },
+            {
+                title: '地址',
+                dataIndex: 'address',
+                key: 'address',
             },
             {
                 title: '销售额',
@@ -69,9 +74,9 @@ class PersonDynamic extends React.Component {
                 key: 'sales',
             },
             {
-                title: '配送额',
-                dataIndex: 'distribution',
-                key: 'distribution',
+                title: '退货额',
+                dataIndex: 'returnmoney',
+                key: 'returnmoney',
             },
         ];
         //给表格数据添加 key 值
@@ -81,18 +86,17 @@ class PersonDynamic extends React.Component {
         //排序方式改变
         function sortChange (value) {
             if(value === 'saleLowHight') {
-                columns[2].sorter = (a, b) => a.sales - b.sales
                 console.log(columns[2])
             }
         }
 
         return (
-            <div className='person-dynamic'>
+            <div className='shop-dynamic'>
                 <div className='dynamic-top'>
                     <div>
                         <div className='dynamic-top-left'>
                             <div className='dynamic-top-leftmark'></div>
-                            <p className='dynamic-top-word'>人员销售动态</p>
+                            <p className='dynamic-top-word'>门店销售动态</p>
                         </div>
                         <div className='dynamic-top-right'>
                             <SyncOutlined />
@@ -126,8 +130,8 @@ class PersonDynamic extends React.Component {
                         <Select defaultValue="排序方式" style={{ width: 150 }} onChange={sortChange}>
                             <Option value="saleHightLow">销售额从高到低</Option>
                             <Option value="saleLowHight">销售额从低到高</Option>
-                            <Option value="disLowHight">配送额从低到高</Option>
-                            <Option value="disHightLow">配送额从高到低</Option>
+                            <Option value="returnLowHight">退货额从低到高</Option>
+                            <Option value="returnHightLow">退货额从高到低</Option>
                         </Select>
                     </div>
                 </div>
@@ -136,6 +140,7 @@ class PersonDynamic extends React.Component {
                         columns={columns}
                         dataSource={data}
                         bordered
+                        expandable
                         pagination={{
                             showQuickJumper:true,
                             showTotal:(total) => {
@@ -154,4 +159,4 @@ class PersonDynamic extends React.Component {
     }
 }
 
-export default PersonDynamic
+export default ShopDynamic

@@ -34,8 +34,8 @@ export default class Home extends Component {
                             <NavLink to={match.url + "/Dongtai"}>动态</NavLink>
                             <div className="home-icon">
                                 <span>
-                                    <UserOutlined /> 
-                                    管理员
+                                    <UserOutlined />
+                                    管理员 |
                                 </span>
                                 <span>|</span>
                                 <span>

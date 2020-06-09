@@ -1,0 +1,11 @@
+.dongtai{
+    width: 100%;
+    display: flex;
+    overflow-x:hidden
+}
+.dongtai-leftmenu{
+    width: 18%;
+}
+.dongtai-content{
+    width: 82%;
+}
