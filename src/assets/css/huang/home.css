@@ -7,7 +7,6 @@
     border-bottom: 2px solid gray ;
 }
 .home-link>span{
-    display: inline-block;
     font-size: 20px;
     font-weight: 400;
     float: left;
@@ -21,7 +20,6 @@
     font-size: large;
     float: right;
     margin-right:5vw;
-    display: inline-block;
     line-height: 50px;
 }
 .home-icon>span{
