@@ -1,0 +1,77 @@
+.addstockOut{
+    width: 100%;
+    background: rgba(248, 246, 246, 0.781);
+}
+
+.addstockOut section{
+    width: 80%;
+    margin: 20px auto;
+}
+
+.addstock-top{
+    width: 80%;
+    height: 50px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.top-box{
+    height: 25px;
+    border: 2px solid #1ABC9C;
+    margin-right: 5px;
+}
+.top-title{
+    margin: 0;
+}
+
+.addstock-info-title{
+    width: 100%;
+    height: 50px;
+    border: 1px solid #ccc;
+    background: #f3f3f3;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.addstock-info-title p{
+    margin: 0;
+    margin-left: 20px;
+}
+.addstock-info{
+    border: 1px solid #ccc;
+    width: 100%;
+    background: white;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.addstock-info div{
+    margin: 5px;
+}
+.addstock-info .goodsTitle{
+    width: 160px;
+    height: 30px;
+    outline: none;
+    border: 1px solid rgba(228, 228, 228, 1);
+}
+.addstock-info .goodsSearch{
+    width: 90px;
+    height: 40px;
+    border:1px solid rgba(26, 188, 156, 1);
+    color: rgba(26, 188, 156, 1);
+    border-radius: 5px;
+    text-align: center;
+    line-height: 40px;
+}
+.addstock-search .search-result{
+    width: 90%;
+    height: 40px;
+    border: 1px solid red;
+    margin: 0 auto;
+    line-height: 40px;
+}
+.search-result p{
+    margin-left: 20px;
+}

@@ -1,13 +1,11 @@
 .stock{
-    width: 100vw;
-    border: 1px solid red;
+    width: 100%;
+    display: flex;
 }
 .stockTitle{
-    width: 20%;
-    height: 100%;
-    float: left;
+    width: 11%;
+    background: #f3f3f3;
 }
 .stockContent{
-    width: 80%;
-    display: inline-block;
+    width: 89%;
 }
