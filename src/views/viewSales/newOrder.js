@@ -14,6 +14,7 @@ export default class newOrder extends Component{
              adddata:[],
              big:1,
              small:1,
+         
         };
     }
 
@@ -38,7 +39,6 @@ export default class newOrder extends Component{
         })
      }
 
-
     componentDidMount() {
         axios({
             method: 'GET',
@@ -54,9 +54,15 @@ export default class newOrder extends Component{
             })
     }
 
-    
      render(){
-
+           const { adddata } = this.state
+           for (let i = 0; i < adddata.length; i++) {
+            adddata[i].key = i
+           }
+            for (let i = 0; i < adddata.length; i++) {
+               adddata[i].count= 1
+           }
+           console.log(adddata,'123123123')
         const columns = [
             {
                 title: '商品名称',
@@ -106,13 +112,8 @@ export default class newOrder extends Component{
             },
             {
                 title: '数量',
-                render: () => (
-                    <div>
-                        <span >-</span>
-                        <span>1</span>
-                        <span onClick={this.add}>+</span>
-                     </div>
-                )
+                dataIndex: 'count',
+                 
             },
             {
                 title: '小单位/单价',
@@ -120,14 +121,16 @@ export default class newOrder extends Component{
             },
             {
                 title: '数量',
-                render: () => (
+                render: (index) => (
                          <div>
                              <span>-</span>
-                             <span>{this.state.big}</span>
-                             <span>+</span>
+                             <span>{adddata[index].count}</span>
+                             <span onClick={this.add.bind(this,index)}>+</span>
+                             
                          </div>
-                    
+
                 )
+
             },
             {
                 title: '金额',
@@ -149,12 +152,7 @@ export default class newOrder extends Component{
         
         ];
 
-
-         const {adddata} = this.state
-
-         for (let i = 0; i < adddata.length; i++) {
-            adddata[i].key = i
-        }
+         
         
        return(
             <div>

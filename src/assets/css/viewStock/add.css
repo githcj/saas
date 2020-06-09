@@ -43,7 +43,7 @@
     width: 100%;
     background: white;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
 }
@@ -65,13 +65,14 @@
     text-align: center;
     line-height: 40px;
 }
-.addstock-search .search-result{
-    width: 90%;
+.addstock-search .search-title{
+    width: 95%;
     height: 40px;
     border: 1px solid red;
     margin: 0 auto;
     line-height: 40px;
 }
 .search-result p{
+    margin: 0;
     margin-left: 20px;
 }

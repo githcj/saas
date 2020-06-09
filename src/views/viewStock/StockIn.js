@@ -41,13 +41,13 @@ export default class StockIn extends Component{
                     <div className="search">
                         <div>
                             入库日期：
-                            <DatePicker />
+                            <DatePicker style={{ width: 160 }}/>
                         </div>
                         <div>
                             供货厂商：
                             <Select 
                             defaultValue="供货厂商"
-                            style={{ width: 180 }}>
+                            style={{ width: 160 }}>
                                 <Option value="jack">Jack</Option>
                                 <Option value="lucy">Lucy</Option>
                             </Select>
@@ -56,7 +56,7 @@ export default class StockIn extends Component{
                             进货仓库：
                             <Select 
                             defaultValue="全部"
-                            style={{ width: 180 }}>
+                            style={{ width: 160 }}>
                                 <Option value="jack">Jack</Option>
                                 <Option value="lucy">Lucy</Option>
                             </Select>
@@ -65,7 +65,7 @@ export default class StockIn extends Component{
                             审核状态：
                             <Select
                                 defaultValue="全部"
-                                style={{ width: 180 }}>
+                                style={{ width: 160 }}>
                                 <Option value="1">全部</Option>
                                 <Option value="2">待审批</Option>
                                 <Option value="3">已通过</Option>
