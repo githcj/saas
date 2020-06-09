@@ -179,8 +179,7 @@ const Admin = (props) => {
                 </div>
                 <Table 
                 rowSelection={{type:'Checkbox'}}
-                columns={columns} 
-                dataSource={data}
+                columns={columns} dataSource={data}
                 bordered>
                 </Table>
             </div>

@@ -35,7 +35,7 @@ export default class Home extends Component {
                             <div className="home-icon">
                                 <span>
                                     <UserOutlined />
-                                    管理员 |
+                                    管理员
                                 </span>
                                 <span>|</span>
                                 <span>
