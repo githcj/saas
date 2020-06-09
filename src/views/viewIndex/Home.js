@@ -44,7 +44,7 @@ export default class Home extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <div>
+                    <div className='ax'>
                         <Route path={match.url} exact component={System}></Route>
                         <Route path={match.url + "/Caigou"} component={Caigou} />
                         <Route path={match.url + "/Xiaoshou"} component={Xiaoshou} />
