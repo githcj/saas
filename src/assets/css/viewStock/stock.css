@@ -1,5 +1,5 @@
 .stock{
-    width: 100%;
+    width: 100vw;
     border: 1px solid red;
 }
 .stockTitle{

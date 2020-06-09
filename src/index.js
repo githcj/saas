@@ -17,14 +17,6 @@ import {Provider} from 'react-redux'
 moment.locale('zh-cn');
 
 ReactDOM.render(
-<<<<<<< HEAD
-	<React.StrictMode>
-		<Router>
-			<App />
-		</Router>
-	</React.StrictMode>,
-	document.getElementById('root')
-=======
   <React.StrictMode>
             <Router>
                 <App />
@@ -32,7 +24,6 @@ ReactDOM.render(
     
   </React.StrictMode>,
   document.getElementById('root')
->>>>>>> huang
 );
 
 
