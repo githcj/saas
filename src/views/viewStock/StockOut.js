@@ -103,18 +103,18 @@ export default class StockOut extends Component {
                     <div className="search">
                         <div>
                             出库日期：
-                            <DatePicker />
+                            <DatePicker style={{ width: 160 }}/>
                         </div>
                         <div>
                             出库仓库：
-                            <Select style={{ width: 180 }}>
+                            <Select style={{ width: 160 }}>
                                 <Option value="jack">Jack</Option>
                                 <Option value="lucy">Lucy</Option>
                             </Select>
                         </div>
                         <div>
                             客户名称：
-                            <Select style={{ width: 180 }}>
+                            <Select style={{ width: 160 }}>
                                 <Option value="jack">Jack</Option>
                                 <Option value="lucy">Lucy</Option>
                             </Select>
@@ -123,7 +123,7 @@ export default class StockOut extends Component {
                             审核状态：
                             <Select
                                 defaultValue="全部"
-                                style={{ width: 180 }}>
+                                style={{ width: 160 }}>
                                 <Option value="1">全部</Option>
                                 <Option value="2">待审批</Option>
                                 <Option value="3">已通过</Option>
