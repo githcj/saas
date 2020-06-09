@@ -32,11 +32,11 @@ export default class Home extends Component {
                             <div className="home-icon">
                                 <span>
                                     <UserOutlined />
-                  管理员 |{" "}
+                                    管理员 |
                                 </span>
                                 <span>
                                     <HomeOutlined /> |
-                </span>
+                                </span>
                                 <span><BellFilled /> | </span>
                                 <span><CloseCircleOutlined /></span>
                             </div>

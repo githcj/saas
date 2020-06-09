@@ -1,12 +1,14 @@
-.person-dynamic{
-    width: 100vw;
-    background: #f3f3f3;
-    height: 50px;
-    border-bottom: 2px solid #e4e4e4;
+.person-dynamic,.goods-dynamic,.shop-dynamic{
+    width: 100%;
+    background: #f6f7f9;
 }
 .dynamic-top{
-    width: 80vw;
-    height: 100%;
+    width: 100%;
+    background: #f3f3f3;
+}
+.dynamic-top>div{
+    width: 80%;
+    height: 50px;
     margin: 0 auto;
     background: #f3f3f3;
     display: flex;
@@ -36,7 +38,7 @@
     margin: 0;
 }
 .dynamic-query,.dynamic-dataList{
-    width: 80vw;
+    width: 80%;
     height: 50px;
     border: 1px solid #e4e4e4;
     margin: 20px auto 0;
@@ -54,7 +56,12 @@
     display: flex;
     align-items: center;
 }
+.dynamic-right-title{
+    width: 30%;
+    display: flex;
+    justify-content: space-evenly;
+}
 .dynamic-dataTable{
-    width: 80vw;
+    width: 80%;
     margin: 0 auto;
 }

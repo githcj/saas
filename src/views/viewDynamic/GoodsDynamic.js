@@ -8,7 +8,7 @@ import {
 import { Table, Select } from 'antd'
 import axios from 'axios'
 
-class PersonDynamic extends React.Component {
+class GoodsDynamic extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -20,7 +20,7 @@ class PersonDynamic extends React.Component {
     componentWillMount() {
         axios({
             method:'GET',
-            url:'http://119.23.228.238:3031/mock/47/personDynamic'
+            url:'http://119.23.228.238:3031/mock/47/goodsdynamic'
         })
         .then(res => {
             this.setState({
@@ -52,16 +52,16 @@ class PersonDynamic extends React.Component {
     render() {
         const { Option } = Select
         const { data, eachPage } = this.state
-        let columns = [
+        const columns = [
             {
                 title: '序号',
                 dataIndex: 'serialNum',
                 key: 'serialNum',
             },
             {
-                title: '人员名称',
-                dataIndex: 'name',
-                key: 'name',
+                title: '商品名称',
+                dataIndex: 'goodsname',
+                key: 'goodsname',
             },
             {
                 title: '销售额',
@@ -69,9 +69,9 @@ class PersonDynamic extends React.Component {
                 key: 'sales',
             },
             {
-                title: '配送额',
-                dataIndex: 'distribution',
-                key: 'distribution',
+                title: '销量',
+                dataIndex: 'amount',
+                key: 'amount',
             },
         ];
         //给表格数据添加 key 值
@@ -87,12 +87,12 @@ class PersonDynamic extends React.Component {
         }
 
         return (
-            <div className='person-dynamic'>
+            <div className='goods-dynamic'>
                 <div className='dynamic-top'>
                     <div>
                         <div className='dynamic-top-left'>
                             <div className='dynamic-top-leftmark'></div>
-                            <p className='dynamic-top-word'>人员销售动态</p>
+                            <p className='dynamic-top-word'>商品销售动态</p>
                         </div>
                         <div className='dynamic-top-right'>
                             <SyncOutlined />
@@ -126,8 +126,8 @@ class PersonDynamic extends React.Component {
                         <Select defaultValue="排序方式" style={{ width: 150 }} onChange={sortChange}>
                             <Option value="saleHightLow">销售额从高到低</Option>
                             <Option value="saleLowHight">销售额从低到高</Option>
-                            <Option value="disLowHight">配送额从低到高</Option>
-                            <Option value="disHightLow">配送额从高到低</Option>
+                            <Option value="amountLowHight">销量从低到高</Option>
+                            <Option value="amountHightLow">销量从高到低</Option>
                         </Select>
                     </div>
                 </div>
@@ -154,4 +154,4 @@ class PersonDynamic extends React.Component {
     }
 }
 
-export default PersonDynamic
+export default GoodsDynamic
