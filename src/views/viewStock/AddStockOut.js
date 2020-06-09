@@ -93,9 +93,10 @@ export default class AddStockOut extends Component{
                         </div>
 
                         <div className="search-result">
-                            <div>
+                            <div className="search-title">
                                 <p>搜索结果</p>
                             </div>
+                            
                         </div>
                     </div>
                 </section>

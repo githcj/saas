@@ -13,7 +13,7 @@ export const loginActionSync = function(user, history) {
     setTimeout(()=> {
       dispatch(loginAction(user))
       history.push('/home')
-    }, 2000)
+    }, 200)
   }
 }
 
