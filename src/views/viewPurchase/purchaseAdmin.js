@@ -1,8 +1,7 @@
 import React from 'react';
 import '../../assets/css/purchase.css'
-import { DatePicker, Select } from 'antd'
+import { DatePicker, Select,Table} from 'antd'
 
-import { Table, Tag, Space } from 'antd';
 import {
     SearchOutlined,
     SyncOutlined,
@@ -76,7 +75,7 @@ const columns = [
 const data =[];
 for(var i=0;i<50;i++){
     data.push({
-        key: '1',
+        key: i,
         serialNum: 10001,
         data:'2017-09-08 12:12',
         gongHuo: 'A供应厂商',
@@ -179,8 +178,9 @@ const Admin = (props) => {
                     </div>
                 </div>
                 <Table 
-                rowSelection={{type:'checkbox'}}
-                columns={columns} dataSource={data}
+                rowSelection={{type:'Checkbox'}}
+                columns={columns} 
+                dataSource={data}
                 bordered>
                 </Table>
             </div>

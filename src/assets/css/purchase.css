@@ -39,9 +39,6 @@
     width:85%;
     margin: 30px auto;
 }
-svg{
-    font-size: 21px;
-}
 .purchase-top{
     width:85%;
     height:35px;
@@ -149,7 +146,7 @@ svg{
     width:85%;
     height:50px;
     background-color:#f3f3f3;
-    margin: 50px auto;
+    margin: 30px auto;
     margin-bottom: 0;
     display: flex;
     align-items: center;
@@ -163,10 +160,30 @@ svg{
     background-color: white;
     border-top: none;
     margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-left: 10px;
+    padding-top: 15px;
+}
+.detail-middle-se22{
+    height:60px;
+    width: 85%;
+    border: 1px solid #e4e4e4;
+    background-color: white;
+    border-top: none;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    padding-top: 15px;
 }
 .detail-middle-se1p{
     margin-left: 15px;
 }
-
+.detail-middle-se1T{
+    width: 85%;
+    margin: 0 auto;
+}
 
 
