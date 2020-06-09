@@ -39,9 +39,7 @@
     width:85%;
     margin: 30px auto;
 }
-svg{
-    font-size: 21px;
-}
+
 .purchase-top{
     width:85%;
     height:35px;
@@ -56,10 +54,11 @@ svg{
     margin-top: 30px;
 }
 .links{
-    width: 15%;  
+    height: 100%;
+    background: rgb(243, 243, 243);  
 }   
 .show{
-    width:85%;
+
     background-color: #F6F7F9;
 }
 .purchase-top-se1{

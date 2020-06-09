@@ -76,7 +76,7 @@ const columns = [
 const data =[];
 for(var i=0;i<50;i++){
     data.push({
-        key: '1',
+        key: i,
         serialNum: 10001,
         data:'2017-09-08 12:12',
         gongHuo: 'A供应厂商',
@@ -179,7 +179,7 @@ const Admin = (props) => {
                     </div>
                 </div>
                 <Table 
-                rowSelection={{type:'checkbox'}}
+                rowSelection={{type:'Checkbox'}}
                 columns={columns} dataSource={data}
                 bordered>
                 </Table>
