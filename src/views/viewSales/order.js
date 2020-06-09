@@ -32,7 +32,7 @@ const columns = [
     name: `Edward King ${i}`,
     age: 32,
     address: `London, Park Lane no. ${i}`,
-    
+
   });
 }
 
