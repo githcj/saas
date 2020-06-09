@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../../assets/css/viewStock/add.css'
-import { Select } from 'antd'
+import { Select,Table } from 'antd'
 
 const { Option } = Select;
 export default class AddStockOut extends Component{
@@ -69,7 +69,7 @@ export default class AddStockOut extends Component{
                         <p>选择商品</p>
                     </div>
                     <div className="addstock-search">
-                        <div className="addstock-info">
+                        <div className="addstock-info info-two">
                             <div>
                                 选择品牌：
                                 <Select style={{ width: 160 }}>
@@ -96,11 +96,66 @@ export default class AddStockOut extends Component{
                             <div className="search-title">
                                 <p>搜索结果</p>
                             </div>
-                            
+                            <Table
+                                style={{width:'100%'}}
+                                dataSource={data}
+                                columns={columns}
+                                bordered />
                         </div>
                     </div>
+                </section>
+
+                <section className="goodsDetail">
+                    <div className="detail-title">
+                        <p>商品明细</p>
+                    </div>
+                    <Table
+                        style={{width:'100%'}}
+                        dataSource={data}
+                        columns={columns}
+                        bordered />
                 </section>
             </div>
         )
     }
+}
+
+const columns = [
+    {
+        title: '商品名称',
+        dataIndex: 'goodsName',
+    },
+    {
+        title: '大单位',
+        dataIndex: 'bigUnit',
+    },
+    {
+        title: '大单位单价',
+        dataIndex: 'bigPrice',
+    },
+    {
+        title:'小单位',
+        dataIndex:'smallUnit'
+    },
+    {
+        title:'小单位价格',
+        dataIndex:'smallPrice'
+    },
+    {
+        title:'现有库存',
+        dataIndex:'storage'
+    }
+];
+
+const data = [];
+for (let i = 0; i < 46; i++) {
+    data.push({
+        key: i,
+        goodsName: '商品名称',
+        bigUnit: '箱',
+        bigPrice: '100',
+        smallUnit:'瓶',
+        smallPrice:'10',
+        storage:'999'
+    });
 }
