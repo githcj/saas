@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, NavLink } from "react-router-dom";
+import { Route, NavLink, Redirect } from "react-router-dom";
 import Caigou from "./Caigou";
 import Xiaoshou from "./Xiaoshou";
 import Kucun from "./Kucun";
@@ -15,6 +15,9 @@ export default class Home extends Component {
         super(props);
         this.state = {};
     }
+    logout=()=>{
+            
+    }
     render() {
         const { match } = this.props;
         return (
@@ -23,7 +26,7 @@ export default class Home extends Component {
                     <Col span={24}>
                         <div className="home-link">
                             <span className="">saas平台</span>
-                            <NavLink to={match.url}>系统</NavLink>
+                            <NavLink to={match.url + "/system"}>系统</NavLink>
                             <NavLink to={match.url + "/Caigou"}>采购</NavLink>
                             <NavLink to={match.url + "/Xiaoshou"}>销售</NavLink>
                             <NavLink to={match.url + "/Kucun"}>库存</NavLink>
@@ -31,21 +34,25 @@ export default class Home extends Component {
                             <NavLink to={match.url + "/Dongtai"}>动态</NavLink>
                             <div className="home-icon">
                                 <span>
-                                    <UserOutlined />
-                  管理员 |{" "}
+                                    <UserOutlined /> 
+                                    管理员
                                 </span>
+                                <span>|</span>
                                 <span>
-                                    <HomeOutlined /> |
-                </span>
-                                <span><BellFilled /> | </span>
-                                <span><CloseCircleOutlined /></span>
+                                    <HomeOutlined />
+                                </span>
+                                <span>|</span>
+                                <span><BellFilled /></span>
+                                <span>|</span>
+                                <span onClick={this.logout}><CloseCircleOutlined /></span>
                             </div>
                         </div>
                     </Col>
                 </Row>
                 <Row>
                     <div>
-                        <Route path={match.url} exact component={System}></Route>
+                        <Redirect from={match.url} exact to={match.url + "/system"} />
+                        <Route path={match.url + "/system"} component={System}></Route>
                         <Route path={match.url + "/Caigou"} component={Caigou} />
                         <Route path={match.url + "/Xiaoshou"} component={Xiaoshou} />
                         <Route path={match.url + "/Kucun"} component={Kucun} />

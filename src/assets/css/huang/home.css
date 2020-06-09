@@ -1,20 +1,32 @@
 .home-link{
     background: rgb(52, 150, 219);
     color: white;
-    font-size: 30px;
     width: 100%;
-    height:100px ;
-    line-height: 100px;
+    height:50px ;
+    line-height: 50px;
+    border-bottom: 2px solid gray ;
 }
 .home-link>span{
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 400;
     float: left;
     margin-left: 40px;
 }
 .home-link a{
-    margin: 0 20px;
+    margin-left: 6vw;
     color: white;
 }
 .home-icon{
+    font-size: large;
+    float: right;
+    margin-right:5vw;
     display: inline-block;
-    line-height: 100px;
+    line-height: 50px;
+}
+.home-icon>span{
+    margin-right: 20px;
+}
+.ant-row>div{
+    width: 100vw;
 }

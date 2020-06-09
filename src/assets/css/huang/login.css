@@ -1,0 +1,46 @@
+.login{
+    background: rgb(26,188,156);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-form{
+    width: 30vw;
+    height: 30vw;
+    background:white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.login-biaoti{
+    color: rgb(26,188,156) ;
+    margin-top: 3vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.login-biaoti>h1{
+    color:rgb(26,188,156) ;
+    font-size: 2vw;
+}
+.login-form>input{
+    border: none;
+    width: 80%;
+    height: 3vw;
+    border-bottom: 1px solid gray;
+    margin-bottom: 1vw;
+    padding: 1vw;
+    outline: none;
+}
+.login-form>button{
+    border: 1px solid gray;
+    background: rgb(26,188,156);
+    width: 80%;
+    height: 3vw;
+    color: white;
+    font-size: 2vw;
+    border-radius: 0.5vw;
+    outline: none;
+}

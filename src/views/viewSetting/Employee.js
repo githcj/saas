@@ -1,7 +1,7 @@
 import React from 'react'
 // import { Button, NavBar, Icon } from 'antd-mobile'
 
-const Gongsi = (props)=> {
+const Employee = (props)=> {
   // const {match, history} = props
   return (
     <div className="about">
@@ -10,4 +10,4 @@ const Gongsi = (props)=> {
   )
 }
 
-export default Gongsi
+export default Employee
