@@ -1,5 +1,5 @@
 import React from 'react'
-import './PersonDynamic.css'
+import '../../assets/css/dynamic/PersonDynamic.css'
 import {
     SearchOutlined,
     SyncOutlined,
