@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../assets/css/purchase.css'
+import '../../assets/css/wang/purchase.css'
 import '../../assets/css/brandma.css'
 import '../../assets/css/dynamic/PersonDynamic.css'
 import { DatePicker, Select } from 'antd'

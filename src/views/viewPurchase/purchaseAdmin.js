@@ -1,6 +1,7 @@
-import React from 'react';
-import '../../assets/css/purchase.css'
+import React from 'react'
 import { DatePicker, Select,Table} from 'antd'
+import '../../assets/css/wang/purchase.css'
+
 
 import {
     SearchOutlined,
@@ -123,17 +124,19 @@ function handleChange(value) {
 }
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const Admin = (props) => {
+const purchaseAdmin = (props) => {
     return (
         <div className="admin">
-            <div className='purchase-firtop'>
-                <div className='dynamic-top-left'>
-                    <div className='dynamic-top-left-mark'></div>
-                    <p className='dynamic-top-word'>采购管理</p>
-                </div>
-                <div className='dynamic-top-right'>
-                    <SyncOutlined />
-                    <p className='dynamic-top-word'>刷新</p>
+            <div className='admin-top'>
+                <div className='purchase-firtop'>
+                    <div className='dynamic-top-left'>
+                        <div className='dynamic-top-left-mark'></div>
+                        <p className='dynamic-top-word'>采购管理</p>
+                    </div>
+                    <div className='dynamic-top-right'>
+                        <SyncOutlined />
+                        <p className='dynamic-top-word'>刷新</p>
+                    </div>
                 </div>
             </div>
             <div className="purchase-search">
@@ -211,4 +214,4 @@ const Admin = (props) => {
     )
 }
 
-export default Admin
+export default purchaseAdmin
