@@ -6,6 +6,7 @@ import AddStockIn from '../viewStock/AddStockIn'
 import AddStockOut from '../viewStock/AddStockOut'
 import '../../assets/css/viewStock/stock.css'
 import { Menu, Col, Row } from 'antd';
+import StockInFail from '../viewStock/StockInFail'
 
 const Stock = (props) => {
     const { match } = props
@@ -38,8 +39,9 @@ const Stock = (props) => {
             <div className="stockContent">
                 <Route path={match.url + '/stockout'}><StockOut /></Route>
                 <Route path={match.url + '/addstockout'}><AddStockOut /></Route>
-                <Route path={match.url + '/stockin'}><StockIn /></Route>
+                <Route path={match.url + '/stockin'}><StockIn  msg={match.url}/></Route>
                 <Route path={match.url + '/addstockin'}><AddStockIn /></Route>
+                <Route path={match.url + '/stockinfail'}><StockInFail/></Route>
                 <Redirect exact to={match.url + '/stockout'} />
             </div>
             </Col>

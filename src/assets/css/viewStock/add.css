@@ -11,6 +11,12 @@
     width: 80%;
     margin: 20px auto;
 }
+.addstockOut header{
+    background: #f3f3f3;
+}
+.addstockIn header{
+    background: #f3f3f3;
+}
 
 .addstock-top{
     width: 80%;
