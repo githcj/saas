@@ -59,6 +59,7 @@ export default class AddStockIn extends Component{
         })
     }
     redBig = (data) => {
+        console.log(data)
         if(data.bigNum>1){
             data.bigNum -= 1
         }

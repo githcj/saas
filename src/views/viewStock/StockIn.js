@@ -2,12 +2,65 @@ import React, { Component } from 'react'
 import { Table, DatePicker, Select } from 'antd'
 import { SyncOutlined, SearchOutlined, DownOutlined, UpOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewStock/stockout.css'
+import { Link } from 'react-router-dom'
 
 export default class StockIn extends Component{
     constructor(props){
         super(props)
     }
     render(){
+        const columns = [
+            {
+                title: '编号',
+                dataIndex: 'id',
+            },
+            {
+                title: '创建日期',
+                dataIndex: 'bulidDate',
+            },
+            {
+                title: '供货厂商',
+                dataIndex: 'store',
+            },
+            {
+                title:'进货仓库',
+                dataIndex:'salesMan'
+            },
+            {
+                title:'总金额',
+                dataIndex:'total'
+            },
+            {
+                title:'入库时间',
+                dataIndex:'deliveryTime'
+            },
+            {
+                title:'发起人',
+                dataIndex:'initiator'
+            },
+            {
+                title:'审批人',
+                dataIndex:'approver'
+            },
+            {
+                title:'状态',
+                dataIndex:'state'
+            },
+            {
+                title:'审批操作',
+                dataIndex:'approveState'
+            },{
+                title:'操作',
+                dataIndex:'handle',
+                render:() => {
+                    return(
+                        <span>
+                            <Link to={this.props.msg + '/stockinfail'}>预览</Link>
+                        </span>
+                    )
+                }
+            }
+        ];
         return (
             <div className="stockIn">
                 <header>
@@ -111,48 +164,7 @@ export default class StockIn extends Component{
         )
     }
 }
-const columns = [
-    {
-        title: '编号',
-        dataIndex: 'id',
-    },
-    {
-        title: '创建日期',
-        dataIndex: 'bulidDate',
-    },
-    {
-        title: '供货厂商',
-        dataIndex: 'store',
-    },
-    {
-        title:'进货仓库',
-        dataIndex:'salesMan'
-    },
-    {
-        title:'总金额',
-        dataIndex:'total'
-    },
-    {
-        title:'入库时间',
-        dataIndex:'deliveryTime'
-    },
-    {
-        title:'发起人',
-        dataIndex:'initiator'
-    },
-    {
-        title:'审批人',
-        dataIndex:'approver'
-    },
-    {
-        title:'状态',
-        dataIndex:'state'
-    },
-    {
-        title:'审批操作',
-        dataIndex:'approveState'
-    }
-];
+
 
 const data = [];
 for (let i = 0; i < 46; i++) {

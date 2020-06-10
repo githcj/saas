@@ -1,9 +1,7 @@
 import React from 'react'
-import {
-    CaretLeftOutlined,
-} from '@ant-design/icons';
+import {CaretLeftOutlined } from '@ant-design/icons';
 import '../../assets/css/purchase.css'
-import { DatePicker, Select,Table} from 'antd'
+import { Table } from 'antd'
 
 
 const columns = [
