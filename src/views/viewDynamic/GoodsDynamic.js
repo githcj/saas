@@ -49,6 +49,33 @@ class GoodsDynamic extends React.Component {
             })
         }
     }
+    //排序
+    sortChange = (value) => {
+        const newData = [...this.state.data]
+        if(value === 'saleLowHight') {
+            newData.sort((a, b) => {
+                return a.sales - b.sales
+            })
+        }
+        if(value === 'saleHightLow') {
+            newData.sort((a, b) => {
+                return b.sales - a.sales
+            })
+        }
+        if(value === 'amountLowHight') {
+            newData.sort((a, b) => {
+                return a.amount - b.amount
+            })
+        }
+        if(value === 'amountHightLow') {
+            newData.sort((a, b) => {
+                return b.amount - a.amount
+            })
+        }
+        this.setState({
+            data: newData
+        })
+    }
     render() {
         const { Option } = Select
         const { data, eachPage } = this.state
@@ -78,14 +105,6 @@ class GoodsDynamic extends React.Component {
         for(let i = 0; i < data.length; i++){
             data[i].key = i
         }
-        //排序方式改变
-        function sortChange (value) {
-            if(value === 'saleLowHight') {
-                columns[2].sorter = (a, b) => a.sales - b.sales
-                console.log(columns[2])
-            }
-        }
-
         return (
             <div className='goods-dynamic'>
                 <div className='dynamic-top'>
@@ -123,7 +142,7 @@ class GoodsDynamic extends React.Component {
                             <Option value="twenty">每页20条</Option>
                             <Option value="thirty">每页30条</Option>
                         </Select>
-                        <Select defaultValue="排序方式" style={{ width: 150 }} onChange={sortChange}>
+                        <Select defaultValue="排序方式" style={{ width: 150 }} onChange={(value) => this.sortChange(value)}>
                             <Option value="saleHightLow">销售额从高到低</Option>
                             <Option value="saleLowHight">销售额从低到高</Option>
                             <Option value="amountLowHight">销量从低到高</Option>

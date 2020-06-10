@@ -49,6 +49,33 @@ class PersonDynamic extends React.Component {
             })
         }
     }
+    //排序
+    sortChange = (value) => {
+        const newData = [...this.state.data]
+        if(value === 'saleLowHight') {
+            newData.sort((a, b) => {
+                return a.sales - b.sales
+            })
+        }
+        if(value === 'saleHightLow') {
+            newData.sort((a, b) => {
+                return b.sales - a.sales
+            })
+        }
+        if(value === 'disLowHight') {
+            newData.sort((a, b) => {
+                return a.distribution - b.distribution
+            })
+        }
+        if(value === 'disHightLow') {
+            newData.sort((a, b) => {
+                return b.distribution - a.distribution
+            })
+        }
+        this.setState({
+            data: newData
+        })
+    }
     render() {
         const { Option } = Select
         const { data, eachPage } = this.state
@@ -77,13 +104,6 @@ class PersonDynamic extends React.Component {
         //给表格数据添加 key 值
         for(let i = 0; i < data.length; i++){
             data[i].key = i
-        }
-        //排序方式改变
-        function sortChange (value) {
-            if(value === 'saleLowHight') {
-                columns[2].sorter = (a, b) => a.sales - b.sales
-                console.log(columns[2])
-            }
         }
 
         return (
@@ -123,7 +143,7 @@ class PersonDynamic extends React.Component {
                             <Option value="twenty">每页20条</Option>
                             <Option value="thirty">每页30条</Option>
                         </Select>
-                        <Select defaultValue="排序方式" style={{ width: 150 }} onChange={sortChange}>
+                        <Select defaultValue="排序方式" style={{ width: 150 }} onChange={(value) => this.sortChange(value)}>
                             <Option value="saleHightLow">销售额从高到低</Option>
                             <Option value="saleLowHight">销售额从低到高</Option>
                             <Option value="disLowHight">配送额从低到高</Option>
