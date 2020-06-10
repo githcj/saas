@@ -62,13 +62,36 @@ const columns = [
         title: '审批操作',
         dataIndex: 'doesA',
         key: 'doesA',
-        align:'center'
+        align:'center',
+        render: (text, record, index)=> {
+            console.log(text,record,index)
+            if(record.state === '待审批') {
+                return <span>审批</span>
+            } else if(record.state === '已入库') {
+                return null
+            }
+        }
     },
     {
         title: '操作',
         dataIndex: 'does',
         key: 'does',
-        align:'center'
+        align:'center',
+        render:(text,record,index)=>{
+            console.log(text,record,index)
+            if(record.state === '待审批'){
+                return <p>
+                    <span>编辑</span>
+                    <span>预览</span>
+                    <span>删除</span>
+                </p>
+            }else if(record.state === '已入库'){
+                return <p>
+                    <span>预览</span>
+                    <span>删除</span>
+                </p>
+            }
+        }
     },
 ];
 
@@ -82,9 +105,9 @@ for(var i=0;i<50;i++){
         needData: '2017-12-26 13:14',
         person: 'A员工',
         shenpiRen:'B员工',
-        state:'待审批',
-        doesA:'审批',
-        does:'编辑 预览 删除'
+        state: Math.random() > 0.5 ? '待审批' : '已入库',
+        doesA:'',
+        does:''
     })
 }
 

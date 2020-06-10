@@ -52,7 +52,7 @@ const columns = [
 ];
 
 const data =[];
-for(var i=0;i<52;i++){
+for(var i=0;i<20;i++){
     data.push({
         key: i,
         serialNum: 10001,
