@@ -1,12 +1,18 @@
 .admin{
     width: 100%;
-    background: #f3f3f3;
-    height: 50px;
     border-bottom: 2px solid #e4e4e4;
+}
+.detail,.admin{
+    background: #f6f7f9;
+}
+.admin-top{
+    width: 100%;
+    border-bottom: 2px solid #e4e4e4;
+    background: #f3f3f3;
 }
 .purchase-firtop{
     width: 85%;
-    height: 100%;
+    height: 50px;
     margin: 0 auto;
     background: #f3f3f3;
     display: flex;
@@ -57,7 +63,6 @@
     background: rgb(243, 243, 243);  
 }   
 .show{
-
     background-color: #F6F7F9;
 }
 .purchase-top-se1{
@@ -186,5 +191,11 @@
     width: 85%;
     margin: 0 auto;
 }
-
+.totals{
+    background-color:#f3f3f3;
+    font-size: 18px;
+    display: flex;
+    height:60px;
+    align-items: center;
+}
 
