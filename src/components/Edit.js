@@ -68,7 +68,7 @@ export default class Edit extends Component {
               <Input />
             </div>
             <div style={{ margin: '24px 0' }} />
-            <div>
+            <div className='Eidt'>
               <label for="zhineng">职能描述</label>
               <TextArea id='zhineng' placeholder="职能描述" autoSize />
             </div>

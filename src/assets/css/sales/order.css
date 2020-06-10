@@ -45,11 +45,7 @@
 .list{
     height: 100%;
     background: rgb(243, 243, 243);
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    background: #ccc;
+
 }
 a{
     color:black
