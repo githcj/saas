@@ -1,9 +1,13 @@
-.addstockOut{
+.addstockOut,.addstockIn{
     width: 100%;
     background: rgba(248, 246, 246, 0.781);
 }
 
 .addstockOut section{
+    width: 80%;
+    margin: 20px auto;
+}
+.addstockIn section{
     width: 80%;
     margin: 20px auto;
 }
@@ -98,4 +102,103 @@
 }
 .goodsDetail p{
     margin: 0 0 0 20px;
+}
+.goodsDetail .total{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    font-size: 18px;
+}
+.goodsDetail .total div{
+    margin: 0 20px;
+}
+.goodsDetail .total .span-one{
+    letter-spacing: normal;
+    color: #666666;
+}
+.goodsDetail .total .span-two{
+    color: red;
+}
+
+.addstockOut footer{
+    width: 80%;
+    margin: 20px auto;
+}
+.addstockIn footer{
+    width: 80%;
+    margin: 20px auto;
+}
+
+footer .payInfo{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid rgb(228, 228, 228);
+}
+.payInfo p{
+    margin: 0 0 0 20px;
+}
+footer .payInfo-detail{
+    width: 100%;
+    background: white;
+    overflow: hidden;
+}
+.payInfo-detail .span-one{
+    letter-spacing: normal;
+    color: #666666;
+}
+.payInfo-detail .span-two{
+    color: red;
+}
+.payInfo-detail input{
+    width: 160px;
+    height: 30px;
+    outline: none;
+    border: 1px solid rgba(228, 228, 228, 1);
+}
+.payInfo-detail>div{
+    margin: 20px 0 0 20px;
+}
+.payMode{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+.payMode>div{
+    margin-right: 40px;
+}
+.payInfo-detail button{
+    border: none;
+    outline: none;
+    width: 180px;
+    height: 35px;
+    color: white;
+    background: rgb(69, 206, 211);
+    border-radius: 5px;
+}
+.payInfo-detail .payment{
+    width: 100%;
+    display: flex;
+}
+.payment>div{
+    margin-right: 60px;
+}
+
+.number{
+    width: 100px;
+    height: 30px;
+    border: 1px solid;
+    display: flex;
+    align-items: center;
+}
+.number span{
+    width: 33.333%;
+    text-align: center;
+}
+.number .count{
+    font-size: 18px;
+    cursor: pointer;
 }
