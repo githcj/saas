@@ -11,6 +11,9 @@ import Supplier from '../viewSetting/Supplier'
 import Brandma from '../viewSetting/Brandma'
 import Comclass from '../viewSetting/Comclass'
 import Cominfo from '../viewSetting/Cominfo'
+import addCus from '../viewSetting/addCus'
+
+
 import { Row, Col, Menu } from 'antd';
 import '../../assets/css/huang/system.css'
 
@@ -72,12 +75,16 @@ const System = (props)=> {
                     <Route path={match.url + '/Position'} component={Position} />
                     <Route path={match.url + '/Employee'} component={Employee} />
                     <Route path={match.url + '/Operation'} component={Operation} />
-                    <Route path={match.url + '/Cusinfo'} component={Cusinfo} />
+                    <Route path={match.url + '/Cusinfo'} component={Cusinfo}>
+                      <Cusinfo msg={match.url}></Cusinfo>
+                    </Route>
                     <Route path={match.url + '/Custype'} component={Custype} />
                     <Route path={match.url + '/Supplier'} component={Supplier} />
                     <Route path={match.url + '/Brandma'} component={Brandma} />
                     <Route path={match.url + '/Comclass'} component={Comclass} />
                     <Route path={match.url + '/Cominfo'} component={Cominfo} />
+                    <Route path={match.url + '/addCus'} component={addCus}></Route>
+                   
           </div>
       </Col>
     </Row>

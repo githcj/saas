@@ -19,21 +19,30 @@
 .quire-title{
     height:38px;
     background: #eee;
-    border:1px solid ;
     line-height: 38px;;
     padding-left: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 .condition{
    height: 60px;
    background: white;
-   border:1px solid ;
 }
+
 .flex-row{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
 }
+.condition4{
+    height: 60px;
+    background: #ffffff;
+    border:1px solid #eee;
+    justify-content: start;
+ }
 .xiaoshou{
     width:150px;
     height:28px;
@@ -45,12 +54,40 @@
 .list{
     height: 100%;
     background: rgb(243, 243, 243);
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    background: #ccc;
 }
 a{
     color:black
+}
+.chaxun{
+    margin-right:120px;
+    border:1px solid;
+    height:28px;
+    width:80px;
+    line-height: 24px;
+    background: white;
+    text-align: center;
+    font-size: 14px;
+    border:1px solid #ddd;
+}
+.cont{
+    height:500px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-evenly;
+}
+.right{
+    display: inline-block;
+    width:80px;
+   text-align: right;
+}
+.left{
+    margin-left:370px;
+}
+.left2{
+    margin-left:450px;
+}
+.xiaoshou2{
+    width:161px;
+    height:27px;
 }

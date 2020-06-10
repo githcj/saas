@@ -1,7 +1,8 @@
 import React, { useState,useEffect,Component } from 'react'
 import axios  from 'axios'
 import '../../assets/css/sales/newOrder.css'
-import { Table, Button,Radio } from 'antd';
+import { Table, Button,Radio, Select } from 'antd';
+const { Option } = Select
 
 export default class newOrder extends Component{
     constructor(props) {
@@ -14,6 +15,7 @@ export default class newOrder extends Component{
              adddata:[],
              big:1,
              small:1,
+             
          
         };
     }
@@ -54,6 +56,10 @@ export default class newOrder extends Component{
             })
     }
 
+    
+    setvalue = (value) => {
+        console.log(value)
+    }
      render(){
            const { adddata } = this.state
            for (let i = 0; i < adddata.length; i++) {
@@ -124,7 +130,7 @@ export default class newOrder extends Component{
                 render: (index) => (
                          <div>
                              <span>-</span>
-                             <span>{adddata[index].count}</span>
+                             <span>{adddata[0].count}</span>
                              <span onClick={this.add.bind(this,index)}>+</span>
                              
                          </div>
@@ -151,7 +157,6 @@ export default class newOrder extends Component{
             },
         
         ];
-
          
         
        return(
@@ -169,48 +174,48 @@ export default class newOrder extends Component{
                          <div className="bianju">
                             <label >订单类型：</label><span>普通订单</span>
                          </div>
-                         <div className="bianju2">
+                         <div className="bianju2" >
                             <label >客户名称：</label>
-                            <select className="xiaoshou">
-                                <option value="全部">客户1</option>
-                                <option value="车销">客户2</option>
-                                <option value="仿销">客户3</option>
-                            </select>
+                            <Select className="xiaoshou" defaultValue='客户名称' onChange={(value) => this.setvalue(value)}>
+                                <Option value="全部">客户1</Option>
+                                <Option value="车销">客户2</Option>
+                                <Option value="仿销">客户3</Option>
+                            </Select>
                          </div>
                          <div className="bianju">
                             <label >业务员：</label>
-                            <select className="xiaoshou">
-                                <option value="全部">业务员1</option>
-                                <option value="车销">业务员2</option>
-                                <option value="仿销">业务员3</option>
-                            </select>
+                            <Select className="xiaoshou">
+                                <Option value="全部">业务员1</Option>
+                                <Option value="车销">业务员2</Option>
+                                <Option value="仿销">业务员3</Option>
+                            </Select>
                          </div>
                          <div className="bianju">
                             <label >出货仓库：</label>
-                            <select className="xiaoshou"  style={{width:'180px'}}>
-                                <option value="全部">业务员1</option>
-                                <option value="车销">业务员2</option>
-                                <option value="仿销">业务员3</option>
-                            </select>
+                            <Select className="xiaoshou"  style={{width:'180px'}}>
+                                <Option value="全部">业务员1</Option>
+                                <Option value="车销">业务员2</Option>
+                                <Option value="仿销">业务员3</Option>
+                            </Select>
                          </div>
                          <div className="bianju">
                             <label >发货日期：</label><input style={{width:'120px'}} value={this.neworderDate} onChange={this.setDate} type="date"></input>
                         </div>
                         <div className="bianju">
                             <label >销售类型：</label>
-                            <select className="xiaoshou">
-                                <option value="全部">全部</option>
-                                <option value="车销">车销</option>
-                                <option value="仿销">仿销</option>
-                            </select>
+                            <Select className="xiaoshou">
+                                <Option value="全部">全部</Option>
+                                <Option value="车销">车销</Option>
+                                <Option value="仿销">仿销</Option>
+                            </Select>
                         </div>
                         <div className="bianju">
                             <label >配送车辆：</label>
-                            <select className="xiaoshou">
-                                <option value="全部">请选择</option>
-                                <option value="车销">车1</option>
-                                <option value="仿销">车2</option>
-                            </select>
+                            <Select className="xiaoshou">
+                                <Option value="全部">请选择</Option>
+                                <Option value="车销">车1</Option>
+                                <Option value="仿销">车2</Option>
+                            </Select>
                         </div>
                       </div>
                 </div>

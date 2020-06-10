@@ -1,31 +1,11 @@
 // import React, { useState,useEffect } from 'react'
 import React, { Component } from 'react'
+import { connect } from "react-redux";
 import axios from 'axios'
 import '../../assets/css/sales/order.css'
 import { Table, Button } from 'antd';
-
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-    },
-    {
-        title: 'Age',
-        dataIndex: 'age',
-    },
-    {
-        title: 'Adress',
-        dataIndex: 'address',
-    },
-    {
-        title: 'Axios',
-        dataIndex: 'axios',
-        render: () => <a>delete</a>
-    },
-
-];
-
-
+import { Route, NavLink } from 'react-router-dom'
+import {yulanAction} from '../../store/order/orderActions'
 
 export default class Order extends Component {
     constructor(props) {
@@ -53,6 +33,12 @@ export default class Order extends Component {
                 console.log(err);
             })
     }
+    yulan =(record)=>{
+         this.props.his.push({
+             pathname:'/home/xiaoshou/orderDetail',
+             params:record
+            })
+    }
 
     setDate = (e) => {
         this.setState({
@@ -66,6 +52,8 @@ export default class Order extends Component {
     };
     render() {
         const { orderList, selectedRowKeys } = this.state;
+        const { yulan} =this.props
+       
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -75,6 +63,63 @@ export default class Order extends Component {
         for (let i = 0; i < orderList.length; i++) {
             orderList[i].key = i
         }
+
+        const columns = [
+            {
+                title: '编号',
+                dataIndex: 'bianhao',
+            },
+            {
+                title: '销售类型',
+                dataIndex: 'age',
+            },
+            {
+                title: '金额合计',
+                dataIndex: 'age',
+            },
+            {
+                title: '创建日期',
+                dataIndex: 'age',
+            },
+            {
+                title: '订单类型',
+                dataIndex: 'age',
+            },
+            {
+                title: '客户类型',
+                dataIndex: 'age',
+            },
+            {
+                title: '客户名称',
+                dataIndex: 'age',
+            },
+            {
+                title: '业务员',
+                dataIndex: 'age',
+            },
+            {
+                title: '出库仓库',
+                dataIndex: 'age',
+            },
+            {
+                title: '配送车辆',
+                dataIndex: 'age',
+            },
+            {
+                title: 'Adress',
+                dataIndex: 'address',
+            },
+            {
+                title: 'Axios',
+                render: (text,record,index) => (
+                    <span>
+                        <a>删除</a>
+                        <div onClick={()=> this.yulan(record)}>预览</div>
+                    </span>
+                )
+            },
+        
+        ];
 
         return (
             <div>
@@ -136,3 +181,17 @@ export default class Order extends Component {
         )
     }
 }
+
+
+
+//  function mapDispatchToProps(dispath){
+//     return{
+//       yulan:(record)=>dispath(yulanAction(record)),
+//      }
+//   }
+
+// export default connect(
+//     null,
+//     mapDispatchToProps
+//     )
+// (Order);
