@@ -41,3 +41,12 @@
     text-align: center;
     line-height: 30px;
 }
+.caozuoPart,.xiangguanP{
+    margin: 0;
+}
+.midA{
+    margin: 0 10px;
+}
+.caozuoPart>a{
+    color: #1ABC9C;
+}

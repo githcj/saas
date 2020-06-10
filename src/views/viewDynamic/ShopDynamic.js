@@ -49,6 +49,33 @@ class ShopDynamic extends React.Component {
             })
         }
     }
+    //排序
+    sortChange = (value) => {
+        const newData = [...this.state.data]
+        if(value === 'saleLowHight') {
+            newData.sort((a, b) => {
+                return a.sales - b.sales
+            })
+        }
+        if(value === 'saleHightLow') {
+            newData.sort((a, b) => {
+                return b.sales - a.sales
+            })
+        }
+        if(value === 'returnLowHight') {
+            newData.sort((a, b) => {
+                return a.returnmoney - b.returnmoney
+            })
+        }
+        if(value === 'returnHightLow') {
+            newData.sort((a, b) => {
+                return b.returnmoney - a.returnmoney
+            })
+        }
+        this.setState({
+            data: newData
+        })
+    }
     render() {
         const { Option } = Select
         const { data, eachPage } = this.state
@@ -127,7 +154,7 @@ class ShopDynamic extends React.Component {
                             <Option value="twenty">每页20条</Option>
                             <Option value="thirty">每页30条</Option>
                         </Select>
-                        <Select defaultValue="排序方式" style={{ width: 150 }} onChange={sortChange}>
+                        <Select defaultValue="排序方式" style={{ width: 150 }} onChange={(value) => this.sortChange(value)}>
                             <Option value="saleHightLow">销售额从高到低</Option>
                             <Option value="saleLowHight">销售额从低到高</Option>
                             <Option value="returnLowHight">退货额从低到高</Option>

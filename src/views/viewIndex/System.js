@@ -16,6 +16,7 @@ import addCus from '../viewSetting/addCus'
 
 import { Row, Col, Menu } from 'antd';
 import '../../assets/css/huang/system.css'
+import Quanxian from '../viewSetting/Quanxian'
 
 const System = (props)=> {
   const {match} = props
@@ -72,7 +73,10 @@ const System = (props)=> {
             <div>
                     <Route path={match.url} exact component={Gongsi} />
                     <Route path={match.url + '/Department'} component={Department} />
-                    <Route path={match.url + '/Position'} component={Position} />
+                    <Route path={match.url + '/Position'} component={Position} >
+                      <Position msg={match.url} />
+                    </Route>
+                    <Route path={match.url + '/Quanxian'} component={Quanxian} />
                     <Route path={match.url + '/Employee'} component={Employee} />
                     <Route path={match.url + '/Operation'} component={Operation} />
                     <Route path={match.url + '/Cusinfo'} component={Cusinfo}>

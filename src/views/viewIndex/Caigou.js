@@ -3,7 +3,7 @@ import { Route, NavLink, Redirect } from "react-router-dom"
 import purchaseAdmin from '../viewPurchase/purchaseAdmin'
 import purchaseApply from '../viewPurchase/purchaseApply'
 import purchaseDetail from '../viewPurchase/purchaseDetail'
-import '../../assets/css/purchase.css'
+import '../../assets/css/wang/purchase.css'
 import { Menu,Row, Col } from 'antd'
 
 const Caigou = (props) => {

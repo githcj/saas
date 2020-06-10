@@ -1,6 +1,7 @@
-import React from 'react';
-import '../../assets/css/purchase.css'
+import React from 'react'
 import { DatePicker, Select,Table} from 'antd'
+import '../../assets/css/wang/purchase.css'
+
 
 import {
     SearchOutlined,
@@ -62,13 +63,36 @@ const columns = [
         title: '审批操作',
         dataIndex: 'doesA',
         key: 'doesA',
-        align:'center'
+        align:'center',
+        render: (text, record, index)=> {
+            console.log(text,record,index)
+            if(record.state === '待审批') {
+                return <span>审批</span>
+            } else if(record.state === '已入库') {
+                return null
+            }
+        }
     },
     {
         title: '操作',
         dataIndex: 'does',
         key: 'does',
-        align:'center'
+        align:'center',
+        render:(text,record,index)=>{
+            console.log(text,record,index)
+            if(record.state === '待审批'){
+                return <p>
+                    <span>编辑</span>
+                    <span>预览</span>
+                    <span>删除</span>
+                </p>
+            }else if(record.state === '已入库'){
+                return <p>
+                    <span>预览</span>
+                    <span>删除</span>
+                </p>
+            }
+        }
     },
 ];
 
@@ -82,9 +106,9 @@ for(var i=0;i<50;i++){
         needData: '2017-12-26 13:14',
         person: 'A员工',
         shenpiRen:'B员工',
-        state:'待审批',
-        doesA:'审批',
-        does:'编辑 预览 删除'
+        state: Math.random() > 0.5 ? '待审批' : '已入库',
+        doesA:'',
+        does:''
     })
 }
 
@@ -100,17 +124,19 @@ function handleChange(value) {
 }
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const Admin = (props) => {
+const purchaseAdmin = (props) => {
     return (
         <div className="admin">
-            <div className='purchase-firtop'>
-                <div className='dynamic-top-left'>
-                    <div className='dynamic-top-left-mark'></div>
-                    <p className='dynamic-top-word'>采购管理</p>
-                </div>
-                <div className='dynamic-top-right'>
-                    <SyncOutlined />
-                    <p className='dynamic-top-word'>刷新</p>
+            <div className='admin-top'>
+                <div className='purchase-firtop'>
+                    <div className='dynamic-top-left'>
+                        <div className='dynamic-top-left-mark'></div>
+                        <p className='dynamic-top-word'>采购管理</p>
+                    </div>
+                    <div className='dynamic-top-right'>
+                        <SyncOutlined />
+                        <p className='dynamic-top-word'>刷新</p>
+                    </div>
                 </div>
             </div>
             <div className="purchase-search">
@@ -179,7 +205,8 @@ const Admin = (props) => {
                 </div>
                 <Table 
                 rowSelection={{type:'Checkbox'}}
-                columns={columns} dataSource={data}
+                columns={columns} 
+                dataSource={data}
                 bordered>
                 </Table>
             </div>
@@ -187,4 +214,4 @@ const Admin = (props) => {
     )
 }
 
-export default Admin
+export default purchaseAdmin

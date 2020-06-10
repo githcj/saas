@@ -1,10 +1,10 @@
-import React, { useState,useEffect,Component } from 'react'
-import axios  from 'axios'
+import React, { useState, useEffect, Component } from 'react'
+import axios from 'axios'
 import '../../assets/css/sales/newOrder.css'
 import { Table, Button,Radio, Select } from 'antd';
 const { Option } = Select
 
-export default class newOrder extends Component{
+export default class newOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,12 +15,10 @@ export default class newOrder extends Component{
              adddata:[],
              big:1,
              small:1,
-             
-         
         };
     }
 
-     add =()=>{
+    add = () => {
         axios({
             method: 'GET',
             url: 'http://119.23.228.238:3031/mock/47/goodsde',
@@ -33,13 +31,17 @@ export default class newOrder extends Component{
             .catch(err => {
                 console.log(err);
             })
-     }
+    }
+    componentWillUnmount(){
+        
+    }
 
-     count(a){
+
+    count(a) {
         this.setState({
-            big:a-1
+            big: a - 1
         })
-     }
+    }
 
     componentDidMount() {
         axios({
@@ -48,15 +50,24 @@ export default class newOrder extends Component{
         })
             .then(res => {
                 this.setState({
-                    queryorder: res.data
+                    queryorder: res.data,
                 })
             })
             .catch(err => {
                 console.log(err);
             })
     }
-
     
+
+    addcount =(arr,i)=>{
+        console.log(i,'iiii')
+        const adddata =this.state.adddata
+        console.log(arr,'0000000000')
+        this.setState({
+             adddata:adddata.map((item,index) =>(index === i ?  item.smcount +=1 : item) )
+        })
+        
+    }
     setvalue = (value) => {
         console.log(value)
     }
@@ -64,11 +75,14 @@ export default class newOrder extends Component{
            const { adddata } = this.state
            for (let i = 0; i < adddata.length; i++) {
             adddata[i].key = i
-           }
-            for (let i = 0; i < adddata.length; i++) {
-               adddata[i].count= 1
-           }
-           console.log(adddata,'123123123')
+        }
+        for (let i = 0; i < adddata.length; i++) {
+            adddata[i].smcount = 1
+        }
+        for (let i = 0; i < adddata.length; i++) {
+            adddata[i].bgcount = 1
+        }
+        console.log(adddata, '123123123')
         const columns = [
             {
                 title: '商品名称',
@@ -94,18 +108,17 @@ export default class newOrder extends Component{
                 title: '现有库存',
                 dataIndex: 'stock',
             },
-        
+
             {
                 title: '操作',
-                dataIndex: 'axios',
-                render: () => (
+                render: (record,index) => (
                     <span>
                         <a>delete</a>
                         <div onClick={this.add}>add</div>
                     </span>
                 )
             },
-        
+
         ];
         const goodscolumns = [
             {
@@ -118,8 +131,15 @@ export default class newOrder extends Component{
             },
             {
                 title: '数量',
-                dataIndex: 'count',
-                 
+                render: (record, index,text) => {
+                    console.log('我就是'+adddata[text])
+                    return <div>
+                        <span>-</span>
+                        <span>{record.bgcount}</span>
+                        <span >+</span>
+                    </div>
+                }
+
             },
             {
                 title: '小单位/单价',
@@ -127,26 +147,26 @@ export default class newOrder extends Component{
             },
             {
                 title: '数量',
-                render: (index) => (
-                         <div>
-                             <span>-</span>
-                             <span>{adddata[0].count}</span>
-                             <span onClick={this.add.bind(this,index)}>+</span>
-                             
-                         </div>
-
-                )
-
+                render: (text,record,index) => {
+                    
+                    return <div>
+                        <span>-</span>
+                        <span>{record.smcount}</span>
+                        <span onClick={() => this.addcount(record,index)}>+</span>
+                    </div>
+                }
             },
             {
                 title: '金额',
-                dataIndex: 'bigUnt *  this.state.big + smallPrice * this.state.small' 
+                render :(text,record,index) => {
+                return <span>{record.smcount * record.smallPrice + record.bgcount * record.bigUnt}</span>
+                }
             },
             {
                 title: '现有库存',
                 dataIndex: 'stock',
             },
-        
+
             {
                 title: '操作',
                 render: () => (
@@ -155,23 +175,24 @@ export default class newOrder extends Component{
                     </span>
                 )
             },
-        
+
         ];
-         
-        
-       return(
+
+
+
+        return (
             <div>
-                <div className = "top">
+                <div className="top">
                     <div className="top-title">新增订单</div>
                 </div>
 
-                  {/*  基本信息 */}
-                <div className = "quire">
-                    <div className = "quire-title">
+                {/*  基本信息 */}
+                <div className="quire">
+                    <div className="quire-title">
                         <p >基本信息</p>
                     </div>
-                      <div className="condition2 flex-row">
-                         <div className="bianju">
+                    <div className="condition2 flex-row">
+                        <div className="bianju">
                             <label >订单类型：</label><span>普通订单</span>
                          </div>
                          <div className="bianju2" >
@@ -217,16 +238,16 @@ export default class newOrder extends Component{
                                 <Option value="仿销">车2</Option>
                             </Select>
                         </div>
-                      </div>
+                    </div>
                 </div>
 
-                 {/*  选择商品 */}
-                 <div className="quire3">
-                    <div className = "quire-title">
+                {/*  选择商品 */}
+                <div className="quire3">
+                    <div className="quire-title">
                         <p >选择商品</p>
                     </div>
                     <div className="condition3 flex-row">
-                       <div className="bianju ">
+                        <div className="bianju ">
                             <label >选择品牌：</label>
                             <select className="xiaoshou">
                                 <option value="全部">请选择</option>
@@ -244,37 +265,37 @@ export default class newOrder extends Component{
                         </div>
                         <div className="bianju ">
                             <label >商品标题：</label>
-                             <input ></input>
+                            <input ></input>
                         </div>
-                        <Radio.Button style={{marginLeft:'12px'}}  type="button" value="large">搜索</Radio.Button>
+                        <Radio.Button style={{ marginLeft: '12px' }} type="button" value="large">搜索</Radio.Button>
                     </div>
 
 
-                     {/* 搜索结果 */}
-                  
+                    {/* 搜索结果 */}
+
                     <div className="quire2">
-                        <div className = "quire-title">
-                            <p >搜索结果</p>
+                        <div className="quire-title">
+                            <p>搜索结果</p>
                         </div>
                         <Table columns={columns} dataSource={this.state.queryorder} />
                     </div>
 
-                 </div>
-                
+                </div>
+
 
                 {/* 商品明细 */}
-                  <div className = "quire">
-                  <div className = "quire-title">
+                <div className="quire">
+                    <div className="quire-title">
                         <p >商品明细</p>
                     </div>
                     <Table columns={goodscolumns} dataSource={this.state.adddata} />
-                  </div>
+                </div>
 
 
 
             </div>
         )
-     }
+    }
 
 }
 

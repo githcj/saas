@@ -1,0 +1,16 @@
+.comclass,.cominfo{
+    background: #f6f7f9;
+}
+.comclass-table{
+    width: 85%;
+    margin: 20px auto;
+    border: 1px solid #e4e4e4;
+}
+.comclass-table-top{
+    background: #f3f3f3;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 25px;
+}
