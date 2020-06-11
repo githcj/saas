@@ -270,7 +270,6 @@ export default class purchaseApply extends Component{
                         </div>
                     </div>
                 </section>
-
                 <section className="goodsDetail">
                     <div className="detail-title">
                         <p>商品明细</p>
