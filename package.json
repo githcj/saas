@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "less": "^3.11.3",
-    "less-loader": "^6.1.0"
+    "less-loader": "^6.1.0",
+    "node-less-chokidar": "^0.4.1"
   }
 }

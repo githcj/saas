@@ -1,14 +1,17 @@
-import React,{component} from 'react'
+import React,{Component} from 'react'
 import { Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
+  
   reader.readAsDataURL(img);
 }
 
 function beforeUpload(file) {
+    
+    console.log(file,'file');
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
   if (!isJpgOrPng) {
     message.error('只能上传 JPG/PNG 文件!');
@@ -20,7 +23,7 @@ function beforeUpload(file) {
   return isJpgOrPng && isLt50KB;
 }
 
-class WXUpLoad extends React.Component {
+class WXUpLoad extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -39,8 +42,10 @@ class WXUpLoad extends React.Component {
             this.setState({
                 imageUrl,
                 loading: false,
-            }),
-            );
+            }),) 
+            message.success(`${info.file.name} 上传成功`);
+        }else if (info.file.status === 'error') {
+            message.error(`${info.file.name} 上传失败`);
         }
     };
 
@@ -68,8 +73,5 @@ class WXUpLoad extends React.Component {
         );
     }
 }
-
-// ReactDOM.render(<WXUpLoad />, mountNode);
-
 
 export default WXUpLoad

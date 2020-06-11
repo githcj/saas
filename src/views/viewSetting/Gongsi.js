@@ -3,9 +3,7 @@ import { Form, Input, Tooltip, Button, InputNumber } from 'antd';
 import ConTitle from '../../components/ConTitle'
 import WXUpLoad from '../../components/WXUpLoad'
 import CompanyImgs from '../../components/CompanyImgs'
-import {
-    EnvironmentOutlined
-} from '@ant-design/icons';
+import { EnvironmentOutlined } from '@ant-design/icons';
 import '../../assets/css/viewSetting/Gongsi.css'
 
 const Gongsi = (props)=> {
@@ -21,16 +19,14 @@ const Gongsi = (props)=> {
     };
 
       
-    const Demo = () => {
-        const onFinish = values => {
-            console.log(values);
-        };
-    }
+    const onFinish = values => {
+        console.log('Success:', values);
+    };
 
-    const onFinish = () => {
+    const onFinishFailed = errorInfo => {
+        console.log('Failed:', errorInfo);
+    };
 
-    }
-        
       
     return (
         <div className="gongsi">
@@ -38,9 +34,9 @@ const Gongsi = (props)=> {
                 <ConTitle titleName='公司信息'/>
             </div>
             <div className='company-content'>
-                <Form {...layout} name="nest-messages" onFinish={onFinish} size="large">
+                <Form {...layout} name="nest-messages" onFinish={onFinish} onFinishFailed={onFinishFailed} size="large">
                     <Form.Item
-                        // name={['company', 'name']}
+                        name={'name'}
                         label="公司名称"
                         rules={[
                         {
@@ -52,7 +48,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'address']}
+                        name={'address'}
                         label="公司地址"
                         rules={[
                         {
@@ -70,7 +66,7 @@ const Gongsi = (props)=> {
                         />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'staffNum']}
+                        name={'staffNum'}
                         label="员工数"
                         rules={[
                         {
@@ -82,7 +78,7 @@ const Gongsi = (props)=> {
                         <InputNumber min={1} />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'charge']}
+                        name={'charge'}
                         label="负责人"
                         rules={[
                         {
@@ -94,7 +90,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'IDCard']}
+                        name={'IDCard'}
                         label="身份证号"
                         rules={[
                         {
@@ -109,7 +105,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'phoneNum']}
+                        name={'phoneNum'}
                         label="联系电话"
                         rules={[
                         {
@@ -123,7 +119,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'email']}
+                        name={'email'}
                         label="邮箱"
                         rules={[
                         {
@@ -138,7 +134,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'wx']}
+                        name={'wx'}
                         label="微信"
                         rules={[
                         {
@@ -150,7 +146,7 @@ const Gongsi = (props)=> {
                         <WXUpLoad notify='点击上传二维码' />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'logo']}
+                        name={'logo'}
                         label="公司Logo"
                         rules={[
                         {
@@ -162,19 +158,19 @@ const Gongsi = (props)=> {
                         <WXUpLoad notify='点击上传logo' />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'instr']}
+                        name={'instr'}
                         label="备注"
                     >
                         <TextArea rows={4} />
                     </Form.Item>
                     <Form.Item
-                        // name={['company', 'companyImgs']}
+                        name={'companyImgs'}
                         label="公司宣传图册"
                     >
-                        {/* <CompanyImgs /> */}
+                        <CompanyImgs />
                     </Form.Item>
                     <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" >
                         提交
                         </Button>
                     </Form.Item>

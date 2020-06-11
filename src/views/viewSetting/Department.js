@@ -50,8 +50,9 @@ export default class Department extends Component{
         })
     }
 
-    handleChange = () =>{
-
+    handleChange = (value) =>{
+        console.log(value);
+        
     }
     render(){
         return (
@@ -69,8 +70,8 @@ export default class Department extends Component{
                     <div className="purchase-table-se2">
                         <div className="addDiv">添加</div>
                         <Select defaultValue="显示条数" style={{ width: 120 }} onChange={this.handleChange}>
-                            <Option value="15">10条/页</Option>
-                            <Option value="20">15条/页</Option>
+                            <Option value="10">10条/页</Option>
+                            <Option value="15">15条/页</Option>
                         </Select>
                         <Select defaultValue="排序方式" className="seen" style={{ width: 120 }} onChange={this.handleChange}>
                             <Option value="15">编号递增</Option>
@@ -86,6 +87,9 @@ export default class Department extends Component{
                     bordered
                     rowKey={this.state.departList.dep_id}
                     />
+                </div>
+                <div className='test'>
+                    <div className='ch'>hh</div>
                 </div>
             </div>
         )
