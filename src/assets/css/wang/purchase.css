@@ -184,8 +184,16 @@
     padding-left: 15px;
     padding-top: 15px;
 }
-.detail-middle-se1p{
+.detail-middle-se1-div{
     margin-left: 15px;
+}
+.detail-middle-se1p{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.detail-middle-se1p>div{
+    margin-left: 35px;
 }
 .detail-middle-se1T{
     width: 85%;
@@ -198,4 +206,12 @@
     height:60px;
     align-items: center;
 }
-
+.detail-middle-se1-new{
+    display: flex;
+    justify-content: space-evenly;
+    width: 900px;
+}
+.caozuoP>a{
+    margin: 0 5px;
+    color: #1ABC9C;
+}
