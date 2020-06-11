@@ -9,7 +9,7 @@ import {
   Select,
 } from "antd";
 import { SyncOutlined, UnorderedListOutlined } from "@ant-design/icons";
-import "../../assets/css/viewStock/stockout.css";
+import "../../assets/css/viewStock/stock.css";
 import { Link } from "react-router-dom";
 import Delete from "../../components/Delete";
 import Edit from "../../components/Edit";
