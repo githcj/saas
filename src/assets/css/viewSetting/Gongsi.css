@@ -1,0 +1,11 @@
+.gongsi-firtop {
+    background-color: rgb(243, 243, 243);
+}
+
+.company-content {
+    padding-top: 50px;
+}
+
+.ant-upload-list-picture-card-container:first-child {
+    display: none;
+}

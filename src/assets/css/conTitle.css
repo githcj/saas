@@ -1,0 +1,37 @@
+.conTile {
+    width: 80%;
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    color: black;
+}
+
+p {
+    margin: 0;
+}
+
+.conTitle-top-left {
+    display: flex;
+}
+
+.conTitle-top-leftmark {
+    width: 5px;
+    height: 22px;
+    background-color: #1ABC9C;
+}
+
+.conTitle-top-right {
+    display: flex;
+    align-items: center;
+    padding: 5px 8px;
+    cursor: pointer;
+    border: 1px solid rgb(207, 206, 206);
+    background-color: #FFF;
+}
+
+.conTitle-top-word {
+    margin-left: 10px;
+}
+
