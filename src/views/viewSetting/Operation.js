@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Table, DatePicker, Select } from 'antd'
 import { SyncOutlined, SearchOutlined, DownOutlined, UpOutlined, UnorderedListOutlined } from '@ant-design/icons'
-import '../../assets/css/viewStock/stockout.css'
+import '../../assets/css/viewStock/stock.css'
 
 const columns = [
     {

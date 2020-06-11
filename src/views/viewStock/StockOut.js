@@ -1,75 +1,106 @@
 import React, { Component } from 'react'
 import { Table, DatePicker, Select } from 'antd'
 import { SyncOutlined, SearchOutlined, DownOutlined, UpOutlined, UnorderedListOutlined } from '@ant-design/icons'
-import '../../assets/css/viewStock/stockout.css'
-
-const columns = [
-    {
-        title: '编号',
-        dataIndex: 'id',
-    },
-    {
-        title: '创建日期',
-        dataIndex: 'bulidDate',
-    },
-    {
-        title: '出库仓库',
-        dataIndex: 'store',
-    },
-    {
-        title:'业务员',
-        dataIndex:'salesMan'
-    },
-    {
-        title:'总金额',
-        dataIndex:'total'
-    },
-    {
-        title:'出库时间',
-        dataIndex:'deliveryTime'
-    },
-    {
-        title:'发起人',
-        dataIndex:'initiator'
-    },
-    {
-        title:'审批人',
-        dataIndex:'approver'
-    },
-    {
-        title:'状态',
-        dataIndex:'state'
-    },
-    {
-        title:'审批操作',
-        dataIndex:'approveState'
-    }
-];
-
-const data = [];
-for (let i = 0; i < 46; i++) {
-    data.push({
-        key: i,
-        id: i,
-        bulidDate: '2020-01-03',
-        store: 'A',
-        salesMan:'A',
-        total:'9999',
-        deliveryTime:'2020-06-06',
-        initiator:"A",
-        approver:'B',
-        state:'待审批',
-        approveState:'审批'
-    });
-}
-const { Option } = Select;
-
+import '../../assets/css/viewStock/stock.css'
+import { Link } from 'react-router-dom'
 
 export default class StockOut extends Component {
     constructor(props) {
         super(props)
     }
     render() {
+        const columns = [
+            {
+                title: '编号',
+                dataIndex: 'id',
+            },
+            {
+                title: '创建日期',
+                dataIndex: 'bulidDate',
+            },
+            {
+                title: '出库仓库',
+                dataIndex: 'store',
+            },
+            {
+                title:'业务员',
+                dataIndex:'salesMan'
+            },
+            {
+                title:'总金额',
+                dataIndex:'total'
+            },
+            {
+                title:'出库时间',
+                dataIndex:'deliveryTime'
+            },
+            {
+                title:'发起人',
+                dataIndex:'initiator'
+            },
+            {
+                title:'审批人',
+                dataIndex:'approver'
+            },
+            {
+                title:'状态',
+                dataIndex:'state'
+            },
+            {
+                title:'审批操作',
+                dataIndex:'approveState', 
+                render: (text, record, index)=> {
+                    if(record.state === '待审批') {
+                        return <span>审批</span>
+                    } else if(record.state === '已入库') {
+                        return null
+                    }
+                }
+            },{
+                title:'操作',
+                dataIndex:'handle',
+                render:(text,record,index) => {
+                    if(record.state === '待审批'){
+                        return (
+                            <p 
+                            style={{
+                                display:'flex',
+                                justifyContent:'space-evenly'
+                            }}>
+                                <span 
+                                style={{
+                                    color:'lightgreen'
+                                }}>编辑</span>
+                                <span>
+                                    <Link to={this.props.msg + '/stockoutfail'}>预览</Link>
+                                </span>
+                                <span
+                                style={{
+                                    color:'lightpink'
+                                }}>删除</span>
+                            </p>
+                        )
+                    }else if(record.state === '已通过'){
+                        return (
+                            <p
+                            style={{
+                                display:'flex',
+                                justifyContent:'space-evenly'
+                            }}>
+                                <span>
+                                    <Link to={this.props.msg + '/stockoutpass'}>预览</Link>
+                                </span>
+                                <span
+                                style={{
+                                    color:'lightpink'
+                                }}>删除</span>
+                            </p>
+                        )
+                    }
+                }
+            }
+        ]
+        const {RangePicker} = DatePicker
         return (
             <div className="stockOut">
                 <header>
@@ -103,7 +134,9 @@ export default class StockOut extends Component {
                     <div className="search">
                         <div>
                             出库日期：
-                            <DatePicker style={{ width: 160 }}/>
+                            <RangePicker
+                            format='YYYY-MM-DD HH:mm'
+                            />
                         </div>
                         <div>
                             出库仓库：
@@ -169,3 +202,22 @@ export default class StockOut extends Component {
         )
     }
 }
+
+
+const data = [];
+for (let i = 0; i < 46; i++) {
+    data.push({
+        key: i,
+        id: i,
+        bulidDate: '2020-01-03',
+        store: 'A',
+        salesMan:'A',
+        total:'9999',
+        deliveryTime:'2020-06-06',
+        initiator:"A",
+        approver:'B',
+        state:Math.random() > 0.5 ? '待审批' : '已通过',
+        approveState:''
+    });
+}
+const { Option } = Select;
