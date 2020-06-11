@@ -4,9 +4,12 @@ import StockIn from '../viewStock/StockIn'
 import StockOut from '../viewStock/StockOut'
 import AddStockIn from '../viewStock/AddStockIn'
 import AddStockOut from '../viewStock/AddStockOut'
-import '../../assets/css/viewStock/stock.css'
+import '../../assets/css/viewStock/kucun.css'
 import { Menu, Col, Row } from 'antd';
 import StockInFail from '../viewStock/StockInFail'
+import StockOutFail from '../viewStock/StockOutFail'
+import StockInPass from '../viewStock/StockInPass'
+import StockOutPass from '../viewStock/StockOutPass'
 
 const Stock = (props) => {
     const { match } = props
@@ -37,11 +40,14 @@ const Stock = (props) => {
             </Col>
             <Col  span={20}>
             <div className="stockContent">
-                <Route path={match.url + '/stockout'}><StockOut /></Route>
+                <Route path={match.url + '/stockout'}><StockOut msg={match.url}/></Route>
                 <Route path={match.url + '/addstockout'}><AddStockOut /></Route>
-                <Route path={match.url + '/stockin'}><StockIn  msg={match.url}/></Route>
+                <Route path={match.url + '/stockin'}><StockIn msg={match.url}/></Route>
                 <Route path={match.url + '/addstockin'}><AddStockIn /></Route>
                 <Route path={match.url + '/stockinfail'}><StockInFail/></Route>
+                <Route path={match.url + '/stockoutfail'}><StockOutFail/></Route>
+                <Route path={match.url + '/stockinpass'}><StockInPass/></Route>
+                <Route path={match.url + '/stockoutpass'}><StockOutPass/></Route>
                 <Redirect exact to={match.url + '/stockout'} />
             </div>
             </Col>

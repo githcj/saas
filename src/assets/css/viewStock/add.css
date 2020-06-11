@@ -129,12 +129,12 @@
 }
 
 .addstockOut footer{
-    width: 80%;
-    margin: 20px auto;
+    width: 85%;
+    margin: 20px auto 0;
 }
 .addstockIn footer{
-    width: 80%;
-    margin: 20px auto;
+    width: 85%;
+    margin: 20px auto 0;
 }
 
 footer .payInfo{
