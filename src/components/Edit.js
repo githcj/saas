@@ -53,7 +53,7 @@ export default class Edit extends Component {
   render() {
     const { visible, confirmLoading } = this.state;
     return (
-      <div>
+      <div style={{display:'inline-block'}} className='edit'>
         <a onClick={this.showModal}>编辑</a>
         <Modal
           title="职位编辑"

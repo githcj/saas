@@ -29,7 +29,7 @@ import {
             message.error("Click on No");
           }
         return(
-            <div>
+            <div style={{display:'inline-block'}} className='delete'>
             <Popconfirm
               title="您确定要删除这条数据吗"
               onConfirm={confirm}
