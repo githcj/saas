@@ -4,6 +4,7 @@ import axios from "axios";
 
 let config = {
     baseURL: "http://119.23.228.238:3031/mock/47",
+    // baseURL:'http://172.16.6.30:8080',
     timeout: 60*1000, // Timeout
 };
 
@@ -44,7 +45,7 @@ _axios.interceptors.response.use(
         return response;
     },
     function(error) {
-		console.log(error.response.status,'??')
+		console.log(error,'??')
         if (error.response.status === 401) {
             // 401 说明 token 验证失败
             // 可以直接跳转到登录页面，重新登录获取 token

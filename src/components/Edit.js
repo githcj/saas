@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import {
   Modal,
-  Popconfirm,
   message,
-  Switch,
-  Table,
-  DatePicker,
-  Select,
   Input,
 } from "antd";
 const { TextArea } = Input;

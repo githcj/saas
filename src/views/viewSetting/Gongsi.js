@@ -1,8 +1,9 @@
 import React from 'react'
-import { Form, Input, Tooltip, Button, InputNumber } from 'antd';
+import { Form, Input, Tooltip, Button, InputNumber, message } from 'antd';
 import ConTitle from '../../components/ConTitle'
 import WXUpLoad from '../../components/WXUpLoad'
 import CompanyImgs from '../../components/CompanyImgs'
+import axios from '../../plugins/axios'
 import { EnvironmentOutlined } from '@ant-design/icons';
 import '../../assets/css/viewSetting/Gongsi.css'
 
@@ -19,8 +20,12 @@ const Gongsi = (props)=> {
     };
 
       
-    const onFinish = values => {
+    const onFinish = async values => {
         console.log('Success:', values);
+        const {data}  = await axios.post('/setCompany',values)
+        const {data:res} = data
+        if(res.code !== 200) return message.error(res.message)
+        message.success(res.message)
     };
 
     const onFinishFailed = errorInfo => {
@@ -36,7 +41,7 @@ const Gongsi = (props)=> {
             <div className='company-content'>
                 <Form {...layout} name="nest-messages" onFinish={onFinish} onFinishFailed={onFinishFailed} size="large">
                     <Form.Item
-                        name={'name'}
+                        name={'com_name'}
                         label="公司名称"
                         rules={[
                         {
@@ -48,7 +53,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={'address'}
+                        name={'com_addr'}
                         label="公司地址"
                         rules={[
                         {
@@ -65,8 +70,8 @@ const Gongsi = (props)=> {
                             }
                         />
                     </Form.Item>
-                    <Form.Item
-                        name={'staffNum'}
+                    {/* <Form.Item
+                        name={''}
                         label="员工数"
                         rules={[
                         {
@@ -76,9 +81,9 @@ const Gongsi = (props)=> {
                         ]}
                     >
                         <InputNumber min={1} />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item
-                        name={'charge'}
+                        name={'emp_name'}
                         label="负责人"
                         rules={[
                         {
@@ -90,7 +95,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={'IDCard'}
+                        name={'emp_cardid'}
                         label="身份证号"
                         rules={[
                         {
@@ -105,7 +110,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={'phoneNum'}
+                        name={'emp_phone'}
                         label="联系电话"
                         rules={[
                         {
@@ -119,7 +124,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={'email'}
+                        name={'com_email'}
                         label="邮箱"
                         rules={[
                         {
@@ -133,7 +138,7 @@ const Gongsi = (props)=> {
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item
+                    {/* <Form.Item
                         name={'wx'}
                         label="微信"
                         rules={[
@@ -168,7 +173,7 @@ const Gongsi = (props)=> {
                         label="公司宣传图册"
                     >
                         <CompanyImgs />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                         <Button type="primary" htmlType="submit" >
                         提交
