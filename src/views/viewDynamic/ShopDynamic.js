@@ -6,7 +6,7 @@ import {
     UnorderedListOutlined
   } from '@ant-design/icons'
 import { Table, Select } from 'antd'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 
 class ShopDynamic extends React.Component {
     constructor(props){
@@ -19,12 +19,13 @@ class ShopDynamic extends React.Component {
     //组件挂载完毕加载
     componentWillMount() {
         axios({
-            method:'GET',
-            url:'http://119.23.228.238:3031/mock/47/shopdynamic'
+            method:'POST',
+            url:'http://172.16.6.27:8080/sales_trends/store_queryall'
         })
         .then(res => {
+            console.log(res)
             this.setState({
-                data:res.data
+                data:res.data.data
             })
         })
         .catch(err => {
@@ -82,39 +83,33 @@ class ShopDynamic extends React.Component {
         const columns = [
             {
                 title: '序号',
-                dataIndex: 'serialNum',
-                key: 'serialNum',
+                dataIndex: 'store_id',
+                key: 'store_id',
             },
             {
                 title: '门店名称',
-                dataIndex: 'shopname',
-                key: 'shopname',
+                dataIndex: 'store_name',
+                key: 'store_name',
             },
             {
                 title: '地址',
-                dataIndex: 'address',
-                key: 'address',
+                dataIndex: 'store_address',
+                key: 'store_address',
             },
             {
                 title: '销售额',
-                dataIndex: 'sales',
-                key: 'sales',
+                dataIndex: 'store_sales',
+                key: 'store_sales',
             },
             {
                 title: '退货额',
-                dataIndex: 'returnmoney',
-                key: 'returnmoney',
+                dataIndex: 'store_return_amount',
+                key: 'store_return_amount',
             },
         ];
         //给表格数据添加 key 值
         for(let i = 0; i < data.length; i++){
             data[i].key = i
-        }
-        //排序方式改变
-        function sortChange (value) {
-            if(value === 'saleLowHight') {
-                console.log(columns[2])
-            }
         }
 
         return (

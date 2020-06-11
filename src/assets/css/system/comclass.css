@@ -14,3 +14,66 @@
     justify-content: space-between;
     padding-right: 25px;
 }
+/* 商品信息样式 */
+.filter-item{
+    width: 25%;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+}
+.purchase-result:hover{
+    background: #f2f2f2;
+    cursor:pointer;
+}
+.ant-btn-primary{
+    background: #1ABC9C;
+}
+.ant-btn-primary:hover{
+    background: #64BC9C;
+}
+.ant-modal-body{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+.modal-item{
+    width: 60%;
+    margin:20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.comclass-right-title{
+    display: flex;
+    justify-content: space-evenly;
+}
+.comclass-right-title>div{
+    margin: 0 10px;
+}
+.tianjiagoods{
+    background: #169BD5;
+    color: white;
+}
+.daoDiv{
+    background: white;
+    color: black;
+}
+.addDiv:hover{
+    background: #f2f2f2;
+}
+.allGoodsBtn{
+    height: 50px;
+    width: 85%;
+    margin: 20px auto 0;
+    display: flex;
+    align-items: center;
+}
+.allBtn{
+    height: 30px;
+    width: 100px;
+    border: 1px solid #e4e4e4;
+    text-align: center;
+    line-height: 30px;
+    margin-right: 20px ;
+    background: white;
+}

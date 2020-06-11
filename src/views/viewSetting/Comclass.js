@@ -6,7 +6,7 @@ import {
     SyncOutlined,
     UnorderedListOutlined,
 } from '@ant-design/icons'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 
 const columns = [
     {
@@ -60,7 +60,7 @@ class Comclass extends React.Component {
 	componentWillMount () {
         axios({
             method:'POST',
-			url:'http://119.23.228.238:3031/mock/47/goodsLevel',
+			url:'/goodsLevel',
 			data:{
 				level:this.state.level
 			}

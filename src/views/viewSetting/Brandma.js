@@ -10,7 +10,7 @@ import {
     UpOutlined,
     UnorderedListOutlined,
 } from '@ant-design/icons'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 
 const columns = [
     {
@@ -64,7 +64,7 @@ class Brandma extends React.Component {
     componentWillMount () {
         axios({
             method:'GET',
-            url:'http://119.23.228.238:3031/mock/47/brandma'
+            url:'/brandma'
         })
         .then(res => {
             this.setState({
