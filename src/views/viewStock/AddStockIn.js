@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import '../../assets/css/viewStock/add.css'
 import { Select,Table } from 'antd'
 
-
-
-
 const { Option } = Select;
 export default class AddStockIn extends Component{
     constructor(props){
@@ -198,7 +195,7 @@ export default class AddStockIn extends Component{
                         </div>
                     </div>
                 </section>
-
+                {/* 所有库存 */}
                 <section>
                     <div className="addstock-info-title">
                         <p>选择商品</p>
@@ -239,14 +236,14 @@ export default class AddStockIn extends Component{
                         </div>
                     </div>
                 </section>
-
+                {/* 添加的商品 */}
                 <section className="goodsDetail">
                     <div className="detail-title">
                         <p>商品明细</p>
                     </div>
                     <Table
                         style={{width:'100%'}}
-                        dataSource={detailData}
+                        // dataSource={detailData}
                         columns={detail}
                         bordered />
                         <div className="total">

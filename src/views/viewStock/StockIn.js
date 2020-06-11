@@ -1,12 +1,30 @@
 import React, { Component } from 'react'
 import { Table, DatePicker, Select } from 'antd'
 import { SyncOutlined, SearchOutlined, DownOutlined, UpOutlined, UnorderedListOutlined } from '@ant-design/icons'
-import '../../assets/css/viewStock/stockout.css'
+import '../../assets/css/viewStock/stock.css'
 import { Link } from 'react-router-dom'
 
 export default class StockIn extends Component{
     constructor(props){
         super(props)
+        this.state = {
+            pagesize:10
+        }
+    }
+    pagesizeChange = (value) => {
+        if(value === '10'){
+            this.setState({
+                pagesize:10
+            })
+        }else if(value === '20'){
+            this.setState({
+                pagesize:20
+            })
+        }else if(value === '30'){
+            this.setState({
+                pagesize:30
+            })
+        }
     }
     render(){
         const columns = [
@@ -48,16 +66,55 @@ export default class StockIn extends Component{
             },
             {
                 title:'审批操作',
-                dataIndex:'approveState'
+                dataIndex:'approveState', 
+                render: (text, record, index)=> {
+                    if(record.state === '待审批') {
+                        return <span>审批</span>
+                    } else if(record.state === '已入库') {
+                        return null
+                    }
+                }
             },{
                 title:'操作',
                 dataIndex:'handle',
-                render:() => {
-                    return(
-                        <span>
-                            <Link to={this.props.msg + '/stockinfail'}>预览</Link>
-                        </span>
-                    )
+                render:(text,record,index) => {
+                    if(record.state === '待审批'){
+                        return (
+                            <p 
+                            style={{
+                                display:'flex',
+                                justifyContent:'space-evenly'
+                            }}>
+                                <span 
+                                style={{
+                                    color:'lightgreen'
+                                }}>编辑</span>
+                                <span>
+                                    <Link to={this.props.msg + '/stockinfail'}>预览</Link>
+                                </span>
+                                <span
+                                style={{
+                                    color:'lightpink'
+                                }}>删除</span>
+                            </p>
+                        )
+                    }else if(record.state === '已通过'){
+                        return (
+                            <p
+                            style={{
+                                display:'flex',
+                                justifyContent:'space-evenly'
+                            }}>
+                                <span>
+                                    <Link to={this.props.msg + '/stockinpass'}>预览</Link>
+                                </span>
+                                <span
+                                style={{
+                                    color:'lightpink'
+                                }}>删除</span>
+                            </p>
+                        )
+                    }
                 }
             }
         ];
@@ -139,10 +196,11 @@ export default class StockIn extends Component{
                             <Select
                                 defaultValue="显示条数"
                                 style={{ width: 100 }}
-                                className="select">
-                                <Option value="1">1</Option>
-                                <Option value="2">2</Option>
-                                <Option value="3">3</Option>
+                                className="select"
+                                onChange={this.pagesizeChange}>
+                                <Option value="10">10</Option>
+                                <Option value="20">20</Option>
+                                <Option value="30">30</Option>
                             </Select>
                             <Select
                                 defaultValue="排序方式"
@@ -158,7 +216,16 @@ export default class StockIn extends Component{
                         rowSelection={{ type: 'Checkbox' }}
                         dataSource={data}
                         columns={columns}
-                        bordered />
+                        bordered
+                        pagination={{
+                            pageSize:this.state.pagesize,
+                            showQuickJumper:true,
+                            showTotal:(total) => {
+                                return (
+                                    <p>共有{Math.ceil(total / this.state.pagesize)}页/{total}条数据</p>
+                                )
+                            },
+                        }} />
                 </div>
             </div>
         )
@@ -167,7 +234,7 @@ export default class StockIn extends Component{
 
 
 const data = [];
-for (let i = 0; i < 46; i++) {
+for (let i = 0; i < 20; i++) {
     data.push({
         key: i,
         id: i,
@@ -178,8 +245,8 @@ for (let i = 0; i < 46; i++) {
         deliveryTime:'2020-06-06',
         initiator:"A",
         approver:'B',
-        state:'待审批',
-        approveState:'审批'
+        state:Math.random() > 0.5 ? '待审批' : '已通过',
+        approveState:''
     });
 }
 const { Option } = Select;

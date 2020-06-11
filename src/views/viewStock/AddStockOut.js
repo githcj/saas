@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import '../../assets/css/viewStock/add.css'
 import { Select,Table } from 'antd'
 
-
-
-
 const { Option } = Select;
 export default class AddStockOut extends Component{
     constructor(props){
@@ -221,7 +218,7 @@ export default class AddStockOut extends Component{
                         </div>
                     </div>
                 </section>
-
+                
                 <section>
                     <div className="addstock-info-title">
                         <p>选择商品</p>
