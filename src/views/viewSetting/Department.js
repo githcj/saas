@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Select } from 'antd'
-import ConTitle from '../../components/ConTitle'
+// import ConTitle from '../../components/ConTitle'
 import { UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewSetting/Department.css'
 
@@ -60,7 +60,7 @@ export default class Department extends Component{
             <div className="stockOut">
                 <header>
                     <div className="stockout-top">
-                        <ConTitle titleName='部门管理' />
+                        {/* <ConTitle titleName='部门管理' /> */}
                     </div>
                 </header>
                 <div className='dynamic-dataList'>

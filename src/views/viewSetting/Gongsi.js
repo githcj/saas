@@ -1,8 +1,8 @@
 import React from 'react'
 import { Form, Input, Tooltip, Button, InputNumber } from 'antd';
-import ConTitle from '../../components/ConTitle'
-import WXUpLoad from '../../components/WXUpLoad'
-import CompanyImgs from '../../components/CompanyImgs'
+// import ConTitle from '../../components/ConTitle'
+// import WXUpLoad from '../../components/WXUpLoad'
+// import CompanyImgs from '../../components/CompanyImgs'
 import {
     EnvironmentOutlined
 } from '@ant-design/icons';
@@ -35,7 +35,7 @@ const Gongsi = (props)=> {
     return (
         <div className="gongsi">
             <div className='gongsi-firtop'>
-                <ConTitle titleName='????'/>
+                {/* <ConTitle titleName='????'/> */}
             </div>
             <div className='company-content'>
                 <Form {...layout} name="nest-messages" onFinish={onFinish} size="large">
@@ -147,7 +147,7 @@ const Gongsi = (props)=> {
                         }
                         ]}
                     >
-                        <WXUpLoad notify='???????' />
+                        {/* <WXUpLoad notify='???????' /> */}
                     </Form.Item>
                     <Form.Item
                         name={['company', 'logo']}
@@ -159,7 +159,7 @@ const Gongsi = (props)=> {
                         }
                         ]}
                     >
-                        <WXUpLoad notify='??logo??' />
+                        {/* <WXUpLoad notify='??logo??' /> */}
                     </Form.Item>
                     <Form.Item
                         name={['company', 'instr']}
@@ -171,7 +171,7 @@ const Gongsi = (props)=> {
                         name={['company', 'companyImgs']}
                         label="?????"
                     >
-                        <CompanyImgs />
+                        {/* <CompanyImgs /> */}
                     </Form.Item>
                     <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                         <Button type="primary" htmlType="submit">
