@@ -2,6 +2,7 @@
     height:100px;
     justify-content: start;
     flex-wrap: wrap;
+    border:1px solid #eee;
 }
 .condition3{
     height:auto;
@@ -10,7 +11,11 @@
     flex-wrap: wrap;
 }
 .bianju{
+    margin-left:30px; 
+}
+.bianju3{
     margin-left:30px;
+    width:200px; 
 }
 .bianju2{
     margin-left:94px;

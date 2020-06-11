@@ -3,9 +3,11 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import axios from 'axios'
 import '../../assets/css/sales/order.css'
-import { Table, Button } from 'antd';
+import { Table, Button,Select } from 'antd';
 import { Route, NavLink } from 'react-router-dom'
 import {yulanAction} from '../../store/order/orderActions'
+const { Option } = Select
+
 
 export default class Order extends Component {
     constructor(props) {
@@ -52,18 +54,17 @@ export default class Order extends Component {
     };
     render() {
         const { orderList, selectedRowKeys } = this.state;
-        const { yulan} =this.props
+        const {msg} =this.props
        
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const hasSelected = selectedRowKeys.length > 0;
+        // const hasSelected = selectedRowKeys.length > 0;
 
         for (let i = 0; i < orderList.length; i++) {
             orderList[i].key = i
         }
-
         const columns = [
             {
                 title: '编号',
@@ -71,39 +72,39 @@ export default class Order extends Component {
             },
             {
                 title: '销售类型',
-                dataIndex: 'age',
+                dataIndex: 'sales',
             },
             {
                 title: '金额合计',
-                dataIndex: 'age',
+                dataIndex: 'jine',
             },
             {
                 title: '创建日期',
-                dataIndex: 'age',
+                dataIndex: 'cjrq',
             },
             {
                 title: '订单类型',
-                dataIndex: 'age',
+                dataIndex: 'order',
             },
             {
                 title: '客户类型',
-                dataIndex: 'age',
+                dataIndex: 'userlx',
             },
             {
                 title: '客户名称',
-                dataIndex: 'age',
+                dataIndex: 'username',
             },
             {
                 title: '业务员',
-                dataIndex: 'age',
+                dataIndex: 'person',
             },
             {
                 title: '出库仓库',
-                dataIndex: 'age',
+                dataIndex: 'ckck',
             },
             {
                 title: '配送车辆',
-                dataIndex: 'age',
+                dataIndex: 'car',
             },
             {
                 title: 'Adress',
@@ -162,16 +163,23 @@ export default class Order extends Component {
                     </div>
                 </div>
 
-                <div className="table">
-                    <div style={{ marginBottom: 16 }}>
+                <div className="table2">
+                    <div >
                         {/* <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
                     Reload
                 </Button> */}
-                        <span style={{ marginLeft: 8 }}>
+                        {/* <span style={{ marginLeft: 8 }}>
                             {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-                        </span>
+                        </span> */}
+                        <div className="quire-title ">
+                        <div>数据列表</div>
+                       
+                        <NavLink  to={msg + '/newOrder'} className="chaxun">添加</NavLink>
+                    </div>
+
                     </div>
                     <Table 
+                    className="order-table"
                     rowSelection={rowSelection} 
                     columns={columns} 
                     dataSource={orderList}

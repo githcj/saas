@@ -47,7 +47,8 @@
     width:150px;
     height:28px;
 }
-.table{
+.table2{
+    width:80%;
     margin:auto;
     margin-top:12px;
 }
@@ -79,7 +80,7 @@ a{
 .addcus .right{
     display: inline-block;
     width:80px;
-   text-align: right;
+    text-align: right;
 }
 .addcus .left{
     margin-left:370px;
@@ -90,4 +91,8 @@ a{
 .xiaoshou2{
     width:161px;
     height:27px;
+}
+.order-table{
+    width:80%;;
+
 }
