@@ -35,14 +35,15 @@ export default class Department extends Component{
         super(props)
         this.state = {
             departList:[],
-            search:[{
-
-            }]
+            search:{
+                limit:5,
+                page:1
+            }
         }
     }
 
     async componentDidMount() {
-        const {data} = await axios.post('/depManagement',{limit:5,page:1})
+        const {data} = await axios.post('/depManagement',{limit:this.state.search.limit,page:this.state.search.page})
         const {data:res} = data
         this.setState({
             departList:res
@@ -83,7 +84,7 @@ export default class Department extends Component{
                     dataSource={this.state.departList} 
                     columns={columns} 
                     bordered
-
+                    rowKey={this.state.departList.dep_id}
                     />
                 </div>
             </div>

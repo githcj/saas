@@ -40,7 +40,7 @@ const Gongsi = (props)=> {
             <div className='company-content'>
                 <Form {...layout} name="nest-messages" onFinish={onFinish} size="large">
                     <Form.Item
-                        name={['company', 'name']}
+                        // name={['company', 'name']}
                         label="公司名称"
                         rules={[
                         {
@@ -52,7 +52,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'address']}
+                        // name={['company', 'address']}
                         label="公司地址"
                         rules={[
                         {
@@ -70,19 +70,19 @@ const Gongsi = (props)=> {
                         />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'staffNum']}
+                        // name={['company', 'staffNum']}
                         label="员工数"
                         rules={[
                         {
                             required: true,
-                            message: '请输入员工数!' 
+                            message: '请输入员工数!',
                         },
                         ]}
                     >
-                        <InputNumber />
+                        <InputNumber min={1} />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'charge']}
+                        // name={['company', 'charge']}
                         label="负责人"
                         rules={[
                         {
@@ -94,7 +94,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'IDCard']}
+                        // name={['company', 'IDCard']}
                         label="身份证号"
                         rules={[
                         {
@@ -109,7 +109,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'phoneNum']}
+                        // name={['company', 'phoneNum']}
                         label="联系电话"
                         rules={[
                         {
@@ -123,7 +123,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'email']}
+                        // name={['company', 'email']}
                         label="邮箱"
                         rules={[
                         {
@@ -138,7 +138,7 @@ const Gongsi = (props)=> {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'wx']}
+                        // name={['company', 'wx']}
                         label="微信"
                         rules={[
                         {
@@ -150,7 +150,7 @@ const Gongsi = (props)=> {
                         <WXUpLoad notify='点击上传二维码' />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'logo']}
+                        // name={['company', 'logo']}
                         label="公司Logo"
                         rules={[
                         {
@@ -162,13 +162,13 @@ const Gongsi = (props)=> {
                         <WXUpLoad notify='点击上传logo' />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'instr']}
+                        // name={['company', 'instr']}
                         label="备注"
                     >
                         <TextArea rows={4} />
                     </Form.Item>
                     <Form.Item
-                        name={['company', 'companyImgs']}
+                        // name={['company', 'companyImgs']}
                         label="公司宣传图册"
                     >
                         {/* <CompanyImgs /> */}
