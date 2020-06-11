@@ -76,12 +76,12 @@ a{
     align-items: start;
     justify-content: space-evenly;
 }
-.right{
+.addcus .right{
     display: inline-block;
     width:80px;
    text-align: right;
 }
-.left{
+.addcus .left{
     margin-left:370px;
 }
 .left2{

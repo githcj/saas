@@ -47,7 +47,7 @@ export default class addCus extends Component {
     
 
         return (
-            <div>
+            <div className="addcus">
                  <div className="top">
                     <div className="top-title">添加客户</div>
                 </div>
