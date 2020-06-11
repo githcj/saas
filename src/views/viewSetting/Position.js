@@ -67,16 +67,16 @@ export default class Position extends Component {
     ];
 
     return (
-      <div className="stockOut">
+      <div className="Position">
         <header>
-          <div className="stock-top">
-            <div className="stock-top-left">
-              <div className="stock-top-left-mark"></div>
-              <p className="stock-top-word">职位管理</p>
+          <div className="Position-top">
+            <div className="Position-top-left">
+              <div className="Position-top-left-mark"></div>
+              <p className="Position-top-word">职位管理</p>
             </div>
-            <div className="stock-top-right">
+            <div className="Position-top-right">
               <SyncOutlined />
-              <p className="stock-top-word">刷新</p>
+              <p className="Position-top-word">刷新</p>
             </div>
           </div>
         </header>
