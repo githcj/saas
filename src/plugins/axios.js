@@ -1,6 +1,5 @@
 "use strict";
 import axios from "axios";
-import {Router} from  'react-router-dom'
 
 
 let config = {
@@ -38,11 +37,13 @@ _axios.interceptors.response.use(
     // Do something with response data
         //console.log(response,'HHHHH')
         // loadingInstance.close() // 关闭 loading
-
+        console.log(response);
+        
         if (response.data.token) { // 将返回的最新的 token 保存
           window.localStorage.setItem('token', response.data.token);
         }
-          
+
+        // window.history.go('http://localhost:3000/login')
         return response;
     },
     function(error) {
@@ -63,24 +64,6 @@ _axios.interceptors.response.use(
     }
 );
 
-Plugin.install = function(Vue, options) {
-    console.log(options);
-    Vue.axios = _axios;
-    window.axios = _axios;
-    Object.defineProperties(Vue.prototype, {
-        axios: {
-            get() {
-                return _axios;
-            }
-        },
-        $axios: {
-            get() {
-                return _axios;
-            }
-        },
-    });
-};
+window.axios = _axios;
 
-Vue.use(Plugin)
-
-export default Plugin;
+export default _axios;

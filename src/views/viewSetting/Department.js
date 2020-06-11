@@ -3,6 +3,7 @@ import { Table, Select } from 'antd'
 import ConTitle from '../../components/ConTitle'
 import { UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewSetting/Department.css'
+import axios from '../../plugins/axios'
 
 const { Option } = Select
 
@@ -50,6 +51,22 @@ export default class Department extends Component{
 
             }]
         }
+    }
+
+    async componentDidMount() {
+        const {data:res} = await axios.post('/depManagement',{limit:5,page:1})
+        console.log(res);
+        
+        // axios.post('/depManagement',{limit:5,page:1})
+        // .then(res =>{
+        //     console.log(res);
+            
+        // })
+        // .catch(err =>{
+        //     console.log(err);
+            
+        // })
+        // console.log(res);
     }
 
     handleChange = () =>{
