@@ -44,9 +44,7 @@
 .caozuoPart,.xiangguanP{
     margin: 0;
 }
-.midA{
-    margin: 0 10px;
-}
-.caozuoPart>a{
+.caozuoPart a{
     color: #1ABC9C;
+    padding:0.5vw
 }

@@ -134,7 +134,7 @@ export default class Employee extends Component {
               </Select>
             </div>
           </div>
-          <Table dataSource={datalist} columns={columns} bordered />
+          <Table  size={'small'} dataSource={datalist} columns={columns} bordered />
         </div>
       </div>
     );
