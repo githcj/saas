@@ -27,7 +27,7 @@ const System = (props)=> {
       <Col span={4}>
             <div className='system-nav'>
             <Menu style={{background: '#f3f3f3'}}>
-                    <Menu.ItemGroup key="g1" title="基本资料">
+                    <Menu.ItemGroup  title="基本资料">
                         <Menu.Item key="1">
                 <NavLink to={match.url}>公司信息</NavLink>
                 </Menu.Item>
@@ -44,7 +44,7 @@ const System = (props)=> {
                 <NavLink to={match.url + '/Operation' }>操作日志</NavLink>
                 </Menu.Item>
                 </Menu.ItemGroup>
-                <Menu.ItemGroup key="g1" title="客户管理">
+                <Menu.ItemGroup title="客户管理">
                 <Menu.Item key="6">
                 <NavLink to={match.url + '/Cusinfo'}>客户信息</NavLink>
                 </Menu.Item>
@@ -55,7 +55,7 @@ const System = (props)=> {
                 <NavLink to={match.url + '/Supplier'}>供应厂商</NavLink>
                 </Menu.Item>
                 </Menu.ItemGroup>
-                <Menu.ItemGroup key="g1" title="商品管理">
+                <Menu.ItemGroup title="商品管理">
                 <Menu.Item key="9">
                 <NavLink to={match.url + '/Brandma'}>品牌管理</NavLink>
                 </Menu.Item>

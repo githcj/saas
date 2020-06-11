@@ -29,24 +29,12 @@ const columns = [
         title: '操作'
     }
   ];
-  
-  const data = [];
-  for (let i = 0; i < 46; i++) {
-    data.push({
-      key: i,
-      dep_name: `Edward King ${i}`,
-      dep_describe: '无描述',
-      emp_num: `${i}`,
-      dep_addtime:'2020-12-6'
-    });
-  }
-
-  
 
 export default class Department extends Component{
     constructor(props){
         super(props)
         this.state = {
+            departList:[],
             search:[{
 
             }]
@@ -54,19 +42,11 @@ export default class Department extends Component{
     }
 
     async componentDidMount() {
-        const {data:res} = await axios.post('/depManagement',{limit:5,page:1})
-        console.log(res);
-        
-        // axios.post('/depManagement',{limit:5,page:1})
-        // .then(res =>{
-        //     console.log(res);
-            
-        // })
-        // .catch(err =>{
-        //     console.log(err);
-            
-        // })
-        // console.log(res);
+        const {data} = await axios.post('/depManagement',{limit:5,page:1})
+        const {data:res} = data
+        this.setState({
+            departList:res
+        })
     }
 
     handleChange = () =>{
@@ -82,7 +62,7 @@ export default class Department extends Component{
                 </header>
                 <div className='dynamic-dataList'>
                     <div className='dynamic-left-title'>
-                        <UnorderedListOutlined style={{fontSize:'20px'}}/>
+                        <UnorderedListOutlined style={{fontSize:'18px'}}/>
                         <span style={{fontSize:'14px'}}>数据列表</span>
                     </div>
                     <div className="purchase-table-se2">
@@ -100,7 +80,7 @@ export default class Department extends Component{
 
                 <div className="table">
                     <Table 
-                    dataSource={data} 
+                    dataSource={this.state.departList} 
                     columns={columns} 
                     bordered
 

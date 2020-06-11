@@ -35,9 +35,6 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
     function(response) {
     // Do something with response data
-        //console.log(response,'HHHHH')
-        // loadingInstance.close() // 关闭 loading
-        console.log(response);
         
         if (response.data.token) { // 将返回的最新的 token 保存
           window.localStorage.setItem('token', response.data.token);
