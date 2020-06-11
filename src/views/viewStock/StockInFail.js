@@ -79,33 +79,33 @@ const StockInFail = (props) => {
                     </div>
                 </div>
             </header>
-            <div className="detail-middle">
-                <div className="detail-middle-se1">
-                    <p className="detail-middle-se1p">基本信息</p>
+            <section>
+                <div className="fail-info-title">
+                    <p>基本信息</p>
                     <p>单号：<span style={{ color: 'red' }}>25151541315316</span></p>
                 </div>
-                <div className="detail-middle-se2">
+                <div>
                     <p>进货仓库：<span>A仓库</span></p>
                     <p>供货厂商：<span>A厂商</span></p>
                     <p>创建日期：<span>2017-09-29</span></p>
                 </div>
-            </div>
-            <div className="detail-middle">
-                <div className="detail-middle-se1">
-                    <p className="detail-middle-se1p">
+            </section>
+            <section>
+                <div>
+                    <p>
                         审批状态：
                         <span style={{ color: 'red' }}>待审批</span>
                     </p>
                 </div>
-                <div className="detail-middle-se22">
+                <div>
                     <p>审批意见：<span>无</span></p>
                 </div>
-            </div>
-            <div className="detail-middle">
-                <div className="detail-middle-se1">
-                    <p className="detail-middle-se1p">商品明细</p>
+            </section>
+            <section>
+                <div>
+                    <p>商品明细</p>
                 </div>
-                <div className="detail-middle-se1T">
+                <div>
                     <Table
                         rowSelection={{ type: 'Checkbox' }}
                         columns={columns}
@@ -113,7 +113,10 @@ const StockInFail = (props) => {
                         bordered>
                     </Table>
                 </div>
-            </div>
+            </section>
+            <footer>
+
+            </footer>
         </div>
     )
 }

@@ -171,7 +171,7 @@ const Gongsi = (props)=> {
                         name={['company', 'companyImgs']}
                         label="公司宣传图册"
                     >
-                        <CompanyImgs />
+                        {/* <CompanyImgs /> */}
                     </Form.Item>
                     <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                         <Button type="primary" htmlType="submit">
