@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ConTitle from '../../components/ConTitle'
-import '../../assets/css/viewStock/stockFail.css'
+import '../../assets/css/viewStock/stockDetail.css'
 import { Table } from 'antd'
 import axios from '../../plugins/axios'
 
@@ -81,16 +81,16 @@ export default class StockOutDetail extends Component{
         const mydata = this.props.msg.params
         console.log(mydata)
         return (
-            <div className="stockOutFail">
+            <div className="stockOutDetail detail">
                 <header>
                     <ConTitle titleName={'出库预览-' + mydata.out_status}/>
                 </header>
                 <section>
-                    <div className="fail-info-title">
+                    <div className="detail-info-title">
                         <p className="p1">基本信息</p>
                         <p className="p2">单号：<span style={{ color: 'red' }}>{mydata.out_id}</span></p>
                     </div>
-                    <div className="fail-info-detail">
+                    <div className="detail-info-detail">
                         <p>客户名称：<span>{infoData.customer_name}</span></p>
                         <p>收款方式：<span>{infoData.collect_method}</span></p>
                         <p>业务员：<span>{infoData.salesman}</span></p>
@@ -100,18 +100,18 @@ export default class StockOutDetail extends Component{
                     </div>
                 </section>
                 <section>
-                    <div className="fail-info-title">
+                    <div className="detail-info-title">
                         <p className="p1">
                             审批状态：
                             <span style={{ color: 'red' }}>{infoData.check_status}</span>
                         </p>
                     </div>
-                    <div className="fail-info-detail">
+                    <div className="detail-info-detail">
                         <p className="p1">审批意见：<span>{infoData.check_opinion}</span></p>
                     </div>
                 </section>
                 <section>
-                    <div className="fail-info-title">
+                    <div className="detail-info-title">
                         <p className="p1">商品明细</p>
                     </div>
                     <div>
@@ -122,7 +122,7 @@ export default class StockOutDetail extends Component{
                             // dataSource={}
                             bordered>
                         </Table>
-                        <div className="fail-total">
+                        <div className="detail-total">
                                 <div>
                                     <span className="span-one">商品共：</span>
                                     <span className="span-two">{tableData.length}</span>
@@ -135,17 +135,17 @@ export default class StockOutDetail extends Component{
                     </div>
                 </section>
                 <footer>
-                    <div className="fail-payInfo">
+                    <div className="detail-payInfo">
                         <p>付款信息</p>
                     </div>
-                    <div className="fail-payInfo-detail">
+                    <div className="detail-payInfo-detail">
                         <div>
                             <p>
                                 <span>付款类型：</span>
                                 <span>现金</span>
                             </p>
                         </div>
-                        <div className="fail-payment">
+                        <div className="detail-payment">
                             <p>
                                 <span>优惠金额：</span>
                                 <span className="span-two">0.00元</span>

@@ -121,16 +121,6 @@ export default class StockIn extends Component{
         return (
             <div className="stockIn">
                 <header>
-                    <div className="stock-top">
-                        <div className='stock-top-left'>
-                            <div className='stock-top-left-mark'></div>
-                            <p className='stock-top-word'>入库管理</p>
-                        </div>
-                        <div className='stock-top-right'>
-                            <SyncOutlined />
-                            <p className='stock-top-word'>刷新</p>
-                        </div>
-                    </div>
                 </header>
 
                 <section>
