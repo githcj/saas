@@ -65,14 +65,48 @@ for (var i = 0; i < 20; i++) {
     })
 }
 
-const purchaseDetail = (props) => {
+class purchaseDetail extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+
+        }
+    }
+    render(){
+    let newDom
+    const {location} = this.props
+    const difficult = location.params.state
+    if(difficult===4){
+        newDom =    <div className="detail-middle-se1-new">
+                        <div>审批时间：</div>
+                        <div>入库时间：</div>
+                    </div>
+    }
+    if(difficult===3){
+        newDom =    <div>
+                        <div>审批时间：</div>
+                    </div>
+    }
+    let status
+        if(difficult === 1) {
+            status= <span style={{color:'red'}}>审批</span>
+        }
+        if(difficult === 2) {
+            status= <span style={{color:'red'}}>审批</span>
+        }
+        if(difficult=== 3){
+            status= <span style={{color:'red'}}>入库</span>
+        } 
+        if(difficult===4){
+            status= null
+        }
     return (
         <div className="detail">
             <div className="admin-top">
                 <div className='purchase-firtop'>
                     <div className='dynamic-top-left'>
                         <div className='dynamic-top-left-mark'></div>
-                        <p className='dynamic-top-word'>采购预览—待审批</p>
+                        <p className='dynamic-top-word'><span style={{color:'black'}}>采购预览-{status}</span></p>
                     </div>
                     <div className='dynamic-top-right'>
                         <CaretLeftOutlined />
@@ -83,7 +117,7 @@ const purchaseDetail = (props) => {
             <div className="detail-middle">
                 <div className="detail-middle-se1">
                     <p className="detail-middle-se1p">基本信息</p>
-                    <p>单号：<span style={{ color: 'red' }}>25151541315316</span></p>
+                    <p>单号：<span className="danHao" style={{ color: 'red'}}>25151541315316</span></p>
                 </div>
                 <div className="detail-middle-se2">
                     <p>供货厂商：<span>A供货商</span></p>
@@ -94,10 +128,12 @@ const purchaseDetail = (props) => {
             </div>
             <div className="detail-middle">
                 <div className="detail-middle-se1">
-                    <p className="detail-middle-se1p">
-                        审批状态：
-                        <span style={{ color: 'red' }}>待审批</span>
-                    </p>
+                        <div className="detail-middle-se1-div">
+                            审批状态：<span style={{color:'red'}}>{status}</span>
+                        </div>
+                        <div className="detail-middle-se1-new">
+                            {newDom}
+                        </div>
                 </div>
                 <div className="detail-middle-se22">
                     <p>审批意见：<span>无</span></p>
@@ -131,6 +167,7 @@ const purchaseDetail = (props) => {
             </div>
         </div>
     )
+    }
 }
 
 export default purchaseDetail

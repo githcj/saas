@@ -7,6 +7,7 @@ import {
     UpOutlined,
     UnorderedListOutlined,
 } from '@ant-design/icons';
+import axios from 'axios';
 
 
 
@@ -28,6 +29,20 @@ class purchaseAdmin extends React.Component{
             everyPage:10
         }
     }
+    componentWillMount(){
+        axios({
+            method:'GET',
+            url:'http://119.23.228.238:3031/mock/47/purchasing'
+        })
+        .then(res=>{
+            this.setState({
+                data:res.data
+            })
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
     pageNumChange = (value) =>{
         if(value==='ten'){
             this.setState({
@@ -40,7 +55,30 @@ class purchaseAdmin extends React.Component{
             })
         }
     }
+    sortChange = (value) =>{
+        const newData = [...this.state.data]
+        if(value === 'saleLowHeight'){
+            newData.sort((a,b)=>{
+                return a.SumMoney - b.SumMoney
+            })
+        }
+        if(value === 'saleHeightLow'){
+            newData.sort((a,b)=>{
+                return b.SumMoney - a.SumMoney
+            })
+        }
+        this.setState({
+            data:newData
+        })
+    }
+    todetail = (record) => {
+        this.props.msg.push({
+            pathname:'/home/Caigou/purchaseDetail',
+            params:record
+        })
+    }
     render(){
+        const { props } = this.props
         const columns = [
             {
                 title: '编号',
@@ -88,7 +126,18 @@ class purchaseAdmin extends React.Component{
                 title: '状态',
                 dataIndex: 'state',
                 key: 'state',
-                align:'center'
+                align:'center',
+                render:(text,record,index)=>{
+                    if(text===1){
+                        return<span>待审批</span>
+                    }else if(text===2){
+                        return<span>不通过</span>
+                    }else if(text===3){
+                        return<span>已通过</span>
+                    }else if(text===4){
+                        return<span>已入库</span>
+                    }
+                }
             },
             {
                 title: '审批操作',
@@ -97,9 +146,13 @@ class purchaseAdmin extends React.Component{
                 align:'center',
                 render: (text, record, index)=> {
                     console.log(text,record,index)
-                    if(record.state === '待审批') {
-                        return <span>审批</span>
-                    } else if(record.state === '已入库') {
+                    if(record.state === 1) {
+                        return <a>审批</a>
+                    } else if(record.state === 2) {
+                        return <a>审批</a>
+                    } else if(record.state=== 3){
+                        return <a>入库</a>
+                    }else if(record.state===4){
                         return null
                     }
                 }
@@ -111,36 +164,23 @@ class purchaseAdmin extends React.Component{
                 align:'center',
                 render:(text,record,index)=>{
                     console.log(text,record,index)
-                    if(record.state === '待审批'){
-                        return <p>
-                            <span>编辑</span>
-                            <span>预览</span>
-                            <span>删除</span>
+                    if(record.state === 1 || record.state ===2){
+                        return <p className="caozuoP">
+                            <a>编辑</a>
+                            <a onClick = {() => this.todetail(record)}>预览</a>
+                            <a>删除</a>
                         </p>
-                    }else if(record.state === '已入库'){
-                        return <p>
-                            <span>预览</span>
-                            <span>删除</span>
+                    }else if(record.state === 4 || record.state ===3){
+                        return <p className="caozuoP">
+                            <a onClick = {() => this.todetail(record)}>预览</a>
+                            <a>删除</a>
                         </p>
                     }
                 }
             },
         ];
         const {data,everyPage} = this.state
-        for(var i=0;i<10;i++){
-            data.push({
-                key: i,
-                serialNum: 10001,
-                data:'2017-09-08 12:12',
-                gongHuo: 'A供应厂商',
-                needData: '2017-12-26 13:14',
-                person: 'A员工',
-                shenpiRen:'B员工',
-                state: Math.random() > 0.5 ? '待审批' : '已入库',
-                doesA:'',
-                does:''
-            })
-        }
+        console.log(props)
         return (
             <div className="admin">
                 <div className='admin-top'>
@@ -213,9 +253,11 @@ class purchaseAdmin extends React.Component{
                                 <Option value="ten">每页10条</Option>
                                 <Option value="twenty">每页20条</Option>
                             </Select>
-                            <Select defaultValue="排序方式" className="seen" style={{ width: 120 }} >
-                                <Option value="15">编号递增</Option>
-                                <Option value="20">编号递减</Option>
+                            <Select defaultValue="排序方式" className="seen" 
+                            style={{ width: 120 }}
+                            onChange={(value)=>this.sortChange(value)} >
+                                <Option value="saleLowHeight">总金额递增</Option>
+                                <Option value="saleHeightLow">总金额递减</Option>
                             </Select>
                         </div>
                     </div>

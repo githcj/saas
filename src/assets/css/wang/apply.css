@@ -4,7 +4,7 @@
 }
 .apply-sec1,.apply-sec2,.goodsDetail{
     width: 85% !important;
-    margin: 20px auto 0;
+    margin: 30px auto;
 }
 header{
     width: 100%;
@@ -190,4 +190,7 @@ header{
     margin-left: 680px;
     border-radius: 5%;
     text-align: center;
+}
+.danHao{
+    padding-right: 25px;
 }
