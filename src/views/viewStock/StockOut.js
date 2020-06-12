@@ -2,37 +2,94 @@ import React, { Component } from 'react'
 import { Table, DatePicker, Select } from 'antd'
 import { SyncOutlined, SearchOutlined, DownOutlined, UpOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewStock/stock.css'
-import { Link } from 'react-router-dom'
+import axios from '../../plugins/axios'
+import ConTitle from '../../components/ConTitle'
 
 export default class StockOut extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            outData:[],
+            pagesize:10
+        }
+    }
+    toAddStockOut = () => {
+        this.props.msg.push({
+            pathname:'/home/kucun/addstockout'
+        })
+    }
+    toFail = (data) => {
+        this.props.msg.push({
+            pathname:'/home/kucun/stockoutdetail',
+            params:data
+        })
+    }
+    toPass = (data) => {
+        this.props.msg.push({
+            pathname:'/home/kucun/stockoutdetail',
+            params:data
+        })
+    }
+    editHandle = (data) => {
+        this.props.msg.push({
+            pathname:'/home/kucun/addstockout',
+            params:data
+        })
+    }
+    pagesizeChange = (value) => {
+        if(value === '10'){
+            this.setState({
+                pagesize:10
+            })
+        }else if(value === '20'){
+            this.setState({
+                pagesize:20
+            })
+        }else if(value === '30'){
+            this.setState({
+                pagesize:30
+            })
+        }
+    }
+    componentDidMount(){
+        axios({
+            method:'POST',
+            url:'/outboundManagement'
+        })
+        .then(res => {
+            this.setState({
+                outData:res.data.data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
     render() {
         const columns = [
             {
                 title: '编号',
-                dataIndex: 'id',
+                dataIndex: 'out_id',
             },
             {
                 title: '创建日期',
-                dataIndex: 'bulidDate',
+                dataIndex: 'create_time',
             },
             {
                 title: '出库仓库',
-                dataIndex: 'store',
+                dataIndex: 'ware_name',
             },
             {
                 title:'业务员',
-                dataIndex:'salesMan'
+                dataIndex:'salesman'
             },
             {
                 title:'总金额',
-                dataIndex:'total'
+                dataIndex:'total_price'
             },
             {
                 title:'出库时间',
-                dataIndex:'deliveryTime'
+                dataIndex:'out_time'
             },
             {
                 title:'发起人',
@@ -44,56 +101,44 @@ export default class StockOut extends Component {
             },
             {
                 title:'状态',
-                dataIndex:'state'
+                dataIndex:'out_status',
+                render:(text) => {
+                    if(text === '已通过'){
+                        return <span
+                        style={{
+                            color:'rgb(51, 153, 255)'
+                        }}>{text}</span>
+                    }
+                    return <span>{text}</span>
+                }
             },
             {
                 title:'审批操作',
                 dataIndex:'approveState', 
-                render: (text, record, index)=> {
-                    if(record.state === '待审批') {
-                        return <span>审批</span>
-                    } else if(record.state === '已入库') {
+                render: (text, record)=> {
+                    if(record.out_status === '待审批') {
+                        return <span style={{color:'rgb(26, 188, 156)'}}>审批</span>
+                    } else if(record.out_status === '已入库') {
                         return null
                     }
                 }
             },{
                 title:'操作',
                 dataIndex:'handle',
-                render:(text,record,index) => {
-                    if(record.state === '待审批'){
+                render:(text, record) => {
+                    if(record.out_status === '待审批'){
                         return (
-                            <p 
-                            style={{
-                                display:'flex',
-                                justifyContent:'space-evenly'
-                            }}>
-                                <span 
-                                style={{
-                                    color:'lightgreen'
-                                }}>编辑</span>
-                                <span>
-                                    <Link to={this.props.msg + '/stockoutfail'}>预览</Link>
-                                </span>
-                                <span
-                                style={{
-                                    color:'lightpink'
-                                }}>删除</span>
+                            <p className="tableHandle">
+                                <span onClick={() => this.editHandle(record)}>编辑</span>
+                                <span onClick={() => this.toFail(record)}>预览</span>
+                                <span>删除</span>
                             </p>
                         )
-                    }else if(record.state === '已通过'){
+                    }else if(record.out_status === '已通过'){
                         return (
-                            <p
-                            style={{
-                                display:'flex',
-                                justifyContent:'space-evenly'
-                            }}>
-                                <span>
-                                    <Link to={this.props.msg + '/stockoutpass'}>预览</Link>
-                                </span>
-                                <span
-                                style={{
-                                    color:'lightpink'
-                                }}>删除</span>
+                            <p className="tableHandle">
+                                <span onClick={() => this.toPass(record)}>预览</span>
+                                <span>删除</span>
                             </p>
                         )
                     }
@@ -101,19 +146,11 @@ export default class StockOut extends Component {
             }
         ]
         const {RangePicker} = DatePicker
+        const { outData } = this.state
         return (
             <div className="stockOut">
                 <header>
-                    <div className="stock-top">
-                        <div className='stock-top-left'>
-                            <div className='stock-top-left-mark'></div>
-                            <p className='stock-top-word'>出库管理</p>
-                        </div>
-                        <div className='stock-top-right'>
-                            <SyncOutlined />
-                            <p className='stock-top-word'>刷新</p>
-                        </div>
-                    </div>
+                    <ConTitle titleName='出库管理'/>
                 </header>
 
                 <section>
@@ -157,9 +194,9 @@ export default class StockOut extends Component {
                             <Select
                                 defaultValue="全部"
                                 style={{ width: 160 }}>
-                                <Option value="1">全部</Option>
-                                <Option value="2">待审批</Option>
-                                <Option value="3">已通过</Option>
+                                <Option>全部</Option>
+                                <Option>待审批</Option>
+                                <Option>已通过</Option>
                             </Select>
                         </div>
                     </div>
@@ -172,15 +209,16 @@ export default class StockOut extends Component {
                             <span>数据列表</span>
                         </div>
                         <div className="right">
-                            <button type="button" className="add">添加</button>
+                            <button type="button" className="add" onClick={this.toAddStockOut}>添加</button>
                             <button type="button">导出</button>
                             <Select
                                 defaultValue="显示条数"
                                 style={{ width: 100 }}
-                                className="select">
-                                <Option value="1">1</Option>
-                                <Option value="2">2</Option>
-                                <Option value="3">3</Option>
+                                className="select"
+                                onChange={this.pagesizeChange}>
+                                <Option value="10">10</Option>
+                                <Option value="20">20</Option>
+                                <Option value="30">30</Option>
                             </Select>
                             <Select
                                 defaultValue="排序方式"
@@ -193,31 +231,24 @@ export default class StockOut extends Component {
                         </div>
                     </div>
                     <Table
+                        id="table"
                         rowSelection={{ type: 'Checkbox' }}
-                        dataSource={data}
+                        dataSource={outData}
                         columns={columns}
-                        bordered />
+                        bordered
+                        pagination={{
+                            pageSize:this.state.pagesize,
+                            showQuickJumper:true,
+                            showTotal:(total) => {
+                                return (
+                                    <p>共有{Math.ceil(total / this.state.pagesize)}页/{total}条数据</p>
+                                )
+                            },
+                        }}  />
                 </div>
             </div>
         )
     }
 }
 
-
-const data = [];
-for (let i = 0; i < 46; i++) {
-    data.push({
-        key: i,
-        id: i,
-        bulidDate: '2020-01-03',
-        store: 'A',
-        salesMan:'A',
-        total:'9999',
-        deliveryTime:'2020-06-06',
-        initiator:"A",
-        approver:'B',
-        state:Math.random() > 0.5 ? '待审批' : '已通过',
-        approveState:''
-    });
-}
 const { Option } = Select;
