@@ -17,14 +17,17 @@ class Cominfo extends React.Component {
 		super(props)
 		this.state = {
 			data: [],
+			dataList:[],// 所有数据
 			visible:false,
 			modalInfo:{
 				goodsType:'',
 				vendor:'',
 				state:''
-			}
+			},
+			stateIndex:1
 		}
 	}
+	// 渲染之前
 	componentWillMount() {
 		axios({
 			method: 'GET',
@@ -32,14 +35,15 @@ class Cominfo extends React.Component {
 		})
 		.then(res => {
 			this.setState({
-				data: res.data
+				data: res.data,
+				dataList: res.data
 			})
 		})
 		.catch(err => {
 			console.log(err)
 		})
 	}
-	//模态框显示隐藏
+	// 模态框显示隐藏
 	showModal = () => {
 		this.setState({
 		  	visible: true,
@@ -57,6 +61,7 @@ class Cominfo extends React.Component {
 		  	visible: false,
 		});
 	}
+	// 上架/下架 商品
 	shangxiaJia = (s) => {
 		const { data } = this.state
 		let newList = data.map(item => {
@@ -72,10 +77,74 @@ class Cominfo extends React.Component {
 		this.setState({
 			data:newList
 		})
-		console.log(data)
+	}
+	// 锁定/解锁 价格
+	priceLock = (record) => {
+		const { data } = this.state
+		let newList = data.map(item => {
+			if(item.serialNum === record.serialNum){
+				if(item.lock === 0){
+					item.lock = 1
+				}else if(item.lock === 1){
+					item.lock = 0
+				}
+			}
+			return item
+		})
+		this.setState({
+			data:newList
+		})
+	}
+	// 删除商品
+	delItem = (record) => {
+		const { dataList } = this.state
+		let newList = dataList.filter(item => item.serialNum !== record.serialNum)
+		this.setState({
+			data:newList
+		})
+	}
+	// tab 选项切换
+	chooseBtn = (i) => {
+		const { dataList } = this.state
+		let newList
+		if(i === 1) {
+			newList = dataList
+		}else if (i === 2) {
+			newList = dataList.filter(item => item.state === 1)
+		}else if (i === 3) {
+			newList = dataList.filter(item => item.state === 0)
+		}
+		this.setState({
+			data:newList,
+			stateIndex:i
+		})
+	}
+	// 排序
+	sortChange = (value) => {
+        const newData = [...this.state.data]
+        if(value === 'costLowHight') {
+            newData.sort((a, b) => {
+                return a.cost - b.cost
+            })
+        }
+        if(value === 'costHightLow') {
+            newData.sort((a, b) => {
+                return b.cost - a.cost
+            })
+        }
+        this.setState({
+            data: newData
+        })
+	}
+	// 添加商品
+	toAdd = () => {
+		console.log(this.props)
+		this.props.history.push({
+			pathname:'/home/system/addgoods'
+		})
 	}
 	render() {
-		const { data } = this.state
+		const { data, stateIndex, dataList } = this.state
 		for (let i = 0; i < data.length; i++) {
 			data[i].key = i
 		}
@@ -155,18 +224,31 @@ class Cominfo extends React.Component {
 				dataIndex: 'does',
 				key: 'does',
 				align: 'center',
-				render: () => {
+				render: (text, record) => {
 					return (
 						<p className='caozuoPart'>
-							<a>编辑</a>
-							<a className='midA'>删除</a>
-							<a>锁定价格</a>
+							<a className='caozuoA'>编辑</a>
+							<a 
+								className='caozuoA midA'
+								onClick={() => this.delItem(record)}
+							>删除</a>
+							{record.lock === 0 
+								? <a 
+									className='caozuoA jiesuo' 
+									onClick={() => this.priceLock(record)}
+								>解锁价格</a> 
+								: <a 
+									className='caozuoA'
+									onClick={() => this.priceLock(record)}
+								>锁定价格</a>}
 						</p>
 					)
 				},
 				width:180
 			},
 		]
+		const shangjia = dataList.filter(item => item.state === 1)
+		const xiajia = dataList.filter(item => item.state === 0)
 		return (
 			<div className="cominfo">
 				{/* 顶部 */}
@@ -183,9 +265,21 @@ class Cominfo extends React.Component {
 					</div>
 				</div>
 				<div className='allGoodsBtn'>
-					<div className='allBtn'>全部商品({data.length})</div>
-					<div className='allBtn'>已上架</div>
-					<div className='allBtn'>未上架</div>
+					<div 
+						className={stateIndex === 1 ? 'TabActive':'allBtn'}
+						onClick={() => this.chooseBtn(1)}>
+						全部商品({dataList.length})
+					</div>
+					<div 
+						className={stateIndex === 2 ? 'TabActive':'allBtn'}
+						onClick={() => this.chooseBtn(2)}>
+						已上架({shangjia.length})
+					</div>
+					<div 
+						className={stateIndex === 3 ? 'TabActive':'allBtn'}
+						onClick={() => this.chooseBtn(3)}>
+						未上架({xiajia.length})
+					</div>
 				</div>
 				<div className="purchase-search">
 					<div className="purchase-top">
@@ -266,7 +360,12 @@ class Cominfo extends React.Component {
 							<p className="brandma-p">数据列表</p>
 						</div>
 						<div className='comclass-right-title'>
-							<div className="addDiv tianjiagoods" style={{ height: 32 }}>添加商品</div>
+							<div 
+								className="addDiv tianjiagoods" 
+								style={{ height: 32 }}
+								onClick={() => this.toAdd()}>
+								添加商品
+							</div>
 							<div className="daoDiv addDiv" style={{ height: 32 }}>导入</div>
 							<div className="daoDiv addDiv" style={{ height: 32 }}>导出</div>
 							<div>
@@ -278,10 +377,8 @@ class Cominfo extends React.Component {
 							</div>
 							<div>
 								<Select defaultValue="排序方式" style={{ width: 150 }} onChange={(value) => this.sortChange(value)}>
-									<Option value="saleHightLow">销售额从高到低</Option>
-									<Option value="saleLowHight">销售额从低到高</Option>
-									<Option value="disLowHight">配送额从低到高</Option>
-									<Option value="disHightLow">配送额从高到低</Option>
+									<Option value="costHightLow">成本价格从高到低</Option>
+									<Option value="costLowHight">成本价格从低到高</Option>
 								</Select>
 							</div>
 						</div>
