@@ -1,65 +1,54 @@
-.stockInPass,.stockOutPass{
+.detail{
     width: 100%;
     background: rgba(248, 246, 246, 0.781);
 }
 
-.stockInPass header{
+.detail header{
     width: 100%;
     background: #f3f3f3;
     height: 50px;
 }
-.stockInPass section{
+.detail section{
     width: 85%;
     margin: 10px auto;
 }
-.stockInPass footer{
-    width: 85%;
-    margin: 0 auto;
-}
-.stockOutPass header{
-    width: 100%;
-    background: #f3f3f3;
-    height: 50px;
-}
-.stockOutPass section{
-    width: 85%;
-    margin: 10px auto;
-}
-.stockOutPass footer{
+.detail footer{
     width: 85%;
     margin: 0 auto;
 }
 
-.pass-info-title{
+
+
+.detail-info-title{
     background-color: rgba(243, 243, 243, 1);
     height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.pass-info-title .p1{
+.detail-info-title .p1{
     margin-left: 20px;
 }
-.pass-info-title .p2{
+.detail-info-title .p2{
     margin-right: 20px;
 }
-.pass-info-detail{
+.detail-info-detail{
     background: white;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     padding: 20px 0;
 }
-.pass-info-detail p{
+.detail-info-detail p{
     /* margin-right: 40px; */
     margin: 5px 20px;
     height: 40px;
     line-height: 40px;
 }
-.pass-info-detail>p>span{
+.detail-info-detail>p>span{
     margin: 0 20px;
 }
-.pass-total{
+.detail-total{
     width: 100%;
     height: 60px;
     display: flex;
@@ -67,42 +56,42 @@
     background-color: white;
     font-size: 18px;
 }
-.pass-total div{
+.detail-total div{
     margin: 0 20px;
 }
-.pass-total .span-one{
+.detail-total .span-one{
     letter-spacing: normal;
     color: #666666;
 }
-.pass-total .span-two{
+.detail-total .span-two{
     color: red;
 }
 
-.pass-payInfo{
+.detail-payInfo{
     width: 100%;
     height: 40px;
     line-height: 40px;
     border: 1px solid rgb(228, 228, 228);
 }
-.pass-payInfo p{
+.detail-payInfo p{
     margin: 0 0 0 20px;
 }
-.pass-payInfo-detail{
+.detail-payInfo-detail{
     background: white;
     overflow: hidden;
 }
-.pass-payInfo-detail>div{
+.detail-payInfo-detail>div{
     height: 40px;
     line-height: 40px;
     margin: 15px 40px;
 }
-.pass-payment{
+.detail-payment{
     display: flex;
 }
-.pass-payment p{
+.detail-payment p{
     margin-right: 60px;
 }
-.pass-payInfo-detail .span-two{
+.detail-payInfo-detail .span-two{
     color: red;
     margin: 0 20px;
 }

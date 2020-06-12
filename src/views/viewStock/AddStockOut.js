@@ -7,38 +7,9 @@ export default class AddStockOut extends Component{
     constructor(props){
         super(props)
         this.state = {
-            List:[],
-            listtop:[]
         }
     }
     componentWillMount(){
-        const data = [];
-        const detailData= []
-        for (let i = 0; i < 20; i++) {
-            data.push({
-                key: i,
-                goodsName: '商品名称',
-                bigUnit: '箱',
-                bigPrice: 100,
-                smallUnit:'瓶',
-                smallPrice:10,
-                storage:'999'
-            })
-            detailData.push({
-                key: i,
-                goodsName: '商品名称',
-                big: '箱',
-                bigNum: 9,
-                small:'瓶',
-                smallNum:9,
-                sum:'999.00',
-                productDate:'2020-02-23'
-            })
-        }
-        this.setState({
-            data:data,
-            detailData:detailData
-        })
     }
     red = (data) => {
         if(data.smallNum>1){
@@ -161,7 +132,6 @@ export default class AddStockOut extends Component{
                 render: () => <span style={{color:'rgb(26, 188, 156)'}}>添加</span>
             }
         ]
-        const { data, detailData } = this.state
         
         return (
             <div className="addstockOut">
@@ -252,8 +222,9 @@ export default class AddStockOut extends Component{
                                 <p>搜索结果</p>
                             </div>
                             <Table
+                                id="table"
                                 style={{width:'100%'}}
-                                dataSource={data}
+                                // dataSource={}
                                 columns={columns}
                                 bordered />
                         </div>
@@ -265,14 +236,15 @@ export default class AddStockOut extends Component{
                         <p>商品明细</p>
                     </div>
                     <Table
+                        id="table"
                         style={{width:'100%'}}
-                        dataSource={detailData}
+                        // dataSource={}
                         columns={detail}
                         bordered />
                         <div className="total">
                             <div>
                                 <span className="span-one">商品共：</span>
-                                <span className="span-two">{detailData.length}</span>
+                                <span className="span-two">{}</span>
                             </div>
                             <div>
                                 <span className="span-one">金额合计：</span>

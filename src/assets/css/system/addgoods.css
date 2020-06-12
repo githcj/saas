@@ -1,0 +1,51 @@
+.addgoods{
+    background: #f6f7f9;
+    padding-bottom: 60px;
+}
+.dynamic-top-right:hover{
+    background: #f2f2f2;
+}
+.dynamic-top-right{
+    cursor: pointer;
+}
+.addgoods-body{
+    width: 85%;
+    margin: 20px auto;
+    border: 1px solid #e4e4e4;
+}
+.addgoods-body>div{
+    width: 100%;
+    height: 250px;
+    display: flex;
+}
+.addgoods-body>div>.first{
+    width: 20%;
+    height: 100%;
+    border-right: 1px solid #e4e4e4;
+    background: #fcfcfc;
+}
+.addgoods-body>div>.second{
+    width: 80%;
+    height: 100%;
+    background: white;
+}
+.biaoqian{
+    height: 45%;
+    width: 135%;
+    display: flex;
+    align-items: center;
+}
+.black{
+    width: 84%;
+    height: 53%;
+    background: #9EA7B4;
+}
+.sanjiao{
+    width: 0;
+    height: 0;
+    border-left: 30px solid #9EA7B4;
+    border-right: 30px solid transparent;
+    border-top: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    z-index: 0;
+}

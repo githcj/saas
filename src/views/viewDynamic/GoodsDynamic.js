@@ -6,7 +6,7 @@ import {
     UnorderedListOutlined
   } from '@ant-design/icons'
 import { Table, Select } from 'antd'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 
 class GoodsDynamic extends React.Component {
     constructor(props){
@@ -20,7 +20,7 @@ class GoodsDynamic extends React.Component {
     componentWillMount() {
         axios({
             method:'GET',
-            url:'http://119.23.228.238:3031/mock/47/goodsdynamic'
+            url:'/goodsdynamic'
         })
         .then(res => {
             this.setState({

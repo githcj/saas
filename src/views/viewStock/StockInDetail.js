@@ -1,6 +1,6 @@
 import React from 'react'
 import {CaretLeftOutlined } from '@ant-design/icons';
-import '../../assets/css/viewStock/stockPass.css'
+import '../../assets/css/viewStock/stockDetail.css'
 import { Table } from 'antd'
 
 
@@ -64,55 +64,46 @@ for(var i=0;i<20;i++){
 }
 
 
-const StockInPass = (props) => {
+const StockInDetail = (props) => {
     return (
-        <div className="stockInPass">
+        <div className="stockInDetail detail">
             <header>
-                <div className='purchase-firtop'>
-                    <div className='dynamic-top-left'>
-                        <div className='dynamic-top-left-mark'></div>
-                        <p className='dynamic-top-word'>入库预览-已通过</p>
-                    </div>
-                    <div className='dynamic-top-right'>
-                        <CaretLeftOutlined />
-                        <p className='dynamic-top-word'>返回</p>
-                    </div>
-                </div>
             </header>
             <section>
-                <div className="pass-info-title">
+                <div className="detail-info-title">
                     <p className="p1">基本信息</p>
                     <p className="p2">单号：<span style={{ color: 'red' }}>25151541315316</span></p>
                 </div>
-                <div className="pass-info-detail">
+                <div className="detail-info-detail">
                     <p>进货仓库：<span>A仓库</span></p>
                     <p>供货厂商：<span>A厂商</span></p>
                     <p>创建日期：<span>2017-09-29</span></p>
                 </div>
             </section>
             <section>
-                <div className="pass-info-title">
+                <div className="detail-info-title">
                     <p className="p1">
                         审批状态：
-                        <span style={{ color: 'red' }}>已入库</span>
+                        <span style={{ color: 'red' }}>待审批</span>
                     </p>
                 </div>
-                <div className="pass-info-detail">
+                <div className="detail-info-detail">
                     <p className="p1">审批意见：<span>无</span></p>
                 </div>
             </section>
             <section>
-                <div className="pass-info-title">
+                <div className="detail-info-title">
                     <p className="p1">商品明细</p>
                 </div>
                 <div>
                     <Table
+                        id="table"
                         rowSelection={{ type: 'Checkbox' }}
                         columns={columns}
                         dataSource={data}
                         bordered>
                     </Table>
-                    <div className="pass-total">
+                    <div className="detail-total">
                             <div>
                                 <span className="span-one">商品共：</span>
                                 <span className="span-two">{data.length}</span>
@@ -125,17 +116,17 @@ const StockInPass = (props) => {
                 </div>
             </section>
             <footer>
-                <div className="pass-payInfo">
+                <div className="detail-payInfo">
                     <p>付款信息</p>
                 </div>
-                <div className="pass-payInfo-detail">
+                <div className="detail-payInfo-detail">
                     <div>
                         <p>
                             <span>付款类型：</span>
                             <span>现金</span>
                         </p>
                     </div>
-                    <div className="pass-payment">
+                    <div className="detail-payment">
                         <p>
                             <span>预付款：</span>
                             <span className="span-two">9999.00元</span>
@@ -161,4 +152,4 @@ const StockInPass = (props) => {
     )
 }
 
-export default StockInPass
+export default StockInDetail
