@@ -7,7 +7,7 @@ import {
     UpOutlined,
     UnorderedListOutlined,
 } from '@ant-design/icons';
-import axios from 'axios';
+import axios from '../../plugins/axios'
 
 
 
@@ -32,7 +32,7 @@ class purchaseAdmin extends React.Component{
     componentWillMount(){
         axios({
             method:'GET',
-            url:'http://119.23.228.238:3031/mock/47/purchasing'
+            url:'/purchasing'
         })
         .then(res=>{
             this.setState({
