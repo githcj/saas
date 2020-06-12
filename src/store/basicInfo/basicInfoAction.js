@@ -1,8 +1,9 @@
-import {  } from './basicActionType'
+import { editType } from './basicActionType'
 
-// export const  = (record)=> (
-//   {
-    
-//   }
-// )
+export const editAction = (editInfo)=> (
+  {
+      type: editType,
+      editInfo
+  }
+)
 

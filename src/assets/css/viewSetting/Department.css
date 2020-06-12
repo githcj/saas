@@ -1,3 +1,8 @@
 .addDiv {
   cursor: pointer;
 }
+
+.toDo {
+    display: flex;
+    justify-content: space-around;
+}

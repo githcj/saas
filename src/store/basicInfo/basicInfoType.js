@@ -1,2 +1,2 @@
-export const yulanType = 'YULAN_ACTION'
+export const editType = 'EDIT_TYPE'
 

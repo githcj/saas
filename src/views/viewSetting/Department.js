@@ -1,23 +1,23 @@
 import React, { Component } from 'react'
-import { Table, Select , Switch, message } from 'antd'
+import { Table, Select , Switch, message ,  } from 'antd'
 import ConTitle from '../../components/ConTitle'
 import { UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewSetting/Department.css'
 import axios from '../../plugins/axios'
-import Item from 'antd/lib/list/Item'
+import DepartFrom from '../../components/DepartForm'
+import DepartDelPop from '../../components/DepartDel'
 
 const { Option } = Select
 
-// const 
-
   
-
 export default class Department extends Component{
     constructor(props){
         super(props)
         this.state = {
             departList:[],
-            eachPage:10
+            eachPage:10,
+            ModalVisible:false,
+            rowInfo:{}
         }
     }
 
@@ -38,7 +38,7 @@ export default class Department extends Component{
           title: '员工数量',
           dataIndex: 'emp_num',
           key:'emp_num',
-          render: (text,row,index) => <a style={{color: '#08b990'}} >{text}</a>,
+          render: (text,row,index) => <a style={{color: '#08b990'}} onClick={()=>this.toEmp(row.dep_id)}>{text}</a>,
         },{
             title: '添加时间',
             dataIndex: 'dep_addtime',
@@ -51,41 +51,13 @@ export default class Department extends Component{
             render: (text,row) => (<Switch checked={text ? true : false} onChange={()=>this.changeStatus(row)} />)
         },{
             title: '操作',
-            width:'200px',
+            width:'150px',
             key:'toDo',
-            render: (text,row) => (<div></div>)
+            render: (text,row) => (<div className='toDo'><a onClick={()=>this.showModel(row)}>编辑</a>
+            <DepartDelPop confirm={(e)=>this.confirm(row.dep_id,e)} cancel={this.cancel} /></div>)
         }
       ];
-
-    changeStatus = async (row)=>{
-        const {departList} = this.state
-        let newList = departList.map((item) =>{
-            if(item.dep_id === row.dep_id){
-                console.log(item);
-                if(row.dep_status){
-                    item.dep_status = 0
-                }else {
-                    item.dep_status = 1
-                }
-            }
-            return item
-        })
-        console.log(newList);
-        let status
-        if(row.dep_status){
-            status = 0
-        }else {
-            status = 1
-        }
-        console.log(row.dep_id,status);
-        
-        const {data:res} = await axios.post('/isActiveDep',{dep_id:row.dep_id,dep_status:status})
-        if(res.code !== 200) return message.error('修改状态失败!')
-        message.success('修改状态成功')
-        this.setState({
-            departList:newList
-        })
-    }
+    
     // 组件加载完毕请求数据
     async componentDidMount() {
         const {data} = await axios.post('/depManagement')
@@ -93,14 +65,9 @@ export default class Department extends Component{
         this.setState({
             departList:res
         })
-        console.log(res);
     }
 
-    toEmp = (rowData) =>{
-        console.log(rowData);
-    
-    }
-
+    // 分页
     pageNumChange = (value) => {
         this.setState({
             eachPage:value
@@ -142,6 +109,107 @@ export default class Department extends Component{
         this.setState({
             departList: newList
         })
+    }
+
+    // 修改部门状态
+    changeStatus = async (row)=>{
+        const {departList} = this.state
+        let newList = departList.map((item) =>{
+            if(item.dep_id === row.dep_id){
+                if(row.dep_status){
+                    item.dep_status = 0
+                }else {
+                    item.dep_status = 1
+                }
+            }
+            return item
+        })
+        let status
+        if(row.dep_status){
+            status = 0
+        }else {
+            status = 1
+        }
+        
+        const {data:res} = await axios.post('/isActiveDep',{dep_id:row.dep_id,dep_status:status})
+        if(res.code !== 200) return message.error('修改状态失败!')
+        message.success('修改状态成功')
+        this.setState({
+            departList:newList
+        })
+    }
+
+    // saveFormRef = (formRef) => {
+    //     this.formRef = formRef
+    // }
+
+    // 编辑
+    async showModel(row) {
+        await this.setState({
+            rowInfo:row,
+            ModalVisible: true,
+        })
+        console.log(this.state.rowInfo,'row');
+        
+    }
+
+    // 表单提交
+    onFinish = async(value,form) => {
+        value.dep_id = this.state.rowInfo.dep_id
+
+        if(value.dep_name !== this.state.rowInfo.dep_name || value.dep_describe !== this.state.rowInfo.dep_describe){
+            // console.log(value);
+            
+            const {data:res} = await axios.post('/updDep',value)
+            // console.log(res,'res');
+            
+            form.resetFields()
+            if(res.code !== 200) return message.error('修改信息失败')
+            message.success('修改信息成功')
+            this.componentDidMount()
+            this.setState({
+                ModalVisible:false
+            })
+        }else{
+            form.resetFields()
+            this.setState({
+                ModalVisible:false
+            })
+            return message.info('未修改信息')
+        }
+        
+    };
+
+    //取消编辑
+    handleCancel = async() => {
+        await this.setState({
+            rowInfo:{},
+            ModalVisible:false,
+        })
+        console.log(this.setState.rowInfo,'cancel');
+        
+    };
+
+    // 删除
+    confirm = async(id,e) => {
+        const {data:res} = await axios.post('/delDep',{dep_id:id})
+        if(res.code !== 200) return message.error('删除失败!')
+        message.success('删除成功!')
+        this.componentDidMount()
+    }
+
+    cancel = () => {
+        message.info('取消删除!');
+    }
+
+    // 点击员工数量跳转
+    toEmp = (id) => {
+        // console.log(id,this.props,'props');
+        this.props.history.push({
+            pathname:'/home/system/Employee',
+            params:id //参数在this.props.location.params中
+        })
+        
     }
 
     render(){
@@ -192,6 +260,12 @@ export default class Department extends Component{
                     }}
                     />
                 </div>
+
+                <DepartFrom
+                    {...this.state}
+                    onCreate={this.onFinish}
+                    onCancel={this.handleCancel}
+                />
             </div>
         )
     }
