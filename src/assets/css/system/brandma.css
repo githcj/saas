@@ -1,5 +1,6 @@
 .brandma{
     background-color: #F6F7F9;
+    padding-bottom: 60px;
 }
 .purchase-top{
     border: 1px solid #e4e4e4;
@@ -44,7 +45,7 @@
 .caozuoPart,.xiangguanP{
     margin: 0;
 }
-.caozuoPart a{
+.caozuoA{
     color: #1ABC9C;
     padding:0.5vw
 }

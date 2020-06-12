@@ -1,5 +1,6 @@
 .comclass,.cominfo{
     background: #f6f7f9;
+    padding-bottom: 60px;
 }
 .comclass-table{
     width: 85%;
@@ -76,4 +77,21 @@
     line-height: 30px;
     margin-right: 20px ;
     background: white;
+}
+.allBtn:hover{
+    cursor: pointer;
+    color: #1ABC9C;
+}
+.jiesuo{
+    color: red;
+}
+/* 类 tab */
+.TabActive{
+    background: #1ABC9C;
+    color: white;
+    height: 30px;
+    width: 100px;
+    text-align: center;
+    line-height: 30px;
+    margin-right: 20px ;
 }
