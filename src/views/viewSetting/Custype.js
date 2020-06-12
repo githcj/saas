@@ -118,12 +118,9 @@ export default class Custype extends Component {
         return (
             <div>
                 <div className="top">
-                    <div className="top-title">订单列表</div>
+                    <div className="top-title">客户类型</div>
                 </div>
            
-                  
-            
-
                 <div className="table">
                     <div style={{ marginBottom: 16 }}>
                         {/* <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>

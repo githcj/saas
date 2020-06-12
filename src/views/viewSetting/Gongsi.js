@@ -8,7 +8,6 @@ import { EnvironmentOutlined } from '@ant-design/icons';
 import '../../assets/css/viewSetting/Gongsi.css'
 
 const Gongsi = (props)=> {
-    const { TextArea } = Input;
     
     const layout = {
         labelCol: {

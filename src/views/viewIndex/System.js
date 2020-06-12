@@ -88,14 +88,14 @@ const System = (props) => {
             </Route>
             <Route path={match.url + "/AddWare"} component={AddWare} />
             <Route path={match.url + "/Cusinfo"} component={Cusinfo}>
-              <Cusinfo msg={props}></Cusinfo>
+              <Cusinfo msg={match.url}></Cusinfo>
             </Route>
             <Route path={match.url + "/Custype"} component={Custype} />
             <Route path={match.url + "/Supplier"} component={Supplier} />
             <Route path={match.url + "/Brandma"} component={Brandma} />
             <Route path={match.url + "/Comclass"} component={Comclass} />
             <Route path={match.url + "/Cominfo"} component={Cominfo} />
-            <Route path={match.url + "/addCus"} component={addCus}></Route>
+            <Route path={match.url + "/addCus"} component={addCus} />
           </div>
         </Col>
       </Row>
