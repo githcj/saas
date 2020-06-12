@@ -24,7 +24,7 @@ export default class newOrder extends Component  {
           
            var suma =0 ;
            const newData = [...this.state.adddata]
-           const xount = true
+           
          if(newData.length === 0){
               newData.push(record)
               for (let i = 0; i < newData.length; i++) {
@@ -48,10 +48,7 @@ export default class newOrder extends Component  {
                 newData[newData.length - 1].smcount = 1;
                 newData[newData.length - 1].bgcount  = 1;
               }
-               }
-               
-            
-            
+               } 
          }
          for(var i=0 ; i<newData.length ; i++){
             suma += newData[i].smcount *newData[i].smallUntPrice + newData[i].bgcount * newData[i].bigUntPrice
@@ -108,10 +105,9 @@ export default class newOrder extends Component  {
                     this.setState({
                         sum:suma,
                         adddata:addcount
-                    }
-                    )}
-                  
-                }
+                    })
+                }  
+            }
 
             addsmcount = (i,n) => {
                 var suma =0 ;
