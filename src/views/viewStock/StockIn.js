@@ -213,6 +213,7 @@ export default class StockIn extends Component{
                         </div>
                     </div>
                     <Table
+                        id="table"
                         rowSelection={{ type: 'Checkbox' }}
                         dataSource={data}
                         columns={columns}

@@ -118,6 +118,11 @@
     height: 30px;
     margin-left: 10px;
     outline: none;
+    cursor: pointer;
+}
+.dataList button:hover{
+    background-color: #f3f3f3;
+    border: 1px solid #ccc;
 }
 .dataList .select{
     margin-left: 10px;
@@ -130,4 +135,16 @@
 .table{
     width: 85%;
     margin: 0 auto;
+}
+#table{
+    font-size: 12px;
+}
+#table .tableHandle{
+    width: 100px;
+    display: flex;
+    justify-content: space-evenly;
+    color: rgb(26, 188, 156);
+}
+#table .tableHandle>span{
+    cursor: pointer;
 }

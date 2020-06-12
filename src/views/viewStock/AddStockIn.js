@@ -229,6 +229,7 @@ export default class AddStockIn extends Component{
                                 <p>搜索结果</p>
                             </div>
                             <Table
+                                id="table"
                                 style={{width:'100%'}}
                                 dataSource={data}
                                 columns={columns}
@@ -242,6 +243,7 @@ export default class AddStockIn extends Component{
                         <p>商品明细</p>
                     </div>
                     <Table
+                        id="table"
                         style={{width:'100%'}}
                         // dataSource={detailData}
                         columns={detail}
