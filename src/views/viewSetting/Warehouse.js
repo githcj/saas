@@ -9,33 +9,31 @@ import Delete from "../../components/Delete";
 const { Option } = Select;
 const { TextArea } = Input;
 
-const data = [];
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    dep_name: `Edward King ${i}`,
-    dep_describe: "无描述",
-    emp_num: `${i}`,
-    dep_addtime: "2020-12-6",
-  });
-}
-
 export default class Warehouse extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      data:'',
       search: [{}],
       visible: false,
       confirmLoading: false,
     };
   }
 
-  async componentDidMount() {
-    const { data: res } = await axios.post("/depManagement", {
-      limit: 5,
-      page: 1,
-    });
-    console.log(res);
+  componentDidMount() {
+    axios({
+      method:'POST',
+      url:'/warehouse/showwarehouse'
+    })
+    .then(res=> {
+      console.log(res.data.data)
+      this.setState({
+        data:res.data.data
+      })    
+    })
+    .catch(err=> {
+      console.log(err)
+    })
   }
 
   handleChange = () => {};
@@ -44,72 +42,74 @@ export default class Warehouse extends Component {
     this.props.his.push({
       pathname: this.props.msg + "/AddWare",
       params: { aa: 123 },
-    });
-  };
+    })
+  }
 
-  showModal = () => {
+  showModal = (recoder) => {
+    console.log(recoder)
     this.setState({
       visible: true,
-    });
-  };
+    })
+  }
 
   handleOk = () => {
     this.setState({
       confirmLoading: true,
-    });
+    })
 
     setTimeout(() => {
       this.setState({
         visible: false,
         confirmLoading: false,
-      });
-      message.success("修改成功");
-    }, 2000);
-  };
+      })
+      message.success("修改成功")
+    }, 2000)
+  }
 
   handleCancel = () => {
-    console.log("Clicked cancel button");
+    console.log("Clicked cancel button")
     this.setState({
       visible: false,
-    });
-    message.error("修改失败");
-  };
+    })
+    message.error("修改失败")
+  }
 
   render() {
-    const { visible, confirmLoading } = this.state;
+    const { visible, confirmLoading, data } = this.state;
 
     const onFinish = (values) => {
-      console.log("Success:", values);
-    };
+      console.log("Success:", values)
+      values=''
+    }
 
     const onFinishFailed = (errorInfo) => {
-      console.log("Failed:", errorInfo);
-    };
+      console.log("Failed:", errorInfo)
+    }
 
     const columns = [
       {
         title: "仓库名称",
-        dataIndex: "dep_name",
+        dataIndex: "ware_name",
       },
       {
         title: "仓库类型",
-        dataIndex: "dep_describe",
+        dataIndex: "ware_type",
       },
       {
         title: "仓库地址",
-        dataIndex: "dep_describe",
+        dataIndex: "ware_addr",
       },
       {
         title: "负责人",
-        dataIndex: "dep_describe",
+        dataIndex: "emp_name",
       },
       {
         title: "联系电话",
-        dataIndex: "emp_num",
+        dataIndex: "emp_phone",
       },
       {
         title: "跟车司机",
-        dataIndex: "dep_addtime",
+        dataIndex: "driver_name",
       },
       {
         title: "是否启用",
@@ -118,10 +118,11 @@ export default class Warehouse extends Component {
       },
       {
         title: "操作",
+        width:'9vw',
         dataIndex: "axios",
-        render: () => (
+        render: (text,recoder) => (
           <div className="caozuoPart">
-            <a onClick={this.showModal}>编辑</a>
+            <a className='caozuoA' onClick={()=>this.showModal(recoder)}>编辑</a>
             <Modal
               title="仓库编辑"
               visible={visible}
@@ -132,17 +133,16 @@ export default class Warehouse extends Component {
             >
               <div>
                 <Form
+                style={{width:'25vw'}}
                   {...layout}
                   name="basic"
-                  initialValues={{
-                    remember: true,
-                  }}
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
+                  initialValues={recoder}
+                  onFinish={onFinish(recoder)}
+                  onFinishFailed={onFinishFailed}                  
                 >
                   <Form.Item
                     label="仓库名称"
-                    name="仓库名称"
+                    name="ware_name"
                     rules={[
                       {
                         required: true,
@@ -155,7 +155,7 @@ export default class Warehouse extends Component {
 
                   <Form.Item
                     label="仓库类型"
-                    name="仓库类型"
+                    name="ware_type"
                     rules={[
                       {
                         required: true,
@@ -168,7 +168,7 @@ export default class Warehouse extends Component {
 
                   <Form.Item
                     label="负责人"
-                    name="负责人"
+                    name="emp_name"
                     rules={[
                       {
                         required: true,
@@ -184,7 +184,7 @@ export default class Warehouse extends Component {
 
                   <Form.Item
                     label="联系电话"
-                    name="联系电话"
+                    name="emp_phone"
                     rules={[
                       {
                         required: true,
@@ -197,7 +197,7 @@ export default class Warehouse extends Component {
 
                   <Form.Item
                     label="仓库地址"
-                    name="仓库地址"
+                    name="ware_addr"
                     rules={[
                       {
                         required: true,
@@ -210,7 +210,7 @@ export default class Warehouse extends Component {
 
                   <Form.Item
                     label="跟车司机"
-                    name="跟车司机"
+                    name="driver_name"
                     rules={[
                       {
                         required: true,
@@ -231,12 +231,13 @@ export default class Warehouse extends Component {
         ),
       },
     ];
+
     const layout = {
       labelCol: {
-        span: 8,
+        span: 6,
       },
       wrapperCol: {
-        span: 16,
+        span: 18,
       },
     };
     return (

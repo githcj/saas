@@ -7,11 +7,11 @@ import Home from './viewIndex/Home'
 import Login from './viewIndex/Login'
 
 function App(props) {
-
+	const token=localStorage.getItem('token')
 	return (
 		<div className="App">
 			<Redirect from="/" exact to="/home" />
-			<PrivateRoute path="/home" Component={Home} auth={props.token} />
+			<PrivateRoute path="/home" Component={Home} auth={token} />
 			<Route path="/login" component={Login} />
 		</div>
 	);
