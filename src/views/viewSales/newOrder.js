@@ -4,7 +4,7 @@ import '../../assets/css/sales/newOrder.css'
 import { Table, Button,Radio, Select } from 'antd';
 const { Option } = Select
 
-export default class newOrder extends Component {
+export default class newOrder extends Component  {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,8 +20,7 @@ export default class newOrder extends Component {
     }
 
     add = (record) => {
-           console.log(record)
-           console.log(record.goodsname,'record.goodsname');
+          
            var suma =0 ;
            const newData = [...this.state.adddata]
            const xount = true
@@ -97,7 +96,6 @@ export default class newOrder extends Component {
                 var addcount=this.state.adddata
                 if(n>0){
                     this.state.adddata.filter((v,x)=>{
-                        console.log(x,'x');
                         if(x === i){
                             addcount[i].bgcount = n+1
                         }
@@ -122,7 +120,6 @@ export default class newOrder extends Component {
                     var addcount=this.state.adddata
                    
                     this.state.adddata.filter((v,x)=>{
-                        console.log(x,'x');
                         if(x === i){
                             addcount[i].smcount = n+1
                         }
@@ -171,11 +168,8 @@ export default class newOrder extends Component {
                 var suma =0 ;
                 var addcount=this.state.adddata
                 
-                    console.log(i,'i');
-                    console.log(n,'n');
                     if(n>1){
                         this.state.adddata.filter((v,x)=>{
-                            console.log(x,'x');
                             if(x === i){
                                  addcount[i].smcount = n-1
                             }
@@ -195,16 +189,20 @@ export default class newOrder extends Component {
                  }
 
                  deldata =(i) => {
-                     console.log(i,'delete  ii');
-                     
-                    const addcount=this.state.adddata
-                        addcount.splice(i,1)
-                        console.log(addcount,'wang')
-                    this.setState({
-                        adddata:addcount
-                    })
-                    console.log(this.state.adddata,'123');
-                         }
+                     console.log(i,'iiiii');
+                    const tests=this.state.adddata.splice(i,1)
+                     var suma =0 ;
+                     tests.splice(i,1);
+                     for(var i=0 ; i<tests.length ; i++){
+                        suma += tests[i].smcount *tests[i].smallUntPrice + tests[i].bgcount * tests[i].bigUntPrice
+                      }
+                        this.setState({
+                            sum:suma,
+                            adddata:tests
+                        })                        
+                    }
+
+                   
              
 
      render(){
@@ -214,9 +212,8 @@ export default class newOrder extends Component {
            for (let i = 0; i < queryorder.length; i++) {
             queryorder[i].key = i
            }
+           console.log(this.state.adddata);
            
-        console.log(adddata, '第二个')
-        console.log( queryorder,'第一个');
         
         const columns = [
             {
@@ -248,7 +245,7 @@ export default class newOrder extends Component {
                 title: '操作',
                 render: (record,index) => (
                     <span>
-                        <a>delete</a>
+                        <a >delete</a>
                         <div onClick={this.add.bind(this,record)}>add</div>
                     </span>
                 )
@@ -269,7 +266,6 @@ export default class newOrder extends Component {
                 title: '数量',
                 dataIndex:'bgcount',
                 render: (text,record,index) => {
-                    console.log('我就是'+{text},)
                     return <div>
                         <span onClick={() => this.redbigcount(index,text)}>-</span>
                         <span>{text}</span>
@@ -279,7 +275,6 @@ export default class newOrder extends Component {
             },
             {
                 title: '小单位/单价',
-                // dataIndex: 'goodsname',
                 render: (text,record,index)=>
                       <span>
                         {record.smallUntPrice+'/'+record.bigUnt}
@@ -300,7 +295,7 @@ export default class newOrder extends Component {
             {
                 title: '金额',
                 render :(text,record,index) => {
-                return <span>{record.smcount * record.smallUntPrice + record.bgcount * record.bigUntPrice}</span>
+                return <span>{ Math.abs(record.smcount * record.smallUntPrice + record.bgcount * record.bigUntPrice).toString()}</span>
                 }
             },
             {
@@ -311,7 +306,7 @@ export default class newOrder extends Component {
                 title: '操作',
                 render: (text,record,index) => (
                     <span>
-                        <span onClick={()=>this.deldata(index)}>delete</span>
+                        <span onClick={()=>this.deldata(record.key)}>delete</span>
                     </span>
                 )
             },
