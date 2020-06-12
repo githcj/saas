@@ -10,7 +10,7 @@ class Login extends React.Component {
     this.state = {
       username: "",
 	  password: "",
-	  token:"nclasnclhnasionl"
+	  token:""
     }
   }
 
@@ -29,29 +29,34 @@ class Login extends React.Component {
   getLogin = () => {
 	  axios({
 		  method:'POST',
-		  url:'http://172.17.7.230:3031/mock/29/g3/xian/mm',
+		  url:'http://119.23.228.238:3031/mock/47/Login',
 		  data:{
-			  username:this.state.username,
-			  password:this.state.password
-		  }
+			  emp_account:this.state.username,
+        emp_password:this.state.password,
+        emp_last_time:new Date()
+      }
 	  })
 	  .then(res=> {
 		  console.log(res.data)
 		  this.setState({
 			  username:res.data.username,
 			  token:res.data.token
-		  })
+      })
+      localStorage.setItem('token',this.state.token)
+      this.props.loginHandler(
+        {
+          username: this.state.username
+        },
+        this.props.history
+      );
 	  })
 	  .catch(err=> {
-		  console.log(err)
-	  })
-    this.props.loginHandler(
-      {
-        username: this.state.username,
-        token: this.state.token,
-      },
-      this.props.history
-    );
+		  console.log('err',err)
+    })
+    this.setState({
+      username:'',
+      password:''
+    })
   };
 
   render() {

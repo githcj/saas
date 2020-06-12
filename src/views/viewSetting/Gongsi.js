@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Tooltip, Button, InputNumber, message } from 'antd';
+import { Form, Input, Tooltip, Button,  message } from 'antd';
 import ConTitle from '../../components/ConTitle'
 import WXUpLoad from '../../components/WXUpLoad'
 import CompanyImgs from '../../components/CompanyImgs'
