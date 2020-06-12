@@ -89,7 +89,7 @@ const System = (props) => {
 						</Route>
 						<Route path={match.url + "/AddWare"} component={AddWare} />
 						<Route path={match.url + "/Cusinfo"} component={Cusinfo}>
-							<Cusinfo msg={props}></Cusinfo>
+							<Cusinfo msg={match.url}></Cusinfo>
 						</Route>
 						<Route path={match.url + "/Custype"} component={Custype} />
 						<Route path={match.url + "/Supplier"} component={Supplier} />

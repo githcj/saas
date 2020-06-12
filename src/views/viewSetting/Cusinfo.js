@@ -2,54 +2,12 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import '../../assets/css/sales/order.css'
-import { Table, Button } from 'antd';
+import { Table, Button ,Select,Modal} from 'antd';
+
 import { NavLink, Route, Redirect } from 'react-router-dom'
 import addCus from '../viewSetting/addCus'
-const columns = [
-    {
-        title: '客户名称',
-        dataIndex: 'useName',
-    },
-    {
-        title: '客户类型',
-        dataIndex: 'Customer',
-    },
-    {
-        title: '联系人',
-        dataIndex: 'person',
-    },
-    {
-      title: '手机号',
-      dataIndex: 'phone',
-    },
-    {
-    title: '地址',
-    dataIndex: 'addres',
-    },
+const {Option} = Select
 
-    {
-      title: '创建人',
-      dataIndex: 'cjperson',
-    },
-    {
-      title: '负责人',
-      dataIndex: 'fzperson',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'timedate',
-    },
-    {
-        title: 'Axios',
-        render: () => (
-          <span>
-               <a>编辑</a>
-               <a>删除</a>
-          </span>
-        )
-    },
-
-];
 
 
 export default class Cusinfo extends Component {
@@ -62,9 +20,34 @@ export default class Cusinfo extends Component {
             orderList: [],
             sousuo:'',
             phone:'',
-            dates:''
+            dates:'',
+            eachPage:10,
+            visible:false,
+            bianji:[]
         };
     }
+
+    showModal = async(row) => {
+
+	  await	this.setState({
+              visible: true,
+              bianji:row
+        });
+        console.log(this.state.bianji,'123123123');
+        
+	}
+	handleOk = e => {
+		console.log(e);
+		this.setState({
+		  	visible: false,
+		});
+	}
+	handleCancel = e => {
+		console.log(e);
+		this.setState({
+		  	visible: false,
+		});
+	}
 
 
     componentDidMount() {
@@ -100,17 +83,52 @@ export default class Cusinfo extends Component {
     })
 }
 
-    // onSelectChange = selectedRowKeys => {
-    //     console.log('selectedRowKeys changed: ', selectedRowKeys);
-    //     this.setState({ selectedRowKeys });
-    // };
     render() {
-        const { orderList, selectedRowKeys ,phone ,sousuo , dates } = this.state;
-        // const rowSelection = {
-        //     selectedRowKeys,
-        //     onChange: this.onSelectChange,
-        // };
-        // const hasSelected = selectedRowKeys.length > 0;
+        const { orderList,phone ,sousuo , dates ,eachPage,bianji } = this.state;
+        const columns = [
+            {
+                title: '客户名称',
+                dataIndex: 'useName',
+            },
+            {
+                title: '客户类型',
+                dataIndex: 'Customer',
+            },
+            {
+                title: '联系人',
+                dataIndex: 'person',
+            },
+            {
+              title: '手机号',
+              dataIndex: 'phone',
+            },
+            {
+            title: '地址',
+            dataIndex: 'addres',
+            },
+            {
+              title: '创建人',
+              dataIndex: 'cjperson',
+            },
+            {
+              title: '负责人',
+              dataIndex: 'fzperson',
+            },
+            {
+              title: '创建时间',
+              dataIndex: 'timedate',
+            },
+            {
+                title: 'Axios',
+                render: (text,row,index) => (
+                  <span>
+                       <a onClick={()=> this.showModal(row)}>编辑</a>
+                       <a>删除</a>
+                  </span>
+                )
+            },
+        
+        ];
 
         for (let i = 0; i < orderList.length; i++) {
             orderList[i].key = i
@@ -143,14 +161,8 @@ export default class Cusinfo extends Component {
                     </div>
                 </div>
 
-                <div className="table">
+                <div className="table2">
                     <div style={{ marginBottom: 16 }}>
-                        {/* <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
-                    Reload
-                </Button> */}
-                        {/* <span style={{ marginLeft: 8 }}>
-                            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-                        </span> */}
                     </div>
                     <div className="quire-title ">
                         <div>数据列表</div>
@@ -161,8 +173,73 @@ export default class Cusinfo extends Component {
                     // rowSelection={rowSelection} 
                     columns={columns} 
                     dataSource={orderList}
-                    bordered />
+                    bordered 
+                    pagination={{
+                            showQuickJumper:true,
+                            showTotal:(total) => {
+                                return (
+                                    <p>共有{
+                                        Math.ceil(total / eachPage)
+                                    }页/{total}条数据</p>
+                                )
+                            },
+                            pageSize:eachPage
+                        }}
+                    />
                 </div>
+
+
+                
+                      <Modal
+						title="编辑"
+						centered
+						visible={this.state.visible}
+						onOk={this.handleOk}
+						okText='确定'
+						okType='primary'
+						cancelText='重置'
+						onCancel={this.handleCancel}
+						>
+						<div className='modal-item'>
+							<p>客户名称：</p>
+							<input value={bianji.useName}></input>
+						</div>
+						<div className='modal-item'>
+							<p>客户类型：</p>
+							<Select defaultValue={bianji.Customer} style={{ width: '60%' }}>
+								<Option value='11233'>Jack</Option>
+								<Option value="lucy">Lucy</Option>
+								<Option value="Yim">yim</Option>
+							</Select>
+						</div>
+						<div className='modal-item'>
+							<p>联系人：</p>
+							<Select defaultValue={bianji.person} style={{ width: '60%' }}>
+								<Option value="shelve">上架</Option>
+								<Option value="xiajia">下架</Option>
+							</Select>
+						</div>
+                        <div className='modal-item'>
+							<p>手机号：</p>
+                            <input value={bianji.phone}></input>
+						</div>
+                        <div className='modal-item'>
+							<p>地址：</p>
+                            <input value={bianji.addres}></input>
+						</div>
+                        <div className='modal-item'>
+							<p>创建人：</p>
+                            <input value={bianji.cjperson}></input>
+						</div>
+                        <div className='modal-item'>
+							<p>负责人：</p>
+                            <input value={bianji.fzperson}></input>
+						</div>
+                        <div className='modal-item'>
+							<p>创建日期：</p> 
+                            <input value={bianji.timedate}></input>
+						</div>
+					</Modal>
             </div>
         )
     }
