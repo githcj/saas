@@ -1,15 +1,13 @@
-import { yulanType } from './basicActionType' 
+import { editType } from './basicActionType' 
 
 const initState = {
-    wxImg:'',
-    logo:'',
-    companyImgs:[]
+    editInfo:{}
 }
 function userReducer(state=initState, action) {
   switch(action.type) {
-    case wxImgType:
+    case editType:
       return {
-        order:action.order
+        edit:action.edit
       }
     default:
       return state
