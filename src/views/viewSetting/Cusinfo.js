@@ -18,17 +18,17 @@ export default class Cusinfo extends Component {
             loading: false,
             orderDate: '',
             orderList: [],
-            sousuo:'',
+            sousuo:'123',
             phone:'',
             dates:'',
             eachPage:10,
             visible:false,
-            bianji:[]
+            bianji:[],
+            query:[],
         };
     }
 
     showModal = async(row) => {
-
 	  await	this.setState({
               visible: true,
               bianji:row
@@ -49,74 +49,104 @@ export default class Cusinfo extends Component {
 		});
 	}
 
-
     componentDidMount() {
         axios({
-            method: 'GET',
-            url: 'http://119.23.228.238:3031/mock/47/custorm',
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/customer/queryall',
         })
             .then(res => {
                 this.setState({
-                    orderList: res.data
+                    orderList: res.data.data
                 })
             })
             .catch(err => {
                 console.log(err);
             })
-    }
+     }
 
     setphone = (e) => {
         this.setState({
-            phone: e.target.value
+            phone:e.targrt.value,
         })
     }
 
     setsousuo = (e) => {
-      this.setState({
-          sousuo: e.target.value
-      })
-  }
+        this.setState({
+            sousuo: e.target.value
+        })
+    }
 
   setdates = (e) => {
-    this.setState({
-        dates: e.target.value
-    })
-}
+        this.setState({
+            dates:e.targrt.value,
+        })
+      }
+        Cusinfoquery =()=>{
+             
+           console.log(this.state.sousuo);
+           
+            
+            
+            axios({
+                method: 'POST',
+                url: 'http://172.16.6.27:8080/customer/wherequery',
+                data:{
+                    token:'1213545',
+                    customer_name:this.state.sousuo,
+                    customer_phone:this.state.phone,
+                    customer_create_time:this.state.dates 
+                }
+            })
+                .then(res => {
+                    this.setState({
+                        orderList: res.data.data
+                    })
+                    console.log(this.state.orderList);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+               
+
+        }
+
+
 
     render() {
         const { orderList,phone ,sousuo , dates ,eachPage,bianji } = this.state;
         const columns = [
             {
                 title: '客户名称',
-                dataIndex: 'useName',
+                dataIndex: 'customer_name',
             },
             {
                 title: '客户类型',
-                dataIndex: 'Customer',
+                dataIndex: 'customer_type_name',
             },
             {
                 title: '联系人',
-                dataIndex: 'person',
+                dataIndex: 'customer_contacts',
             },
             {
               title: '手机号',
-              dataIndex: 'phone',
+              dataIndex: 'customer_phone',
             },
             {
             title: '地址',
-            dataIndex: 'addres',
+            dataIndex: 'customer_address',
             },
             {
               title: '创建人',
-              dataIndex: 'cjperson',
+              dataIndex: 'customer_creater',
             },
             {
               title: '负责人',
-              dataIndex: 'fzperson',
+              dataIndex: 'emp_name',
             },
             {
               title: '创建时间',
-              dataIndex: 'timedate',
+              dataIndex: 'customer_create_time',
             },
             {
                 title: 'Axios',
@@ -143,11 +173,11 @@ export default class Cusinfo extends Component {
                 <div className="quire">
                     <div className="quire-title ">
                         <div>筛选查询</div>
-                        <div className="chaxun">查询结果</div>
+                        <div className="chaxun" onClick={this.Cusinfoquery}>查询结果</div>
                     </div>
                     <div className="flex-row condition4 ">
                         <div className="bianju">
-                            <label >输入搜索：</label><input placeholder="搜索" value={sousuo} onChange={this.setsousuo} ></input>
+                            <label >输入搜索：</label><input placeholder="搜索" value={this.sousuo} onChange={this.setsousuo }></input>
                         </div>
                         <div className="bianju" >
                             <label >手机号：</label>
@@ -166,7 +196,6 @@ export default class Cusinfo extends Component {
                     </div>
                     <div className="quire-title ">
                         <div>数据列表</div>
-                       
                         <NavLink  to={msg + '/addCus'} className="chaxun">添加</NavLink>
                     </div>
                     <Table 
@@ -207,9 +236,7 @@ export default class Cusinfo extends Component {
 						<div className='modal-item'>
 							<p>客户类型：</p>
 							<Select defaultValue={bianji.Customer} style={{ width: '60%' }}>
-								<Option value='11233'>Jack</Option>
-								<Option value="lucy">Lucy</Option>
-								<Option value="Yim">yim</Option>
+								 
 							</Select>
 						</div>
 						<div className='modal-item'>
