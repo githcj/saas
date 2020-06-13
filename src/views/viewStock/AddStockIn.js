@@ -7,8 +7,8 @@ export default class AddStockIn extends Component{
     constructor(props){
         super(props)
         this.state = {
-            List:[],
-            listtop:[]
+            data:[],
+            detailData:[]
         }
     }
     componentWillMount(){
