@@ -5,7 +5,7 @@ import {
   } from "antd";
 
 
- export default class Delete extends Component{
+ export default class Waredelete extends Component{
     constructor(props){
         super(props)
         this.state={
