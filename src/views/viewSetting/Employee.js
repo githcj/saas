@@ -21,39 +21,37 @@ const Employee = (props)=> {
                     </div>
                     <div className="purchase-table-se2">
                         <div className="addDiv">添加</div>
-                        <Select defaultValue="显示条数" style={{ width: 120 }} onChange={this.pageNumChange}>
+                        {/* <Select defaultValue="显示条数" style={{ width: 120 }} onChange={pageNumChange}>
                             <Option value="10">10条/页</Option>
                             <Option value="15">15条/页</Option>
                             <Option value="20">20条/页</Option>
                         </Select>
-                        <Select defaultValue="排序方式" className="seen" style={{ width: 150 }} onChange={this.sortChange}>
+                        <Select defaultValue="排序方式" className="seen" style={{ width: 150 }} onChange={sortChange}>
                             <Option value="addName">员工姓名升序</Option>
                             <Option value="eddName">员工姓名降序</Option>
-                            {/* <Option value="addNum">员工数量升序</Option>
-                            <Option value="eddNum">员工数量降序</Option> */}
-                        </Select>
+                        </Select> */}
                     </div>
                 </div>
 
-                <div className="table">
+                {/* <div className="table">
                     <Table 
-                    dataSource={this.state.departList} 
-                    columns={this.columns} 
+                    dataSource={departList} 
+                    columns={columns} 
                     bordered
-                    rowKey={this.state.departList.dep_id}
+                    rowKey={departList.dep_id}
                     pagination={{
                         showQuickJumper:true,
                         showTotal:(total) => {
                             return (
                                 <p>共有{
-                                    Math.ceil(total / this.state.eachPage)
+                                    Math.ceil(total / eachPage)
                                 }页/{total}条数据</p>
                             )
                         },
-                        pageSize:this.state.eachPage
+                        pageSize:eachPage
                     }}
                     />
-                </div>
+                </div> */}
 
                 {/* <DepartFrom
                     {...this.state}

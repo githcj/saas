@@ -4,7 +4,7 @@ import ConTitle from '../../components/ConTitle'
 import { UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewSetting/Department.css'
 import axios from '../../plugins/axios'
-import DepartFrom from '../../components/DepartForm'
+import DepartModal from '../../components/DepartModal'
 import DepartDelPop from '../../components/DepartDel'
 
 const { Option } = Select
@@ -17,7 +17,9 @@ export default class Department extends Component{
             departList:[],
             eachPage:10,
             ModalVisible:false,
-            rowInfo:{}
+            rowInfo:{},
+            title:'',
+            finishFun:null,
         }
     }
 
@@ -145,47 +147,69 @@ export default class Department extends Component{
 
     // 编辑
     async showModel(row) {
-        await this.setState({
-            rowInfo:row,
-            ModalVisible: true,
-        })
-        console.log(this.state.rowInfo,'row');
+        if(row !== undefined) {
+            await this.setState({
+                rowInfo:row,
+                title:'编辑部门信息',
+                finishFun:this.onFinish,
+                ModalVisible: true,
+            })
+        }else {
+            await this.setState({
+                title:'添加部门',
+                finishFun:this.onAdd,
+                ModalVisible: true,
+            })
+        }
         
     }
 
     // 表单提交
-    onFinish = async(value,form) => {
+    onFinish = async (value,form) => {
         value.dep_id = this.state.rowInfo.dep_id
 
         if(value.dep_name !== this.state.rowInfo.dep_name || value.dep_describe !== this.state.rowInfo.dep_describe){
             // console.log(value);
-            
             const {data:res} = await axios.post('/updDep',value)
             // console.log(res,'res');
-            
-            form.resetFields()
             if(res.code !== 200) return message.error('修改信息失败')
             message.success('修改信息成功')
             this.componentDidMount()
             this.setState({
+                rowInfo:{},
                 ModalVisible:false
             })
-        }else{
             form.resetFields()
+        }else{
             this.setState({
+                rowInfo:{},
                 ModalVisible:false
             })
+            form.resetFields()
             return message.info('未修改信息')
         }
-        
     };
 
+    onAdd = async (value,form) => {
+        console.log(value);
+        const {data:res}  = await axios.post('/addDep',value)
+        if(res.code !== 200) return message.error('添加部门失败!')
+        message.success('添加部门成功')
+        this.componentDidMount()
+        form.resetFields()
+        this.setState({
+            ModalVisible:false
+        })
+    }
+
     //取消编辑
-    handleCancel = async() => {
+    handleCancel = async(form) => {
+        // form.resetFields();
         await this.setState({
             rowInfo:{},
             ModalVisible:false,
         })
+        form.resetFields();
         console.log(this.setState.rowInfo,'cancel');
         
     };
@@ -226,7 +250,7 @@ export default class Department extends Component{
                         <span style={{fontSize:'14px'}}>数据列表</span>
                     </div>
                     <div className="purchase-table-se2">
-                        <div className="addDiv">添加</div>
+                        <div className="addDiv" onClick={()=>this.showModel()}>添加</div>
                         <Select defaultValue="显示条数" style={{ width: 120 }} onChange={this.pageNumChange}>
                             <Option value="10">10条/页</Option>
                             <Option value="15">15条/页</Option>
@@ -261,9 +285,9 @@ export default class Department extends Component{
                     />
                 </div>
 
-                <DepartFrom
+                <DepartModal
                     {...this.state}
-                    onCreate={this.onFinish}
+                    onCreate={this.state.finishFun}
                     onCancel={this.handleCancel}
                 />
             </div>
