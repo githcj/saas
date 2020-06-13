@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import '../../assets/css/viewStock/add.css'
 import { Select,Table,DatePicker } from 'antd'
+import axios from '../../plugins/axios'
 
 const { Option } = Select;
 export default class AddStockOut extends Component{
@@ -13,20 +14,22 @@ export default class AddStockOut extends Component{
         }
     }
     componentWillMount(){
-        const data = []
-        for(let i=0;i<20;i++){
-            data.push({
-                key: i,
-                goodsName: Math.random() > 0.5 ? 'A' : 'B',
-                bigUnit: '箱',
-                bigPrice: 100,
-                smallUnit:'瓶',
-                smallPrice:10,
-                storage:'999'
+        axios({
+            method:'POST',
+            url:'/inventory'
+        })
+        .then(res => {
+            const data = res.data.data
+            data.map((item,index) => {
+                item.key = index
+                return data
             })
-        }
-        this.setState({
-            data:data
+            this.setState({
+                data:data
+            })
+        })
+        .catch(err => {
+            console.log(err)
         })
     }
     red = (data) => {
@@ -87,11 +90,10 @@ export default class AddStockOut extends Component{
                 sum:data.bigPrice + data.smallPrice
             })
         }else{
-            detailData.map((item,index) => {
-                if(detailData[index].goodsName === data.goodsName){
-                    detailData[index].bigNum += 1
-                    detailData[index].smallNum += 1
-                    return detailData
+            for(let i=0;i<detailData.length;i++){
+                if(detailData[i].goodsName === data.goodsName){
+                    detailData[i].bigNum += 1
+                    detailData[i].smallNum += 1
                 }else{
                     detailData.push({
                         goodsName:data.goodsName,
@@ -101,33 +103,42 @@ export default class AddStockOut extends Component{
                         smallNum:1,
                         sum:data.bigPrice + data.smallPrice
                     })
-                    return detailData
                 }
-            })
+            }
+            // detailData.push({
+            //     goodsName:data.goodsName,
+            //     big:data.bigPrice + '/' + data.bigUnit,
+            //     bigNum:1,
+            //     small:data.smallPrice + '/' + data.smallUnit,
+            //     smallNum:1,
+            //     sum:data.bigPrice + data.smallPrice
+            // })
         }
-        var allSum = 0
-        for(let i=0;i<detailData.length;i++){
-            allSum = detailData[i].sum + allSum
-        }
-
-        console.log(detailData)
-        this.setState({
-            detailData:detailData,
-            allSum:allSum
+        detailData.map((item,index) => {
+            item.key = index
+            return detailData
         })
-
-    }
-    delGoods = (index) => {
-        console.log(this.state.detailData)
-        console.log(index)
-        const newData = this.state.detailData.splice(index,1)
         this.setState({
-            ...this.state,
+            detailData:detailData
+        })
+        console.log(this.state.detailData)
+    }
+    delGoods = (i) => {
+        console.log(this.state.detailData)
+        const newData = this.state.detailData
+        newData.map((item,index) => {
+            if(item.key === i){
+                newData.splice(i,1)
+            }
+            return newData
+        })
+        this.setState({
             detailData:newData
         })
     }
     render(){
         const { data,detailData,allSum } = this.state
+        console.log(detailData)
         const detail = [
             {
                 title: '商品名称',
