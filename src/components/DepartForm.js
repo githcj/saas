@@ -31,6 +31,7 @@ const DepartFrom = (props) => {
         }}
         >
         <Form
+        style={{width:'25vw'}}
             form={form}
             layout="vertical"
             name="form_in_modal"

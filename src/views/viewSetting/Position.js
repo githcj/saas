@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import {
-  Modal,
-  Popconfirm,
-  message,
   Switch,
   Table,
-  DatePicker,
   Select,
 } from "antd";
 import { SyncOutlined, UnorderedListOutlined } from "@ant-design/icons";
