@@ -39,7 +39,7 @@ export default class purchaseApply extends Component {
     }
     addbigcount = (i,n) => {
         var suma = 0
-        var addcount = this.state.data
+        var addcount = this.state.detailData
         console.log(i,'i')
         console.log(n,'n')
         if(n>0){
@@ -58,7 +58,68 @@ export default class purchaseApply extends Component {
             })
         }
     }
-    
+    addsmcount = (i,n) =>{
+        var suma = 0
+        var addcount = this.state.detailData
+        if(n>0){
+            this.state.detailData.filter((v,x)=>{
+                if( x===i){
+                    addcount[i].smcount = n+1
+                }
+            })
+            for(var i=0;i<addcount.length;i++){
+                suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
+            }
+            this.setState({
+                sum:suma,
+                data:addcount
+            })
+        }
+    }
+    redbigcount = (i,n) =>{
+        var suma = 0
+        var addcount = this.state.detailData
+        if(n>1){
+            this.state.detailData.filter((v,x)=>{
+                if(x===i){
+                    addcount[i].bgcount = n-1
+                }
+            })
+            for(var i=0;i<addcount.length;i++){
+                suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
+            }
+            this.setState({
+                sum:suma,
+                data:addcount
+            })
+        }
+    }
+    redsmcount =(i,n)=>{
+        var suma  =0;
+        var addcount = this.state.detailData
+        if(n>1){
+            this.state.detailData.filter((v,x)=>{
+                if(x===i){
+                    addcount[i].smcount =n-1
+                }
+            })
+            for(var i=0;i<addcount.length;i++){
+                suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
+            }
+            this.setState({
+                sum:suma,
+                data:addcount
+            })
+        }
+    }
+    delA = (i) => {
+        const delB = this.state.detailData.filter(item=>(
+             item.key != i
+        ))
+        this.setState({
+            detailData:delB
+        })
+    }
     add = (record) => {
         var suma = 0
         let newData = [...this.state.detailData]
@@ -115,7 +176,7 @@ export default class purchaseApply extends Component {
                 }
             }, {
                 title: '数量',
-                dataIndex: 'bigNum',
+                dataIndex: 'bgcount',
                 align: 'center',
                 render: (text, record,index) => {
                     console.log('我就是',record.bgcount)
@@ -134,12 +195,12 @@ export default class purchaseApply extends Component {
                 }
             }, {
                 title: '数量',
-                dataIndex: 'smallNum',
+                dataIndex: 'smcount',
                 align: 'center',
                 render: (text, record,index) => {
                     return <div className="number">
                             <span onClick={() => this.redsmcount(index,text)} className="count">-</span>
-                            <span>{record.smcount}</span>
+                            <span>{text}</span>
                             <span onClick={() => this.addsmcount(index,text)} className="count">+</span>
                         </div>
                 }
@@ -158,7 +219,8 @@ export default class purchaseApply extends Component {
                 title: '操作',
                 dataIndex: 'delHandle',
                 align: 'center',
-                render: () => <span style={{ color: 'rgb(26, 188, 156)' }}>删除</span>
+                render: (text,record) => <span style={{ color: 'rgb(26, 188, 156)' }}
+                onClick={()=>this.delA(record.key)}>删除</span>
             }
         ]
         const columns = [

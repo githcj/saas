@@ -1,5 +1,5 @@
 import React from 'react'
-import { DatePicker, Select,Table} from 'antd'
+import { DatePicker, Select, Table, Modal, Button } from 'antd'
 import '../../assets/css/wang/purchase.css'
 import {
     SearchOutlined,
@@ -21,121 +21,160 @@ function onOk(value) {
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-class purchaseAdmin extends React.Component{
-    constructor(props){
+class purchaseAdmin extends React.Component {
+    constructor(props) {
         super(props)
-        this.state={
-            data:[],
-            everyPage:10
+        this.state = {
+            data: [],
+            everyPage: 10,
+            loading: false,
+            visible: false,
+            shenpi:[],
+            yijian:'',
+            id:'',
+            shenpiyijian:''
         }
     }
-    componentWillMount(){
+    componentWillMount() {
         axios({
-            method:'GET',
-            url:'/purchasing'
+            method: 'GET',
+            url: '/purchasing'
         })
-        .then(res=>{
-            this.setState({
-                data:res.data
+            .then(res => {
+                this.setState({
+                    data: res.data
+                })
             })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
+            .catch(err => {
+                console.log(err)
+            })
     }
-    pageNumChange = (value) =>{
-        if(value==='ten'){
+    pageNumChange = (value) => {
+        if (value === 'ten') {
             this.setState({
-                everyPage:10
+                everyPage: 10
             })
         }
-        if(value==='twenty'){
+        if (value === 'twenty') {
             this.setState({
-                everyPage:20
+                everyPage: 20
             })
         }
     }
-    sortChange = (value) =>{
+    sortChange = (value) => {
         const newData = [...this.state.data]
-        if(value === 'saleLowHeight'){
-            newData.sort((a,b)=>{
+        if (value === 'saleLowHeight') {
+            newData.sort((a, b) => {
                 return a.SumMoney - b.SumMoney
             })
         }
-        if(value === 'saleHeightLow'){
-            newData.sort((a,b)=>{
+        if (value === 'saleHeightLow') {
+            newData.sort((a, b) => {
                 return b.SumMoney - a.SumMoney
             })
         }
         this.setState({
-            data:newData
+            data: newData
         })
     }
     todetail = (record) => {
         this.props.msg.push({
-            pathname:'/home/Caigou/purchaseDetail',
-            params:record
+            pathname: '/home/Caigou/purchaseDetail',
+            params: record
         })
     }
-    render(){
+    showModal = (i) => {
+        console.log('我触发了',i,this.state)
+        this.setState({
+            visible: true,
+            id:i
+        });
+    };
+    handleOk = () => {
+        const data2=this.state.data
+        const { id, shenpiyijian } = this.state
+        data2.filter(item => {
+            if(id === item.serialNum){
+                item.state = 3
+                item.yijian = shenpiyijian
+            }
+            return item
+        })
+        this.setState({ 
+            data:data2,
+            loading: false,
+            visible: false,
+            shenpiyijian:''
+        });
+    }
+    handleCancel = () => {
+        this.setState({ visible: false });
+    }
+    yijianChange = (e) => {
+        this.setState({
+            shenpiyijian:e.target.value
+        })
+    }
+    render() {
         const { props } = this.props
+        const { visible, loading } = this.state;
         const columns = [
             {
                 title: '编号',
                 dataIndex: 'serialNum',
                 key: 'serialNum',
-                align:'center'
+                align: 'center'
             },
             {
                 title: '创建日期',
                 dataIndex: 'data',
                 key: 'data',
-                align:'center'
+                align: 'center'
             },
             {
                 title: '供货厂商',
                 dataIndex: 'gongHuo',
                 key: 'gongHuo',
-                align:'center'
+                align: 'center'
             },
             {
                 title: '总金额',
                 dataIndex: 'SumMoney',
                 key: 'SumMoney',
-                align:'center'
+                align: 'center'
             },
             {
                 title: '需用日期',
                 dataIndex: 'needData',
                 key: 'needData',
-                align:'center'
+                align: 'center'
             },
             {
                 title: '创建人',
                 dataIndex: 'person',
                 key: 'person',
-                align:'center'
+                align: 'center'
             },
             {
                 title: '审批人',
                 dataIndex: 'shenpiRen',
                 key: 'shenpiRen',
-                align:'center'
+                align: 'center'
             },
             {
                 title: '状态',
                 dataIndex: 'state',
                 key: 'state',
-                align:'center',
-                render:(text,record,index)=>{
-                    if(text===1){
-                        return<span>待审批</span>
-                    }else if(text===2){
-                        return<span>不通过</span>
-                    }else if(text===3){
-                        return<span>已通过</span>
-                    }else if(text===4){
-                        return<span>已入库</span>
+                align: 'center',
+                render: (text, record, index) => {
+                    if (text === 1) {
+                        return <span>待审批</span>
+                    } else if (text === 2) {
+                        return <span>不通过</span>
+                    } else if (text === 3) {
+                        return <span>已通过</span>
+                    } else if (text === 4) {
+                        return <span>已入库</span>
                     }
                 }
             },
@@ -143,16 +182,20 @@ class purchaseAdmin extends React.Component{
                 title: '审批操作',
                 dataIndex: 'doesA',
                 key: 'doesA',
-                align:'center',
-                render: (text, record, index)=> {
-                    console.log(text,record,index)
-                    if(record.state === 1) {
-                        return <a>审批</a>
-                    } else if(record.state === 2) {
-                        return <a>审批</a>
-                    } else if(record.state=== 3){
+                align: 'center',
+                render: (text, record, index) => {
+                    console.log(record,'11111')
+                    if (record.state === 1) {
+                        return <div>
+                            <span type="primary" onClick={()=> this.showModal(record.serialNum)}>审批</span>
+                        </div>
+                    } else if (record.state === 2) {
+                        return <div>
+                                <span type="primary" onClick={()=> this.showModal(record.serialNum)}>审批</span>
+                        </div>
+                    } else if (record.state === 3) {
                         return <a>入库</a>
-                    }else if(record.state===4){
+                    } else if (record.state === 4) {
                         return null
                     }
                 }
@@ -161,25 +204,25 @@ class purchaseAdmin extends React.Component{
                 title: '操作',
                 dataIndex: 'does',
                 key: 'does',
-                align:'center',
-                render:(text,record,index)=>{
-                    console.log(text,record,index)
-                    if(record.state === 1 || record.state ===2){
+                align: 'center',
+                render: (text, record, index) => {
+                    console.log(text, record, index)
+                    if (record.state === 1 || record.state === 2) {
                         return <p className="caozuoP">
                             <a>编辑</a>
-                            <a onClick = {() => this.todetail(record)}>预览</a>
+                            <a onClick={() => this.todetail(record)}>预览</a>
                             <a>删除</a>
                         </p>
-                    }else if(record.state === 4 || record.state ===3){
+                    } else if (record.state === 4 || record.state === 3) {
                         return <p className="caozuoP">
-                            <a onClick = {() => this.todetail(record)}>预览</a>
+                            <a onClick={() => this.todetail(record)}>预览</a>
                             <a>删除</a>
                         </p>
                     }
                 }
             },
         ];
-        const {data,everyPage} = this.state
+        const { data, everyPage } = this.state
         console.log(props)
         return (
             <div className="admin">
@@ -253,32 +296,53 @@ class purchaseAdmin extends React.Component{
                                 <Option value="ten">每页10条</Option>
                                 <Option value="twenty">每页20条</Option>
                             </Select>
-                            <Select defaultValue="排序方式" className="seen" 
-                            style={{ width: 120 }}
-                            onChange={(value)=>this.sortChange(value)} >
+                            <Select defaultValue="排序方式" className="seen"
+                                style={{ width: 120 }}
+                                onChange={(value) => this.sortChange(value)} >
                                 <Option value="saleLowHeight">总金额递增</Option>
                                 <Option value="saleHeightLow">总金额递减</Option>
                             </Select>
                         </div>
                     </div>
-                    <Table 
-                    rowSelection={{type:'Checkbox'}}
-                    columns={columns} 
-                    dataSource={data}
-                    bordered
-                    pagination={{
-                        showQuickJumper:true,
-                        showTotal:(total)=>{
-                            return(
-                                <p>共有{
-                                    Math.ceil(total / everyPage)
+                    <Table
+                        rowSelection={{ type: 'Checkbox' }}
+                        columns={columns}
+                        dataSource={data}
+                        bordered
+                        pagination={{
+                            showQuickJumper: true,
+                            showTotal: (total) => {
+                                return (
+                                    <p>共有{
+                                        Math.ceil(total / everyPage)
                                     }页/{total}条数据
-                                </p>
-                            )
-                        },
-                        pageSize:everyPage
-                    }}>
+                                    </p>
+                                )
+                            },
+                            pageSize: everyPage
+                        }}>
                     </Table>
+                    <Modal
+                        visible={visible}
+                        title="审批意见"
+                        onOk={() => this.handleOk()}
+                        onCancel={() => this.handleCancel()}
+                        footer={[
+                            <Button key="back" onClick={() => this.handleCancel()}>
+                                不同意
+                            </Button>,
+                            <Button key="submit" type="primary" loading={loading} onClick={()=>this.handleOk()}>
+                                同意
+                            </Button>,
+                        ]}
+                    >
+                        <div className="YiJ">
+                            <div>审批意见：</div>
+                            <div>
+                                <input value={this.state.shenpiyijian} onChange={this.yijianChange}></input>
+                            </div>
+                        </div>
+                    </Modal>
                 </div>
             </div>
         )
