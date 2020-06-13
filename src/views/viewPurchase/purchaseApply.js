@@ -39,7 +39,7 @@ export default class purchaseApply extends Component {
     }
     addbigcount = (i,n) => {
         var suma = 0
-        var addcount = this.state.detailData
+        var addcount = this.state.data
         console.log(i,'i')
         console.log(n,'n')
         if(n>0){
@@ -97,6 +97,10 @@ export default class purchaseApply extends Component {
         })
     }
     render() {
+        const { data, detailData,sum } = this.state
+        for (let i = 0; i < detailData.length; i++) {
+            detailData[i].key = i
+        }
         const detail = [
             {
                 title: '商品名称',
@@ -117,7 +121,7 @@ export default class purchaseApply extends Component {
                     console.log('我就是',record.bgcount)
                     return  <div className="number">
                             <span onClick={() => this.redbigcount(index,text)} className="count">-</span>
-                            <span>{record.bgcount}</span>
+                            <span>{text}</span>
                             <span onClick={() => this.addbigcount(index,text)} className="count">+</span>
                         </div>
                 }
@@ -197,7 +201,7 @@ export default class purchaseApply extends Component {
                 )
             }
         ]
-        const { data, detailData,sum } = this.state
+        
         for (let i = 0; i < detailData.length; i++) {
             detailData[i].key = i
            }
