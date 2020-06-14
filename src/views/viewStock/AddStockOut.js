@@ -10,10 +10,12 @@ export default class AddStockOut extends Component{
         this.state = {
             data:[],
             detailData:[],
-            allSum:''
+            allSum:0,
+            bigNum:1,
+            smallNum:1
         }
     }
-    componentWillMount(){
+    componentDidMount(){
         axios({
             method:'POST',
             url:'/inventory'
@@ -32,113 +34,126 @@ export default class AddStockOut extends Component{
             console.log(err)
         })
     }
-    red = (data) => {
-        if(data.smallNum>1){
-            data.smallNum -= 1
+    red = (i) => {
+        const detailData = [...this.state.detailData]
+        if(detailData[i].smallNum>1){
+            detailData[i].smallNum -= 1
+            detailData[i].sum = detailData[i].sum - detailData[i].small
         }
         var allSum = 0
-        for(let i=0;i<this.state.detailData.length;i++){
-            allSum = this.state.detailData[i].sum + allSum
+        for(let i=0;i<detailData.length;i++){
+            allSum = detailData[i].sum + allSum
         }
         this.setState({
-            allSum:allSum
+            allSum:allSum,
+            detailData:detailData
         })
     }
-    add = (data) => {
-        console.log(data)
-        data.smallNum += 1
+    add = (i) => {
+        const detailData = [...this.state.detailData]
+        detailData[i].smallNum += 1
+        detailData[i].sum = detailData[i].sum + detailData[i].small
         var allSum = 0
-        for(let i=0;i<this.state.detailData.length;i++){
-            allSum = this.state.detailData[i].sum + allSum
+        for(let i=0;i<detailData.length;i++){
+            allSum = detailData[i].sum + allSum
         }
         this.setState({
-            allSum:allSum
+            allSum:allSum,
+            detailData:detailData
         })
     }
-    redBig = (data) => {
-        if(data.bigNum>1){
-            data.bigNum -= 1
+    redBig = (i) => {
+        const detailData = [...this.state.detailData]
+        if(detailData[i].bigNum>1){
+            detailData[i].bigNum -= 1
+            detailData[i].sum = detailData[i].sum - detailData[i].big
         }
         var allSum = 0
         for(let i=0;i<this.state.detailData.length;i++){
             allSum = this.state.detailData[i].sum + allSum
         }
         this.setState({
-            allSum:allSum
+            allSum:allSum,
+            detailData:detailData
         })
     }
-    addBig = (data) => {
-        console.log(data)
-        data.bigNum += 1
+    addBig = (i) => {
+        const detailData = [...this.state.detailData]
+        detailData[i].bigNum += 1
+        detailData[i].sum = detailData[i].sum + detailData[i].big
         var allSum = 0
         for(let i=0;i<this.state.detailData.length;i++){
             allSum = this.state.detailData[i].sum + allSum
         }
         this.setState({
-            allSum:allSum
+            allSum:allSum,
+            detailData:detailData
         })
     }
     addStockOut = (data) => {
+        var allSum = 0
         const detailData = [...this.state.detailData]
         if(detailData.length === 0){
             detailData.push({
                 goodsName:data.goodsName,
-                big:data.bigPrice + '/' + data.bigUnit,
+                big:data.bigPrice,
+                bigUnit:data.bigUnit,
                 bigNum:1,
-                small:data.smallPrice + '/' + data.smallUnit,
+                small:data.smallPrice,
+                smallUnit:data.smallUnit,
                 smallNum:1,
                 sum:data.bigPrice + data.smallPrice
             })
+            
         }else{
+            let is = true
             for(let i=0;i<detailData.length;i++){
-                if(detailData[i].goodsName === data.goodsName){
+                if(data.goodsName === detailData[i].goodsName){
+                    is = !is
                     detailData[i].bigNum += 1
                     detailData[i].smallNum += 1
-                }else{
-                    detailData.push({
-                        goodsName:data.goodsName,
-                        big:data.bigPrice + '/' + data.bigUnit,
-                        bigNum:1,
-                        small:data.smallPrice + '/' + data.smallUnit,
-                        smallNum:1,
-                        sum:data.bigPrice + data.smallPrice
-                    })
+                    detailData[i].sum = data.bigPrice*detailData[i].bigNum + data.smallPrice*detailData[i].smallNum
                 }
             }
-            // detailData.push({
-            //     goodsName:data.goodsName,
-            //     big:data.bigPrice + '/' + data.bigUnit,
-            //     bigNum:1,
-            //     small:data.smallPrice + '/' + data.smallUnit,
-            //     smallNum:1,
-            //     sum:data.bigPrice + data.smallPrice
-            // })
+            if(is){
+                detailData.push({
+                    goodsName:data.goodsName,
+                    big:data.bigPrice,
+                    bigUnit:data.bigUnit,
+                    bigNum:1,
+                    small:data.smallPrice,
+                    smallUnit:data.smallUnit,
+                    smallNum:1,
+                    sum:data.bigPrice + data.smallPrice
+                })
+            }
+        }
+        for(let i=0;i<detailData.length;i++){
+            allSum = detailData[i].sum + allSum
         }
         detailData.map((item,index) => {
             item.key = index
             return detailData
         })
         this.setState({
-            detailData:detailData
+            detailData:detailData,
+            allSum:allSum
         })
-        console.log(this.state.detailData)
     }
     delGoods = (i) => {
-        console.log(this.state.detailData)
-        const newData = this.state.detailData
-        newData.map((item,index) => {
-            if(item.key === i){
-                newData.splice(i,1)
-            }
-            return newData
-        })
+        const newData = [...this.state.detailData]
+        newData.splice(i,1)
+        var allSum = 0
+        for(let i=0;i<newData.length;i++){
+            allSum = newData[i].sum + allSum
+        }
         this.setState({
-            detailData:newData
+            detailData:newData,
+            allSum:allSum
         })
     }
     render(){
         const { data,detailData,allSum } = this.state
-        console.log(detailData)
         const detail = [
             {
                 title: '商品名称',
@@ -146,30 +161,36 @@ export default class AddStockOut extends Component{
             },{
                 title: '单价/大单位',
                 dataIndex: 'big',
+                render:(text,record) => {
+                    return record.big + '/' + record.bigUnit
+                }
             },{
                 title:'数量',
                 dataIndex:'bigNum',
-                render: (text,record) => {
+                render: (text,record,index) => {
                     return(
                         <div className="number">
-                            <span onClick={() => this.redBig(record)} className="count">-</span>
+                            <span onClick={() => this.redBig(index)} className="count">-</span>
                             <span>{text}</span>
-                            <span onClick={() => this.addBig(record)} className="count">+</span>
+                            <span onClick={() => this.addBig(index)} className="count">+</span>
                         </div>
                     )
                 }
             },{
                 title:'小单位价格',
-                dataIndex:'small'
+                dataIndex:'small',
+                render:(text,record) => {
+                    return record.small + '/' + record.smallUnit
+                }
             },{
                 title:'数量',
                 dataIndex:'smallNum',
-                render: (text,record) => {
+                render: (text,record,index) => {
                     return(
                         <div className="number">
-                            <span onClick={() => this.red(record)} className="count">-</span>
+                            <span onClick={() => this.red(index)} className="count">-</span>
                             <span>{text}</span>
-                            <span onClick={() => this.add(record)} className="count">+</span>
+                            <span onClick={() => this.add(index)} className="count">+</span>
                         </div>
                     )
                 }

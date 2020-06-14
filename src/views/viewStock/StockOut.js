@@ -57,8 +57,13 @@ export default class StockOut extends Component {
             url:'/outboundManagement'
         })
         .then(res => {
+            const data = res.data.data
+            data.map((item,index) => {
+                item.key = index
+                return data
+            })
             this.setState({
-                outData:res.data.data
+                outData:data
             })
         })
         .catch(err => {
