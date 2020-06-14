@@ -90,13 +90,28 @@ class purchaseAdmin extends React.Component {
             id:i
         });
     };
+    showModelR = (i) =>{
+        this.setState({
+            visible:true,
+            id:i
+        })
+    }
     handleOk = () => {
         const data2=this.state.data
         const { id, shenpiyijian } = this.state
         data2.filter(item => {
-            if(id === item.serialNum){
+            if(id === item.serialNum && item.state===1){
+                console.log(item.serialNum+'我今天吃的水饺'+id)
                 item.state = 3
                 item.yijian = shenpiyijian
+            }
+            else if(id === item.serialNum && item.state===2){
+                console.log(item.serialNum+'我今天吃的水饺'+id)
+                item.state = 3
+                item.yijian = shenpiyijian
+            }else if(id===item.serialNum && item.state===3){
+                item.state = 4 
+                
             }
             return item
         })
@@ -108,7 +123,7 @@ class purchaseAdmin extends React.Component {
         });
     }
     handleCancel = () => {
-        this.setState({ visible: false });
+        this.setState({ visible: false })
     }
     yijianChange = (e) => {
         this.setState({
@@ -194,7 +209,9 @@ class purchaseAdmin extends React.Component {
                                 <span type="primary" onClick={()=> this.showModal(record.serialNum)}>审批</span>
                         </div>
                     } else if (record.state === 3) {
-                        return <a>入库</a>
+                        return <div>
+                            <span onClick={()=>this.showModelR(record.serialNum)}>入库</span>
+                        </div>
                     } else if (record.state === 4) {
                         return null
                     }
