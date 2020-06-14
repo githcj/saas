@@ -56,14 +56,15 @@ for (var i = 0; i < 20; i++) {
     data.push({
         key: i,
         serialNum: 10001,
-        name: '2017-09-08 12:12',
-        bigDan: 'A供应厂商',
-        Num1: '2017-12-26 13:14',
-        smallPrice: 'A员工',
-        Num2: 'B员工',
-        SumPrice: '待审批'
+        name: '名字',
+        bigDan: '100/箱',
+        Num1: '99',
+        smallPrice: '10/瓶',
+        Num2: '99',
+        SumPrice: '999'
     })
 }
+ 
 
 class purchaseDetail extends React.Component {
     constructor(props){

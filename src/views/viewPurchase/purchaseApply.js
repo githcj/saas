@@ -14,6 +14,7 @@ export default class purchaseApply extends Component {
             sum: 0
         }
     }
+   
     componentDidMount() {
         const detailData = this.state.detailData
        
@@ -119,6 +120,9 @@ export default class purchaseApply extends Component {
         this.setState({
             detailData:delB
         })
+    }
+    handleData = () =>{
+        
     }
     add = (record) => {
         var suma = 0
@@ -377,7 +381,7 @@ export default class purchaseApply extends Component {
                             <span className="span-one">金额合计：</span>
                             <span className="span-two">{sum}元</span>
                         </div>
-                        <div className="apply-sub">提交</div>
+                        <div className="apply-sub" onClick={()=>this.handleData()}>提交</div>
                     </div>
                 </section>
             </div>
