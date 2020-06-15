@@ -5,52 +5,6 @@ import { Table } from 'antd'
 import axios from '../../plugins/axios'
 
 
-const columns = [
-    {
-        title: '序号',
-        dataIndex: 'serialNum',
-        key: 'serialNum',
-        align:'center'
-    },
-    {
-        title: '商品名称',
-        dataIndex: 'name',
-        key: 'name',
-        align:'center'
-    },
-    {
-        title: '单位/大单位',
-        dataIndex: 'bigDan',
-        key: 'bigDan',
-        align:'center'
-    },
-    {
-        title: '数量',
-        dataIndex: 'Num1',
-        key: 'Num1',
-        align:'center'
-    },
-    {
-        title: '小单位/价格',
-        dataIndex: 'smallPrice',
-        key: 'smallPrice',
-        align:'center'
-    },
-    {
-        title: '数量',
-        dataIndex: 'Num2',
-        key: 'Num2',
-        align:'center'
-    },
-    {
-        title: '金额',
-        dataIndex: 'SumPrice',
-        key: 'SumPrice',
-        align:'center'
-    }
-];
-
-
 export default class StockOutDetail extends Component{
     constructor(props){
         super(props)
@@ -65,9 +19,15 @@ export default class StockOutDetail extends Component{
             url:'/preOutbound',
             data:this.props.msg.params.out_id
         })
-        .then( res => {
+        .then(res => {
+            console.log(res.data)
+            const tableData = res.data.data
+            tableData.map((item,index) => {
+                tableData[index].key = index
+                return tableData
+            })
             this.setState({
-                tableData:res.data.data,
+                tableData:tableData,
                 infoData:res.data
             })
         })
@@ -79,15 +39,55 @@ export default class StockOutDetail extends Component{
         const { tableData,infoData } = this.state
         const mydata = this.props.msg.params
         console.log(mydata)
+        const columns = [
+            {
+                title: '序号',
+                dataIndex: 'key',
+                render:(text) => <span>{text + 1}</span>
+            },
+            {
+                title: '商品名称',
+                dataIndex: 'goods_name'
+            },
+            {
+                title: '单位/大单位',
+                dataIndex: 'bigDan',
+                render:(text,record) =>{
+                    return record.large_unit_price + '/' + record.large_unit
+                }
+            },
+            {
+                title: '数量',
+                dataIndex: 'whole_num'
+            },
+            {
+                title: '小单位/价格',
+                dataIndex: 'smallPrice',
+                render:(text,record) => {
+                    return record.small_unit_price + '/' + record.small_unit
+                }
+            },
+            {
+                title: '数量',
+                dataIndex: 'single_num'
+            },
+            {
+                title: '金额',
+                dataIndex: 'total_price'
+            },{
+                title:'生产日期',
+                dataIndex:'production_time'
+            }
+        ]
         return (
             <div className="stockOutDetail detail">
                 <header>
-                    <ConTitle titleName={'出库预览-' + mydata.out_status}/>
+                    <ConTitle titleName={'出库预览-' + infoData.check_status}/>
                 </header>
                 <section>
                     <div className="detail-info-title">
                         <p className="p1">基本信息</p>
-                        <p className="p2">单号：<span style={{ color: 'red' }}>{mydata.out_id}</span></p>
+                        <p className="p2">单号：<span style={{ color: 'red' }}>{1234567890}</span></p>
                     </div>
                     <div className="detail-info-detail">
                         <p>客户名称：<span>{infoData.customer_name}</span></p>
@@ -118,7 +118,7 @@ export default class StockOutDetail extends Component{
                             id="table"
                             rowSelection={{ type: 'Checkbox' }}
                             columns={columns}
-                            // dataSource={}
+                            dataSource={tableData}
                             bordered>
                         </Table>
                         <div className="detail-total">

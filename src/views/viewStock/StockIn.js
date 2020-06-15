@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import { Table, DatePicker, Select } from 'antd'
 import { SyncOutlined, SearchOutlined, DownOutlined, UpOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewStock/stock.css'
-import { Link } from 'react-router-dom'
+import axios from '../../plugins/axios'
+import ConTitle from '../../components/ConTitle'
 
 export default class StockIn extends Component{
     constructor(props){
         super(props)
         this.state = {
+            indata:[],
             pagesize:10
         }
     }
@@ -26,31 +28,62 @@ export default class StockIn extends Component{
             })
         }
     }
+    componentDidMount(){
+        axios({
+            method:'POST',
+            url:'/enterwareManagement'
+        })
+        .then(res => {
+            console.log(res.data)
+            const data = res.data.data
+            data.map((item,index) => {
+                item.key = index
+                return data
+            })
+            this.setState({
+                indata:data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    toAddStockIn = () => {
+        this.props.msg.push({
+            pathname:'/home/kucun/addstockin'
+        })
+    }
+    todetail = (data) => {
+        this.props.msg.push({
+            pathname:'/home/kucun/stockindetail',
+            params:data
+        })
+    }
     render(){
         const columns = [
             {
                 title: '编号',
-                dataIndex: 'id',
+                dataIndex: 'godown_id',
             },
             {
                 title: '创建日期',
-                dataIndex: 'bulidDate',
+                dataIndex: 'create_time',
             },
             {
                 title: '供货厂商',
-                dataIndex: 'store',
+                dataIndex: 'supplier_name',
             },
             {
                 title:'进货仓库',
-                dataIndex:'salesMan'
+                dataIndex:'ware_name'
             },
             {
                 title:'总金额',
-                dataIndex:'total'
+                dataIndex:'total_price'
             },
             {
                 title:'入库时间',
-                dataIndex:'deliveryTime'
+                dataIndex:'entry_time'
             },
             {
                 title:'发起人',
@@ -62,15 +95,24 @@ export default class StockIn extends Component{
             },
             {
                 title:'状态',
-                dataIndex:'state'
+                dataIndex:'out_status',
+                render:(text) => {
+                    if(text === '已通过'){
+                        return <span
+                        style={{
+                            color:'rgb(51, 153, 255)'
+                        }}>{text}</span>
+                    }
+                    return <span>{text}</span>
+                }
             },
             {
                 title:'审批操作',
                 dataIndex:'approveState', 
                 render: (text, record, index)=> {
-                    if(record.state === '待审批') {
+                    if(record.out_status === '待审批') {
                         return <span>审批</span>
-                    } else if(record.state === '已入库') {
+                    } else if(record.out_status === '已入库') {
                         return null
                     }
                 }
@@ -78,49 +120,30 @@ export default class StockIn extends Component{
                 title:'操作',
                 dataIndex:'handle',
                 render:(text,record,index) => {
-                    if(record.state === '待审批'){
+                    if(record.out_status === '待审批'){
                         return (
-                            <p 
-                            style={{
-                                display:'flex',
-                                justifyContent:'space-evenly'
-                            }}>
-                                <span 
-                                style={{
-                                    color:'lightgreen'
-                                }}>编辑</span>
-                                <span>
-                                    <Link to={this.props.msg + '/stockinfail'}>预览</Link>
-                                </span>
-                                <span
-                                style={{
-                                    color:'lightpink'
-                                }}>删除</span>
+                            <p className="tableHandle">
+                                <span>编辑</span>
+                                <span onClick={() => this.todetail(record)}>预览</span>
+                                <span>删除</span>
                             </p>
                         )
-                    }else if(record.state === '已通过'){
+                    }else if(record.out_status === '已通过'){
                         return (
-                            <p
-                            style={{
-                                display:'flex',
-                                justifyContent:'space-evenly'
-                            }}>
-                                <span>
-                                    <Link to={this.props.msg + '/stockinpass'}>预览</Link>
-                                </span>
-                                <span
-                                style={{
-                                    color:'lightpink'
-                                }}>删除</span>
+                            <p className="tableHandle">
+                                <span onClick={() => this.todetail(record)}>预览</span>
+                                <span>删除</span>
                             </p>
                         )
                     }
                 }
             }
-        ];
+        ]
+        const { indata } = this.state
         return (
             <div className="stockIn">
                 <header>
+                    <ConTitle titleName="入库管理"></ConTitle>
                 </header>
 
                 <section>
@@ -181,7 +204,7 @@ export default class StockIn extends Component{
                             <span>数据列表</span>
                         </div>
                         <div className="right">
-                            <button type="button" className="add">添加</button>
+                            <button type="button" className="add" onClick={this.toAddStockIn}>添加</button>
                             <button type="button">导出</button>
                             <Select
                                 defaultValue="显示条数"
@@ -205,7 +228,7 @@ export default class StockIn extends Component{
                     <Table
                         id="table"
                         rowSelection={{ type: 'Checkbox' }}
-                        dataSource={data}
+                        dataSource={indata}
                         columns={columns}
                         bordered
                         pagination={{
@@ -223,21 +246,4 @@ export default class StockIn extends Component{
     }
 }
 
-
-const data = [];
-for (let i = 0; i < 20; i++) {
-    data.push({
-        key: i,
-        id: i,
-        bulidDate: '2020-01-03',
-        store: 'A',
-        salesMan:'A',
-        total:'9999',
-        deliveryTime:'2020-06-06',
-        initiator:"A",
-        approver:'B',
-        state:Math.random() > 0.5 ? '待审批' : '已通过',
-        approveState:''
-    });
-}
 const { Option } = Select;
