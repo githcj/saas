@@ -8,47 +8,6 @@ import {
 } from '@ant-design/icons'
 import axios from '../../plugins/axios'
 
-const columns = [
-    {
-        title: '编号',
-        dataIndex: 'serialNum',
-        key: 'serialNum',
-        align:'center'
-    },
-    {
-        title: '品牌名称',
-        dataIndex: 'brandName',
-        key: 'brandName',
-        align:'center'
-    },
-    {
-        title: '级别',
-        dataIndex: 'level',
-        key: 'level',
-        align:'center'
-    },
-    {
-        title: '商品数量',
-        dataIndex: 'count',
-        key: 'count',
-        align:'center'
-    },
-    {
-        title: '操作',
-        dataIndex: 'does',
-        key: 'does',
-        align:'center',
-        render:() => {
-            return (
-                <p className='caozuoPart'>
-                    <a>新增下级</a>
-                    <a className='midA'>查看下级</a>
-                </p>
-            )
-        }
-    },
-];
-
 class Comclass extends React.Component {
 	constructor(props) {
 		super(props)
@@ -56,29 +15,77 @@ class Comclass extends React.Component {
 			level:'一级',
 			data:[]
 		}
-	}
+    }
+    LookLower = (id) => {
+        this.props.history.push({
+            pathname:'/home/system/secondary',
+            params:id
+        })
+    }
 	componentWillMount () {
         axios({
             method:'POST',
-			url:'/goodsLevel',
+			url:'/commodity_level/queryone',
 			data:{
-				level:this.state.level
+				token:'akjshfkla'
 			}
         })
         .then(res => {
             this.setState({
-                data:res.data.filter(item => item.level === '一级')
+                data:res.data.data
             })
         })
         .catch(err => {
             console.log(err)
         })
     }
+    toAddclass = () => {
+        this.props.history.push('/home/system/addclass')
+    }
+
 	render() {
+        const columns = [
+            {
+                title: '编号',
+                dataIndex: 'commodity_level_id',
+                key: 'commodity_level_id',
+                align:'center'
+            },
+            {
+                title: '品牌名称',
+                dataIndex: 'commodity_level_name',
+                key: 'commodity_level_name',
+                align:'center'
+            },
+            {
+                title: '级别',
+                dataIndex: 'level',
+                key: 'level',
+                align:'center',
+                render:() => <span>一级</span>
+            },
+            {
+                title: '商品数量',
+                dataIndex: 'good_num',
+                key: 'good_num',
+                align:'center'
+            },
+            {
+                title: '操作',
+                dataIndex: 'does',
+                key: 'does',
+                align:'center',
+                render:(text, record) => {
+                    return (
+                        <p className='caozuoPart'>
+                            <a style={{marginRight:10}}>新增下级</a>
+                            <a className='midA' onClick={() => this.LookLower(record.commodity_level_name)}>查看下级</a>
+                        </p>
+                    )
+                }
+            },
+        ];
         const { data, level } = this.state
-        for(let i = 0; i < data.length; i++){
-            data[i].key = i
-        }
 		return (
 			<div className="comclass">
 				{/* 顶部 */}
@@ -86,7 +93,7 @@ class Comclass extends React.Component {
                     <div>
                         <div className='dynamic-top-left'>
                             <div className='dynamic-top-leftmark'></div>
-                            <p className='dynamic-top-word'>商品分类 - {level}</p>
+                            <p className='dynamic-top-word'>商品分类 - 一级</p>
                         </div>
                         <div className='dynamic-top-right'>
                             <SyncOutlined />
@@ -100,7 +107,7 @@ class Comclass extends React.Component {
 							<UnorderedListOutlined />
 							<p className="brandma-p">数据列表</p>
 						</div>
-						<div className="addDiv">添加</div>
+						<div className="addDiv" onClick={this.toAddclass}>添加</div>
 					</div>
 					<Table
                         columns={columns}

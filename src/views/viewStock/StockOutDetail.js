@@ -59,14 +59,13 @@ export default class StockOutDetail extends Component{
             infoData:''
         }
     }
-    componentWillMount(){
+    componentDidMount(){
         axios({
             method:'POST',
             url:'/preOutbound',
             data:this.props.msg.params.out_id
         })
         .then( res => {
-            console.log(res.data.data)
             this.setState({
                 tableData:res.data.data,
                 infoData:res.data

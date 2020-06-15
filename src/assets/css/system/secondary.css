@@ -1,0 +1,22 @@
+.secondary-top-right{
+    display: flex;
+
+}
+.secondary-top-right>div{
+    height: 30px;
+    width: 80px;
+    background: white;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-left: 5px;
+}
+.secondary-top-right>div:hover,.addDiv:hover{
+    cursor: pointer;
+    background: #f2f2f2;
+}
+.addDiv{
+    border: white;
+    border: 1px solid;
+}

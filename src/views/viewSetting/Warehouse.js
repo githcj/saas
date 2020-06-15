@@ -4,7 +4,7 @@ import ConTitle from "../../components/ConTitle";
 import { UnorderedListOutlined } from "@ant-design/icons";
 import "../../assets/css/viewSetting/Department.css";
 import axios from "../../plugins/axios";
-import Delete from "../../components/Delete";
+import Delete from "../../components/Waredelete";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -17,6 +17,7 @@ export default class Warehouse extends Component {
       search: [{}],
       visible: false,
       confirmLoading: false,
+      recoder:{}
     };
   }
 
@@ -47,7 +48,9 @@ export default class Warehouse extends Component {
 
   showModal = (recoder) => {
     console.log(recoder)
+    
     this.setState({
+      recoder,
       visible: true,
     })
   }
@@ -74,17 +77,38 @@ export default class Warehouse extends Component {
     message.error("修改失败")
   }
 
+  onFinish = (values) => {
+    console.log("Success:", values)
+    values=''
+  }
+
+  onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo)
+  }
+
+  toRecord=async (recoder)=>{
+    await this.setState({
+      recoder:recoder
+    })
+    console.log(this.state)
+  }
+  Delrecode=()=> {
+    axios({
+      method:'POST',
+      url:'',
+      data:{
+        ware_id:this.state.data.ware_id
+      }
+    })
+    .then(res=>{
+      console.log(res)
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+  }
   render() {
-    const { visible, confirmLoading, data } = this.state;
-
-    const onFinish = (values) => {
-      console.log("Success:", values)
-      values=''
-    }
-
-    const onFinishFailed = (errorInfo) => {
-      console.log("Failed:", errorInfo)
-    }
+    const { visible, confirmLoading, data, recoder } = this.state
 
     const columns = [
       {
@@ -119,10 +143,10 @@ export default class Warehouse extends Component {
       {
         title: "操作",
         width:'9vw',
-        dataIndex: "axios",
-        render: (text,recoder) => (
+        dataIndex: "caozuo",
+        render: (text,record,index) => (
           <div className="caozuoPart">
-            <a className='caozuoA' onClick={()=>this.showModal(recoder)}>编辑</a>
+            <a className='caozuoA' onClick={()=>this.showModal(record)}>编辑</a>
             <Modal
               title="仓库编辑"
               visible={visible}
@@ -136,9 +160,7 @@ export default class Warehouse extends Component {
                 style={{width:'25vw'}}
                   {...layout}
                   name="basic"
-                  initialValues={recoder}
-                  onFinish={onFinish(recoder)}
-                  onFinishFailed={onFinishFailed}                  
+                  initialValues={this.state.recoder}                 
                 >
                   <Form.Item
                     label="仓库名称"
@@ -176,7 +198,7 @@ export default class Warehouse extends Component {
                       },
                     ]}
                   >
-                    <Select defaultValue="lucy" style={{ width: 120 }}>
+                    <Select  style={{ width: 120 }}>
                       <Option value="jack">Jack</Option>
                       <Option value="lucy">Lucy</Option>
                     </Select>
@@ -218,7 +240,7 @@ export default class Warehouse extends Component {
                       },
                     ]}
                   >
-                    <Select defaultValue="lucy" style={{ width: 120 }}>
+                    <Select style={{ width: 120 }}>
                       <Option value="jack">Jack</Option>
                       <Option value="lucy">Lucy</Option>
                     </Select>
@@ -226,7 +248,7 @@ export default class Warehouse extends Component {
                 </Form>
               </div>
             </Modal>
-            <Delete />
+            <Delete todel={()=>this.Delrecode(recoder)}  toRecord={()=>this.toRecord(record)} />
           </div>
         ),
       },
@@ -277,7 +299,7 @@ export default class Warehouse extends Component {
         </div>
 
 				<div className="table">
-					<Table dataSource={data} columns={columns} bordered />
+					<Table  dataSource={data} columns={columns} bordered />
 				</div>
 			</div>
 		);

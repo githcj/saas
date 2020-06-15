@@ -3,7 +3,7 @@ import '../../assets/css/wang/purchase.css'
 import '../../assets/css/system/brandma.css'
 import '../../assets/css/dynamic/PersonDynamic.css'
 import { Select } from 'antd'
-import { Table, Input } from 'antd'
+import { Table, Input, Popconfirm, message } from 'antd'
 import {
     SearchOutlined,
     SyncOutlined,
@@ -12,45 +12,6 @@ import {
 } from '@ant-design/icons'
 import axios from '../../plugins/axios'
 
-const columns = [
-    {
-        title: '编号',
-        dataIndex: 'serialNum',
-        key: 'serialNum',
-        align:'center'
-    },
-    {
-        title: '品牌名称',
-        dataIndex: 'brandName',
-        key: 'brandName',
-        align:'center'
-    },
-    {
-        title: '相关',
-        dataIndex: 'related',
-        key: 'related',
-        align:'center',
-        render:() => {
-            return (
-                <p className='xiangguanP'>商品：<a>{100}</a></p>
-            )
-        }
-    },
-    {
-        title: '操作',
-        dataIndex: 'does',
-        key: 'does',
-        align:'center',
-        render:() => {
-            return (
-                <p className='caozuoPart'>
-                    <a>编辑</a>
-                    <a className='midA'>删除</a>
-                </p>
-            )
-        }
-    },
-];
 const { Option } = Select;
 
 class Brandma extends React.Component {
@@ -58,22 +19,29 @@ class Brandma extends React.Component {
         super(props)
         this.state = {
             data:[],
-            eachPage:10
+            eachPage:10,
+            keyword:''
         }
     }
-    componentWillMount () {
+    getAllData = () => {
         axios({
-            method:'GET',
-            url:'/brandma'
+            method:'POST',
+            url:'/brand/queryall',
+            data:{
+                token:'gnsdkjhla'
+            }
         })
         .then(res => {
             this.setState({
-                data:res.data
+                data:res.data.data
             })
         })
         .catch(err => {
             console.log(err)
         })
+    }
+    componentWillMount () {
+        this.getAllData()
     }
     //显示条数
     pageNumChange = (value) => {
@@ -110,20 +78,131 @@ class Brandma extends React.Component {
             data: newData
         })
     }
+    // 关键字双向绑定
+    inputChange = (e) => {
+        this.setState({
+            keyword:e.target.value
+        })
+    }
+    // 查询结果
+    queryResult = () => {
+        axios({
+            method:'POST',
+            url:'/brand/wherequery',
+            data:{
+                token:'sdagjd',
+                brand_name:this.state.keyword
+            }
+        })
+        .then(res => {
+            this.setState({
+                data:res.data.data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    // 刷新
+    refresh = () => {
+        this.getAllData()
+        this.setState({
+            keyword:''
+        })
+    }
+	// 确认删除
+	confirm = (record) => {
+		axios({
+			method:'POST',
+			url:'/brand/delect',
+			data:{
+				token:'gakjhfkas',
+				brand_id:record.brand_id
+			}
+		})
+		.then(res => {
+			this.getAllData()
+			message.success('删除成功')
+		})
+		.catch(err => {
+			console.log(err)
+		})
+	}
+	cancel = (e) => {
+		console.log(e);
+		message.error('Click on No');
+    }
+    // 去添加品牌或者添加
+    toAddBrand = (str) => {
+        this.props.history.push({
+            pathname:'/home/system/addbrand',
+            params:str
+        })
+    }
+    toEditBrand = (item) => {
+        this.props.history.push({
+            pathname:'/home/system/addbrand',
+            params:item.brand_name
+        })
+    }
     render(){
-        const { data } = this.state
-        for(let i = 0; i < data.length; i++){
-            data[i].key = i
-        }
+        const { data, keyword } = this.state
+        const columns = [
+            {
+                title: '编号',
+                dataIndex: 'brand_id',
+                key: 'brand_id',
+                align:'center'
+            },
+            {
+                title: '品牌名称',
+                dataIndex: 'brand_name',
+                key: 'brand_name',
+                align:'center'
+            },
+            {
+                title: '相关',
+                dataIndex: 'goods_sum',
+                key: 'goods_sum',
+                align:'center',
+                render:(text) => {
+                    return (
+                        <p className='xiangguanP'>商品：<a>{text}</a></p>
+                    )
+                }
+            },
+            {
+                title: '操作',
+                dataIndex: 'does',
+                key: 'does',
+                align:'center',
+                render:(text, record) => {
+                    return (
+                        <p className='caozuoPart'>
+                            <a style={{marginRight:10}} onClick={() => this.toEditBrand(record)}>编辑</a>
+                            <Popconfirm
+                                title="确定删除？"
+                                onConfirm={() => this.confirm(record)}
+                                onCancel={this.cancel}
+                                okText="确定"
+                                cancelText="取消"
+                            >
+                                <a className='midA'>删除</a>
+                            </Popconfirm>
+                        </p>
+                    )
+                }
+            },
+        ];
         return (
             <div className="brandma">
                 <div className='dynamic-top'>
                     <div>
                         <div className='dynamic-top-left'>
                             <div className='dynamic-top-leftmark'></div>
-                            <p className='dynamic-top-word'>人员销售动态</p>
+                            <p className='dynamic-top-word'>品牌管理</p>
                         </div>
-                        <div className='dynamic-top-right'>
+                        <div className='dynamic-top-right' onClick={this.refresh}>
                             <SyncOutlined />
                             <p className='dynamic-top-word'>刷新</p>
                         </div>
@@ -140,15 +219,19 @@ class Brandma extends React.Component {
                                 <UpOutlined />
                                 <p className='purchase-p'>收起筛选</p>
                             </div>
-                            <div className="purchase-result">
+                            <div className="purchase-result" onClick={this.queryResult}>
                                 <p className='purchase-p'>查询结果</p>
                             </div>
                         </div>
                     </div>
                     <div className="brandma-middle">
                         <div className="brandma-middle-se1">
-                            <p className="brandma-middle-se1-p">创建日期：</p>
-                            <Input placeholder="品牌名称/关键词" />
+                            <p className="brandma-middle-se1-p">输入搜索：</p>
+                            <Input 
+                                placeholder="品牌名称/关键词" 
+                                value={keyword}
+                                onChange={(e) => this.inputChange(e)}
+                            />
                         </div>
                     </div>
                 </div>
@@ -159,7 +242,7 @@ class Brandma extends React.Component {
                             <p className="brandma-p">数据列表</p>
                         </div>
                         <div className="purchase-table-se2">
-                            <div className="addDiv">添加</div>
+                            <div className="addDiv" onClick={() => this.toAddBrand('添加')}>添加</div>
                             <Select defaultValue="显示条数" style={{ width: 120 }} onChange={this.pageNumChange}>
                                 <Option value="ten">每页10条</Option>
                                 <Option value="twenty">每页20条</Option>

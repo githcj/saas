@@ -215,3 +215,15 @@
     margin: 0 5px;
     color: #1ABC9C;
 }
+.YiJ{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.YiJ input{
+    width:250px;
+    height:30px;
+    outline: none;
+    text-indent: 10px;
+}
