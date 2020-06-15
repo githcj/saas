@@ -4,6 +4,7 @@ import {
 } from '@ant-design/icons';
 import '../../assets/css/wang/purchase.css'
 import { Table } from 'antd'
+import axios from 'axios';
 
 
 const columns = [
@@ -64,50 +65,64 @@ for (var i = 0; i < 20; i++) {
         SumPrice: '999'
     })
 }
- 
+
 
 class purchaseDetail extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
 
         }
     }
-    render(){
+    componentWillMount() {
+        axios({
+            method: 'POST',
+            url: '/purchase/showpurchas'
+        })
+            .then(res => {
+                this.setState({
+                    data: res.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+    render() {
         let newDom
-        const {location} = this.props
+        const { location } = this.props
         console.log(location.params)
-        const difficult = location.params.state
-        if(difficult===4){
-            newDom =    <div className="detail-middle-se1-new">
-                            <div>审批时间：</div>
-                            <div>入库时间：</div>
-                        </div>
+        const difficult = location.params.purchase_status
+        if (difficult === 4) {
+            newDom = <div className="detail-middle-se1-new">
+                <div>审批时间：{location.params.sptiming}</div>
+                <div>入库时间：{location.params.rktiming}</div>
+            </div>
         }
-        if(difficult===3){
-            newDom =    <div>
-                            <div>审批时间：</div>
-                        </div>
+        if (difficult === 3) {
+            newDom = <div>
+                <div>审批时间：{location.params.sptiming}</div>
+            </div>
         }
         let status
-        if(difficult === 1) {
-            status= <span style={{color:'red'}}>待审批</span>
+        if (difficult === 1) {
+            status = <span style={{ color: 'red' }}>待审批</span>
         }
-        if(difficult === 2) {
-            status= <span style={{color:'red'}}>不通过</span>
+        if (difficult === 2) {
+            status = <span style={{ color: 'red' }}>不通过</span>
         }
-        if(difficult=== 3){
-            status= <span style={{color:'red'}}>已通过</span>
-        } 
-        if(difficult===4){
-            status= <span style={{color:'red'}}>已入库</span>
+        if (difficult === 3) {
+            status = <span style={{ color: 'red' }}>已通过</span>
+        }
+        if (difficult === 4) {
+            status = <span style={{ color: 'red' }}>已入库</span>
         }
         // 审批意见
         let yijianDom
-        if(location.params.yijian === '' || !location.params.yijian){
+        if (location.params.yijian === '' || !location.params.yijian) {
             yijianDom = <span>无</span>
         }
-        if(location.params.yijian){
+        if (location.params.yijian) {
             yijianDom = <span>{location.params.yijian}</span>
         }
         return (
@@ -116,7 +131,7 @@ class purchaseDetail extends React.Component {
                     <div className='purchase-firtop'>
                         <div className='dynamic-top-left'>
                             <div className='dynamic-top-left-mark'></div>
-                            <p className='dynamic-top-word'><span style={{color:'black'}}>采购预览-{status}</span></p>
+                            <p className='dynamic-top-word'><span style={{ color: 'black' }}>采购预览-{status}</span></p>
                         </div>
                         <div className='dynamic-top-right'>
                             <CaretLeftOutlined />
@@ -127,7 +142,7 @@ class purchaseDetail extends React.Component {
                 <div className="detail-middle">
                     <div className="detail-middle-se1">
                         <p className="detail-middle-se1p">基本信息</p>
-                        <p>单号：<span className="danHao" style={{ color: 'red'}}>25151541315316</span></p>
+                        <p>单号：<span className="danHao" style={{ color: 'red' }}>25151541315316</span></p>
                     </div>
                     <div className="detail-middle-se2">
                         <p>供货厂商：<span>A供货商</span></p>
@@ -138,12 +153,12 @@ class purchaseDetail extends React.Component {
                 </div>
                 <div className="detail-middle">
                     <div className="detail-middle-se1">
-                            <div className="detail-middle-se1-div">
-                                审批状态：<span style={{color:'red'}}>{status}</span>
-                            </div>
-                            <div className="detail-middle-se1-new">
-                                {newDom}
-                            </div>
+                        <div className="detail-middle-se1-div">
+                            审批状态：<span style={{ color: 'red' }}>{status}</span>
+                        </div>
+                        <div className="detail-middle-se1-new">
+                            {newDom}
+                        </div>
                     </div>
                     <div className="detail-middle-se22">
                         <p>审批意见：{yijianDom} </p>
@@ -161,19 +176,19 @@ class purchaseDetail extends React.Component {
                             bordered>
                         </Table>
                         <div className="totals">
-                                <div className="totals-se1">
-                                    <span className="span-one">商品共：</span>
-                                    <span className="span-two"
-                                    style={{color:'red'}}>{data.length}</span>
-                                </div>
-                                <div className="totals-se1">
-                                    <span className="span-one">金额合计：</span>
-                                    <span className="span-two"
-                                    style={{color:'red'}}>{9999.00}元</span>
-                                </div>
+                            <div className="totals-se1">
+                                <span className="span-one">商品共：</span>
+                                <span className="span-two"
+                                    style={{ color: 'red' }}>{data.length}</span>
+                            </div>
+                            <div className="totals-se1">
+                                <span className="span-one">金额合计：</span>
+                                <span className="span-two"
+                                    style={{ color: 'red' }}>{9999.00}元</span>
+                            </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         )

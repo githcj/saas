@@ -39,15 +39,15 @@ const Stock = (props) => {
             <Col  span={20}>
             <div className="stockContent">
                 <Route path={match.url + '/stockout'}><StockOut msg={props.history}/></Route>
-                <Route path={match.url + '/stockin'}><StockIn/></Route>
+                <Route path={match.url + '/stockin'}><StockIn msg={props.history}/></Route>
 
                 <Route path={match.url + '/addstockout'}><AddStockOut /></Route>
                 <Route path={match.url + '/addstockin'}><AddStockIn /></Route>
 
-                <Route path={match.url + '/stockindetail'}><StockInDetail/></Route>
+                <Route path={match.url + '/stockindetail'}><StockInDetail msg={props.location}/></Route>
                 <Route path={match.url + '/stockoutdetail'}><StockOutDetail msg={props.location}/></Route>
                 
-                <Redirect exact to={match.url + '/stockout'} />
+                <Redirect to={match.url + '/stockout'} />
             </div>
             </Col>
             </Row>

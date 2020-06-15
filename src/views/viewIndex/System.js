@@ -17,7 +17,7 @@ import AddWare from "../viewSetting/AddWare"
 import AddGoods from "../viewSetting/AddGoods"
 import AddClass from "../viewSetting/AddClass"
 import AddBrand from "../viewSetting/AddBrand"
-
+import AddEmp from '../viewSetting/AddEmp'
 import { Row, Col, Menu } from "antd";
 import "../../assets/css/huang/system.css";
 import Quanxian from "../viewSetting/Quanxian";
@@ -86,6 +86,7 @@ const System = (props) => {
 						</Route>
 						<Route path={match.url + "/Quanxian"} component={Quanxian} />
 						<Route path={match.url + "/Employee"} component={Employee} />
+                    	<Route path={match.url + '/AddEmp'} component={AddEmp} />
 						<Route path={match.url + "/Operation"} component={Operation} />
 						<Route path={match.url + "/Warehouse"} component={Warehouse}>
 							<Warehouse msg={match.url} his={props.history}></Warehouse>

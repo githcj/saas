@@ -18,13 +18,7 @@ export default class StockOut extends Component {
             pathname:'/home/kucun/addstockout'
         })
     }
-    toFail = (data) => {
-        this.props.msg.push({
-            pathname:'/home/kucun/stockoutdetail',
-            params:data
-        })
-    }
-    toPass = (data) => {
+    todetail = (data) => {
         this.props.msg.push({
             pathname:'/home/kucun/stockoutdetail',
             params:data
@@ -65,6 +59,21 @@ export default class StockOut extends Component {
             this.setState({
                 outData:data
             })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    del = (data) => {
+        axios({
+            method:'POST',
+            url:'/delOutbound',
+            data:{
+                out_id:data.out_id
+            }
+        })
+        .then(res => {
+            console.log(res.data.code)
         })
         .catch(err => {
             console.log(err)
@@ -135,15 +144,15 @@ export default class StockOut extends Component {
                         return (
                             <p className="tableHandle">
                                 <span onClick={() => this.editHandle(record)}>编辑</span>
-                                <span onClick={() => this.toFail(record)}>预览</span>
-                                <span>删除</span>
+                                <span onClick={() => this.todetail(record)}>预览</span>
+                                <span onClick={() => this.del(record)}>删除</span>
                             </p>
                         )
                     }else if(record.out_status === '已通过'){
                         return (
                             <p className="tableHandle">
-                                <span onClick={() => this.toPass(record)}>预览</span>
-                                <span>删除</span>
+                                <span onClick={() => this.todetail(record)}>预览</span>
+                                <span onClick={() => this.del(record)}>删除</span>
                             </p>
                         )
                     }

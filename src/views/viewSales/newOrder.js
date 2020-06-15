@@ -1,7 +1,7 @@
-import React, { useState, useEffect, Component } from 'react'
+import React, { Component } from 'react'
 import axios from 'axios'
 import '../../assets/css/sales/newOrder.css'
-import { Table, Button, Radio, Select } from 'antd';
+import { Table, Radio, Select } from 'antd';
 const { Option } = Select
 
 export default class newOrder extends Component {
