@@ -247,14 +247,14 @@ class AddEmp extends Component {
                     >
                         <Input />
                     </Form.Item>
-                    {/* <Form.Item
+                    <Form.Item
                         name='emp_birth'
                         label="出生日期"
                     >
-                        <DatePicker defaultValue={this.state.rowInfo.emp_birth} disabledDate={this.disabledDate} />
-                    </Form.Item> */}
+                        <DatePicker disabledDate={this.disabledDate} />
+                    </Form.Item>
                     <Form.Item
-                        // name='emp_entry_time'    
+                        name='emp_entry_time'    
                         label="入职日期"
                     >
                         <DatePicker />
