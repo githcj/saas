@@ -1,7 +1,7 @@
-import React, { useState, useEffect, Component } from 'react'
+import React, { Component } from 'react'
 import axios from 'axios'
 import '../../assets/css/sales/newOrder.css'
-import { Table, Button, Radio, Select } from 'antd';
+import { Table, Radio, Select } from 'antd';
 const { Option } = Select
 
 export default class newOrder extends Component {
@@ -233,44 +233,6 @@ export default class newOrder extends Component {
             adddata: tests
         })
     }
-
-
-
-
-//     render() {
-
-//         const { adddata, queryorder, sum } = this.state
-
-//         for (let i = 0; i < queryorder.length; i++) {
-//             queryorder[i].key = i
-//         }
-//         this.setState({
-//             sum: suma,
-//             adddata: addcount
-//         }
-//         )
-//     }
-//         else {
-//     alert('不能在减了')
-// }
-
-//     }
-
-deldata = (i) => {
-    console.log(i, 'iiiii');
-    const tests = this.state.adddata.splice(i, 1)
-    var suma = 0;
-    tests.splice(i, 1);
-    for (var i = 0; i < tests.length; i++) {
-        suma += tests[i].smcount * tests[i].smallUntPrice + tests[i].bgcount * tests[i].bigUntPrice
-    }
-    this.setState({
-        sum: suma,
-        adddata: tests
-    })
-}
-
-
 
 
 render() {
