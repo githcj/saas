@@ -186,12 +186,14 @@ export default class newOrder extends Component  {
                  }
 
                  deldata =(i) => {
-                     console.log(i,'iiiii');
+                    
                     const tests=this.state.adddata.filter(item => {
                         return item.key !== i
                     })
+                    
+                    console.log(tests);
+                    
                      var suma =0 ;
-                    //  tests.splice(i,1);
                      for(var i=0 ; i<tests.length ; i++){
                         suma += tests[i].smcount *tests[i].smallUntPrice + tests[i].bgcount * tests[i].bigUntPrice
                       }
@@ -211,7 +213,7 @@ export default class newOrder extends Component  {
             for (let i = 0; i < queryorder.length; i++) {
                 queryorder[i].key = i
             }
-            console.log(this.state.adddata);
+
            
             const columns = [
                 {
@@ -243,8 +245,8 @@ export default class newOrder extends Component  {
                     title: '操作',
                     render: (record,index) => (
                         <span>
-                            <a >delete</a>
-                            <div onClick={this.add.bind(this,record)}>add</div>
+                            <a >删除</a>
+                            <div onClick={this.add.bind(this,record)}>添加</div>
                         </span>
                     )
                 },
@@ -264,7 +266,7 @@ export default class newOrder extends Component  {
                     title: '数量',
                     dataIndex:'bgcount',
                     render: (text,record,index) => {
-                        return <div>
+                        return <div className="number">
                             <span onClick={() => this.redbigcount(index,text)}>-</span>
                             <span>{text}</span>
                             <span onClick={() => this.addbigcount(index,text)}>+</span>
@@ -283,7 +285,7 @@ export default class newOrder extends Component  {
                     title: '数量',
                     dataIndex:'smcount',
                     render: (text,record,index) => {
-                        return <div>
+                        return <div className="number">
                             <span onClick={() => this.redsmcount(index,text)}>-</span>
                             <span>{text}</span>
                             <span onClick={() => this.addsmcount(index,text)}>+</span>
@@ -304,7 +306,7 @@ export default class newOrder extends Component  {
                     title: '操作',
                     render: (text,record,index) => (
                         <span>
-                            <span onClick={()=>this.deldata(record.key)}>delete</span>
+                            <span onClick={()=>this.deldata(record.key)}>删除</span>
                         </span>
                     )
                 },
@@ -343,7 +345,7 @@ export default class newOrder extends Component  {
                             </div>
                             <div className="bianju">
                                 <label >出货仓库：</label>
-                                <Select className="xiaoshou"  style={{width:'180px'}}>
+                                <Select className="xiaoshou"  style={{width:'120px'}}>
                                     <Option value="全部">全部</Option>
                                     <Option value="仓库1">仓库1</Option>
                                     <Option value="仓库1">仓库2</Option>

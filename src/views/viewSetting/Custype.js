@@ -2,53 +2,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import '../../assets/css/sales/order.css'
-import { Table, Button } from 'antd';
-
-const columns = [
-    {
-        title: '客户名称',
-        dataIndex: 'useName',
-    },
-    {
-        title: '客户类型',
-        dataIndex: 'Customer',
-    },
-    {
-        title: '联系人',
-        dataIndex: 'person',
-    },
-    {
-      title: '手机号',
-      dataIndex: 'phone',
-    },
-    {
-    title: '地址',
-    dataIndex: 'addres',
-    },
-
-    {
-      title: '创建人',
-      dataIndex: 'cjperson',
-    },
-    {
-      title: '负责人',
-      dataIndex: 'fzperson',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'timedate',
-    },
-    {
-        title: 'Axios',
-        render: () => (
-          <span>
-               <a>编辑</a>
-               <a>删除</a>
-          </span>
-        )
-    },
-
-];
+import { Table, Button,Modal,Select } from 'antd';
+const { Option } = Select
 
 
 export default class Custype extends Component {
@@ -59,21 +14,100 @@ export default class Custype extends Component {
             loading: false,
             orderDate: '',
             orderList: [],
-            sousuo:'',
-            phone:'',
-            dates:''
+            fuji:'',
+            username:'',
+            addfuji:'',
+            addusername:'',
+            dates:'',
+            eachPage:10,
+            visible:false,
+            bianji:[],
+            tianjia:[],
+            addmodels:false
         };
     }
+    editfuji = async(v) => {
+         await  this.setState({
+              fuji:v
+          })
+    }
 
+    editusername = async(v) => {
+         await  this.setState({
+              username:v
+          })
+    }
 
-    componentDidMount() {
+    addfuji = async(v) => {
+        await  this.setState({
+             addfuji:v
+         })
+   }
+
+   addusername = async(v) => {
+        await  this.setState({
+             addusername:v
+         })
+   }
+
+        showModal = (row) => {
+		this.setState({
+            bianji:row,  
+            visible: true,
+		});
+       }
+       addModal = () => {
+        this.setState({
+            addmodels: true,
+        });
+       
         axios({
-            method: 'GET',
-            url: 'http://119.23.228.238:3031/mock/47/custorm',
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/customer_type/add',
+            data:{
+                token:'123',
+                
+            }
         })
             .then(res => {
                 this.setState({
-                    orderList: res.data
+                    orderList: res.data.data
+                })
+            })
+            .catch(err => {
+                console.log(err);
+            })
+       
+     }
+    
+	handleOk = e => {
+        console.log(e);
+		this.setState({
+              visible: false,
+              addmodels:false
+		});
+	}
+	handleCancel = e => {
+		console.log(e);
+		this.setState({
+              visible: false,
+              addmodels:false
+		});
+	}
+
+    componentDidMount() {
+        axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/customer_type/querysubclass',
+            data:{
+                token:'123'
+            }
+        })
+            .then(res => {
+                console.log(res,'res');
+                
+                this.setState({
+                    orderList: res.data.data
                 })
             })
             .catch(err => {
@@ -104,12 +138,29 @@ export default class Custype extends Component {
     //     this.setState({ selectedRowKeys });
     // };
     render() {
-        const { orderList, selectedRowKeys ,phone ,sousuo , dates } = this.state;
-        // const rowSelection = {
-        //     selectedRowKeys,
-        //     onChange: this.onSelectChange,
-        // };
-        // const hasSelected = selectedRowKeys.length > 0;
+        const { orderList, selectedRowKeys ,phone ,sousuo , dates,bianji } = this.state;
+
+        const columns = [
+            {
+                title: '父类型',
+                dataIndex: 'customer_type_father_name',
+            },
+            {
+                title: '客户类型名称',
+                dataIndex: 'customer_type_name',
+            },
+            {
+                title: 'Axios',
+                render: (text,row,index) => (
+                  <span>
+                       <a onClick={()=> this.showModal(row)}>编辑</a>
+                       <a>删除</a>
+                  </span>
+                )
+            },
+        
+        ];
+
 
         for (let i = 0; i < orderList.length; i++) {
             orderList[i].key = i
@@ -134,14 +185,72 @@ export default class Custype extends Component {
 
                     <div className="quire-title ">
                         <div>数据列表</div>
-                        <div className="chaxun">添加</div>
+                        <div className="chaxun" onClick={()=> this.addModal()}>添加</div>
                     </div>
                     <Table 
                     // rowSelection={rowSelection} 
                     columns={columns} 
                     dataSource={orderList}
                     bordered />
+                     <Modal
+						title="编辑"
+						centered
+						visible={this.state.visible}
+						onOk={this.handleOk}
+						okText='确定'
+						okType='primary'
+						cancelText='重置'
+						onCancel={this.handleCancel}
+						>
+						<div className='modal-item'>
+							<p>父级类型：</p>
+							<Select defaultValue={bianji.useName} onChange={(value) => this.editfuji(value)}  style={{ width: '60%' }}>
+								<Option value="jack">Jack</Option>
+								<Option value="lucy">Lucy</Option>
+								<Option value="Yim">yim</Option>
+							</Select>
+						</div>
+						<div className='modal-item'>
+							<p>客户类型名称：</p>
+							<Select defaultValue={bianji.Customer} onChange={(value) => this.editusername(value)} style={{ width: '60%' }}>
+								<Option value="jack">Jack</Option>
+								<Option value="lucy">Lucy</Option>
+								<Option value="Yim">yim</Option>
+							</Select>
+						</div>
+					</Modal>
+                   
+                       <Modal
+						title="新增"
+						centered
+						visible={this.state.addmodels}
+						onOk={this.handleOk}
+						okText='确定'
+						okType='primary'
+						cancelText='重置'
+						onCancel={this.handleCancel}
+						>
+						<div className='modal-item'>
+							<p>父级类型：</p>
+							<Select defaultValue='' onChange={(value) => this.addfuji(value)} style={{ width: '60%' }}>
+								<Option value="jack">Jack</Option>
+								<Option value="lucy">Lucy</Option>
+								<Option value="Yim">yim</Option>
+							</Select>
+						</div>
+						<div className='modal-item'>
+							<p>客户类型名称：</p>
+							<Select defaultValue='' onChange={(value) => this.addusername(value)} style={{ width: '60%' }}>
+								<Option value="jack">Jack</Option>
+								<Option value="lucy">Lucy</Option>
+								<Option value="Yim">yim</Option>
+							</Select>
+						</div>
+					</Modal>
+
+                   
                 </div>
+
             </div>
         )
     }

@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import '../../assets/css/sales/order.css'
-import { Table, Button ,Select,Modal} from 'antd';
+import { Table, Button ,Select,Modal,message} from 'antd';
 
 import { NavLink, Route, Redirect } from 'react-router-dom'
 import addCus from '../viewSetting/addCus'
@@ -25,7 +25,15 @@ export default class Cusinfo extends Component {
             visible:false,
             bianji:[],
             query:[],
+            kehutype:[],
+            fuzeperson:[],
+            value:0,
+            usertype:0
         };
+    }
+
+    modelkehumingc =() =>{
+
     }
 
     showModal = async(row) => {
@@ -34,13 +42,34 @@ export default class Cusinfo extends Component {
               bianji:row
         });
         console.log(this.state.bianji,'123123123');
-        
 	}
 	handleOk = e => {
-		console.log(e);
+        
+        axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/customer/update',
+            data:{
+                token:'13245',
+                customer_id:this.state.bianji.customer_id,
+                customer_name:this.state.bianji.customer_name,
+                customer_address:this.state.bianji.customer_address,
+                customer_type_id:this.state.usertype,
+                customer_contacts:this.state.bianji.customer_contacts,
+                customer_phone:this.state.bianji.customer_phone,
+                emp_id:this.state.value
+            }
+        })
+        .then(res => {
+            this.componentDidMount() 
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
 		this.setState({
 		  	visible: false,
-		});
+        });
+        
 	}
 	handleCancel = e => {
 		console.log(e);
@@ -49,19 +78,54 @@ export default class Cusinfo extends Component {
 		});
 	}
 
-    componentDidMount() {
-        axios({
-            method: 'POST',
-            url: 'http://172.16.6.27:8080/customer/queryall',
-        })
-            .then(res => {
-                this.setState({
+   async  componentDidMount() {
+         await  axios({
+                method: 'POST',
+                url: 'http://172.16.6.27:8080/customer/queryall',
+            })
+           .then(res => {
+                  this.setState({
                     orderList: res.data.data
                 })
+              
+                for (let i = 0; i < this.state.orderList.length; i++) {
+                    this.state.orderList[i].key = i
+                }
+                
+                console.log(this.state.orderList,'order');
+                
             })
             .catch(err => {
                 console.log(err);
             })
+
+            await   axios({
+                method: 'POST',
+                url: 'http://172.16.6.27:8080/combobox/customer',
+            })
+                .then(res => {
+                    this.setState({
+                        kehutype: res.data.data
+                 })  
+                 console.log('kehutype',this.state.kehutype)  
+                })
+                .catch(err => {
+                    console.log(err,'err');
+                })
+
+                axios({
+                    method: 'POST',
+                    url: 'http://172.16.6.27:8080/person/in_charge',
+                })
+                    .then(res => {
+                        this.setState({
+                            fuzeperson: res.data.data
+                        })
+                        console.log(this.state,'fuze');
+                    })
+                    .catch(err => {
+                        console.log(err,'err');
+                    })
      }
 
     setphone = (e) => {
@@ -83,10 +147,7 @@ export default class Cusinfo extends Component {
       }
         Cusinfoquery =()=>{
              
-           console.log(this.state.sousuo);
-           
-            
-            
+           console.log(this.state.sousuo); 
             axios({
                 method: 'POST',
                 url: 'http://172.16.6.27:8080/customer/wherequery',
@@ -105,16 +166,65 @@ export default class Cusinfo extends Component {
                 })
                 .catch(err => {
                     console.log(err);
+                })    
+        }
+
+        modelfuze = async(value)=>{
+         
+           const fuze = this.state.fuzeperson.filter((v,i)=>{
+               return v.emp_name  == value
+           })
+
+           const fuzeid=fuze[0].emp_id
+           await this.setState({
+                  value:fuzeid
+              })
+        }
+
+        modelkehu =async(value)=>{
+            const fuze = this.state.kehutype.filter((v,i)=>{
+                return v.customer_type_name == value
+            })
+ 
+            const fuzeid=fuze[0].customer_type_id
+            console.log(fuzeid,'fuze');
+            
+            await this.setState({
+                usertype:fuzeid
+            })
+         
+        }
+        delkehu =(row)=>{
+            console.log(row,'row');
+            
+             const id=this.state.orderList.filter((v,i)=>{
+                  return v.customer_id == row.customer_id
+             })
+            console.log(id,'id');
+            
+             const ids=id[0].customer_id
+             console.log(ids,'ids');
+            
+            axios({
+                method: 'POST',
+                url: 'http://172.16.6.27:8080/customer/delete',
+                data:{
+                    token:'123',
+                    customer_id:ids
+                }
+            })
+                .then(res => {
+                    console.log(res.message ,'成功');
+                    this.componentDidMount() 
                 })
-
-               
-
+                .catch(err => {
+                    console.log(err);
+                })     
         }
 
 
-
     render() {
-        const { orderList,phone ,sousuo , dates ,eachPage,bianji } = this.state;
+        const { orderList,phone ,sousuo,kehutype , fuzeperson,dates ,eachPage,bianji } = this.state;
         const columns = [
             {
                 title: '客户名称',
@@ -153,16 +263,29 @@ export default class Cusinfo extends Component {
                 render: (text,row,index) => (
                   <span>
                        <a onClick={()=> this.showModal(row)}>编辑</a>
-                       <a>删除</a>
+                       <a onClick={()=> this.delkehu(row)}>删除</a>
                   </span>
                 )
             },
         
         ];
 
-        for (let i = 0; i < orderList.length; i++) {
-            orderList[i].key = i
-        }
+        const kehu=kehutype.map((item,index) =>(
+             <Option value={item.customer_type_name}>
+                 {item.customer_type_name}
+            </Option>
+        ))
+        
+
+        const fuzeren=fuzeperson.map((item,index) =>(
+            
+            <Option value={item.emp_name}>
+                {item.emp_name}
+           </Option>
+       ))
+
+
+
         const {match, msg} =this.props
         console.log(this.props)
         return (
@@ -196,7 +319,7 @@ export default class Cusinfo extends Component {
                     </div>
                     <div className="quire-title ">
                         <div>数据列表</div>
-                        <NavLink  to={msg + '/addCus'} className="chaxun">添加</NavLink>
+                        <NavLink  to={msg + '/addCus'} className="chaxun"  >添加</NavLink>
                     </div>
                     <Table 
                     // rowSelection={rowSelection} 
@@ -231,40 +354,39 @@ export default class Cusinfo extends Component {
 						>
 						<div className='modal-item'>
 							<p>客户名称：</p>
-							<input value={bianji.useName}></input>
+							<input value={bianji.customer_name} onChange={this.modelkehumingc}></input>
 						</div>
 						<div className='modal-item'>
 							<p>客户类型：</p>
-							<Select defaultValue={bianji.Customer} style={{ width: '60%' }}>
-								 
+							<Select defaultValue={bianji.customer_type_name} onChange={(value)=> this.modelkehu(value)} style={{ width: '60%' }}>
+								 {kehu}
 							</Select>
 						</div>
 						<div className='modal-item'>
 							<p>联系人：</p>
-							<Select defaultValue={bianji.person} style={{ width: '60%' }}>
-								<Option value="shelve">上架</Option>
-								<Option value="xiajia">下架</Option>
-							</Select>
+							<input value={bianji.customer_contacts}></input>
 						</div>
                         <div className='modal-item'>
 							<p>手机号：</p>
-                            <input value={bianji.phone}></input>
+                            <input value={bianji.customer_phone}></input>
 						</div>
                         <div className='modal-item'>
 							<p>地址：</p>
-                            <input value={bianji.addres}></input>
+                            <input value={bianji.customer_address}></input>
 						</div>
                         <div className='modal-item'>
 							<p>创建人：</p>
-                            <input value={bianji.cjperson}></input>
+                            <input value={bianji.customer_creater}  ></input>
 						</div>
                         <div className='modal-item'>
 							<p>负责人：</p>
-                            <input value={bianji.fzperson}></input>
+                            <Select defaultValue={bianji.emp_name} onChange={(value)=> this.modelfuze(value)} style={{ width: '60%' }}>
+								 {fuzeren}
+							</Select>
 						</div>
                         <div className='modal-item'>
 							<p>创建日期：</p> 
-                            <input value={bianji.timedate}></input>
+                            <input value={bianji.customer_create_time}></input>
 						</div>
 					</Modal>
             </div>
