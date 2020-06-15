@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { loginActionSync } from "../../store/user/userActions";
 import '../../assets/css/huang/login.css'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 
 class Login extends React.Component {
   constructor(props) {
@@ -26,10 +26,10 @@ class Login extends React.Component {
     });
   };
 
-  getLogin = () => {
-	  axios({
+  getLogin = async () => {
+	  await axios({
 		  method:'POST',
-		  url:'http://119.23.228.238:3031/mock/47/Login',
+		  url:'/login',
 		  data:{
 			  emp_account:this.state.username,
         emp_password:this.state.password,
@@ -39,10 +39,10 @@ class Login extends React.Component {
 	  .then(res=> {
 		  console.log(res.data)
 		  this.setState({
-			  username:res.data.username,
 			  token:res.data.token
       })
       localStorage.setItem('token',this.state.token)
+      localStorage.setItem('username',this.state.username)
       this.props.loginHandler(
         {
           username: this.state.username

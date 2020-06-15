@@ -1,114 +1,116 @@
-import React, { Component, useState } from "react";
-import { Form, Modal, message, Input, Switch, Table, Select } from "antd";
-import ConTitle from "../../components/ConTitle";
-import { UnorderedListOutlined } from "@ant-design/icons";
-import "../../assets/css/viewSetting/Department.css";
-import axios from "../../plugins/axios";
-import Delete from "../../components/Waredelete";
+import React, { Component, useState } from "react"
+import { Form, Modal, message, Input, Switch, Table, Select } from "antd"
+import ConTitle from "../../components/ConTitle"
+import { UnorderedListOutlined } from "@ant-design/icons"
+import "../../assets/css/viewSetting/Department.css"
+import axios from "../../plugins/axios"
+import Delete from "../../components/Waredelete"
+import Edit from '../../components/WareEidt'
 
-const { Option } = Select;
-const { TextArea } = Input;
+const { Option } = Select
 
 export default class Warehouse extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      data:'',
+      data: "",
       search: [{}],
       visible: false,
       confirmLoading: false,
-      recoder:{}
-    };
+      recoder: '',
+    }
   }
 
   componentDidMount() {
     axios({
-      method:'POST',
-      url:'/warehouse/showwarehouse'
+      method: "POST",
+      url: "/warehouse/showwarehouse",
     })
-    .then(res=> {
-      console.log(res.data.data)
-      this.setState({
-        data:res.data.data
-      })    
-    })
-    .catch(err=> {
-      console.log(err)
-    })
+      .then((res) => {
+        console.log(res.data.data);
+        this.setState({
+          data: res.data.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
-	handleChange = () => { };
+  handleChange = () => {};
 
   toAddware = () => {
     this.props.his.push({
       pathname: this.props.msg + "/AddWare",
       params: { aa: 123 },
-    })
+    });
   }
 
   showModal = (recoder) => {
     console.log(recoder)
-    
+
     this.setState({
       recoder,
       visible: true,
     })
   }
 
-  handleOk = () => {
-    this.setState({
-      confirmLoading: true,
-    })
-
-    setTimeout(() => {
-      this.setState({
-        visible: false,
-        confirmLoading: false,
-      })
-      message.success("修改成功")
-    }, 2000)
-  }
-
-  handleCancel = () => {
-    console.log("Clicked cancel button")
+  onCancel = () => {
     this.setState({
       visible: false,
     })
     message.error("修改失败")
   }
 
-  onFinish = (values) => {
-    console.log("Success:", values)
-    values=''
-  }
-
-  onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo)
-  }
-
-  toRecord=async (recoder)=>{
+  toRecord = async (record) => {
     await this.setState({
-      recoder:recoder
+      recoder: record,
     })
     console.log(this.state)
   }
-  Delrecode=()=> {
+  toDel = rec => {
+      console.log('id',rec)
     axios({
-      method:'POST',
-      url:'',
-      data:{
-        ware_id:this.state.data.ware_id
-      }
+      method: "POST",
+      url: "/warehouse/deletewarehouse",
+      data: {
+        ware_id: rec
+      },
     })
-    .then(res=>{
-      console.log(res)
-    })
-    .catch(err=>{
-      console.log(err)
-    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   render() {
-    const { visible, confirmLoading, data, recoder } = this.state
+    const onCreate = values => {
+      this.setState({
+        confirmLoading: true,
+      })
+      axios({
+        method: "POST",
+        url: "/warehouse/updatewarehouse",
+        data: values,
+      })
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log("err", err)
+        })
+
+      setTimeout(() => {
+        this.setState({
+          visible: false,
+          confirmLoading: false,
+        })
+        message.success("修改成功");
+      }, 2000)
+    };
+
+    const { visible, confirmLoading, data, recoder } = this.state;
 
     const columns = [
       {
@@ -142,166 +144,70 @@ export default class Warehouse extends Component {
       },
       {
         title: "操作",
-        width:'9vw',
+        width: "9vw",
         dataIndex: "caozuo",
-        render: (text,record,index) => (
+        render: (text, record, index) => (
           <div className="caozuoPart">
-            <a className='caozuoA' onClick={()=>this.showModal(record)}>编辑</a>
-            <Modal
-              title="仓库编辑"
-              visible={visible}
-              onOk={this.handleOk}
-              confirmLoading={confirmLoading}
-              onCancel={this.handleCancel}
-              bodyStyle={{height:'25vw'}}
-            >
-              <div>
-                <Form
-                style={{width:'25vw'}}
-                  {...layout}
-                  name="basic"
-                  initialValues={this.state.recoder}                 
-                >
-                  <Form.Item
-                    label="仓库名称"
-                    name="ware_name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "仓库名不能为空",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="仓库类型"
-                    name="ware_type"
-                    rules={[
-                      {
-                        required: true,
-                        message: "类型不能为空",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="负责人"
-                    name="emp_name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "请选择负责人",
-                      },
-                    ]}
-                  >
-                    <Select  style={{ width: 120 }}>
-                      <Option value="jack">Jack</Option>
-                      <Option value="lucy">Lucy</Option>
-                    </Select>
-                  </Form.Item>
-
-                  <Form.Item
-                    label="联系电话"
-                    name="emp_phone"
-                    rules={[
-                      {
-                        required: true,
-                        message: "电话不能为空",
-                      }
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="仓库地址"
-                    name="ware_addr"
-                    rules={[
-                      {
-                        required: true,
-                        message: "地址不能为空",
-                      }
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="跟车司机"
-                    name="driver_name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "请选择跟车司机",
-                      },
-                    ]}
-                  >
-                    <Select style={{ width: 120 }}>
-                      <Option value="jack">Jack</Option>
-                      <Option value="lucy">Lucy</Option>
-                    </Select>
-                  </Form.Item>
-                </Form>
-              </div>
-            </Modal>
-            <Delete todel={()=>this.Delrecode(recoder)}  toRecord={()=>this.toRecord(record)} />
+            <a className="caozuoA" onClick={() => this.showModal(record)}>
+              编辑
+            </a>
+            <Delete
+            msg={record}
+              toDel={this.toDel}
+              toRecord={() => this.toRecord(record)}
+            />
           </div>
         ),
       },
-    ];
+    ]
 
-    const layout = {
-      labelCol: {
-        span: 6,
-      },
-      wrapperCol: {
-        span: 18,
-      },
-    };
     return (
-      <div className="stockOut">
-        <header>
-          <div className="stockout-top">
-            <ConTitle titleName="仓库管理" />
-          </div>
-        </header>
+        <div className="warehouse">
+            <Edit 
+            visible={visible}
+            confirmLoading={confirmLoading}
+            recoder={recoder}
+            onCreate={onCreate}
+            onCancel={this.onCancel}
+             />
+            <header>
+                <div className="stockout-top">
+                    <ConTitle titleName="仓库管理" />
+                </div>
+            </header>
         <div className="dynamic-dataList">
-          <div className="dynamic-left-title">
-            <UnorderedListOutlined style={{ fontSize: "20px" }} />
-            <span style={{ fontSize: "14px" }}>数据列表</span>
-          </div>
-          <div className="purchase-table-se2">
-            <div onClick={this.toAddware} className="addDiv">
-              添加
+            <div className="dynamic-left-title">
+                <UnorderedListOutlined style={{ fontSize: "20px" }} />
+                <span style={{ fontSize: "14px" }}>数据列表</span>
             </div>
-            <Select
-              defaultValue="显示条数"
-              style={{ width: 120 }}
-              onChange={this.handleChange}
-            >
-              <Option value="15">10条/页</Option>
-              <Option value="20">15条/页</Option>
-            </Select>
-            <Select
-              defaultValue="排序方式"
-              className="seen"
-              style={{ width: 120 }}
-              onChange={this.handleChange}
-            >
+            <div className="purchase-table-se2">
+                <div onClick={this.toAddware} className="addDiv">
+                添加
+                </div>
+                <Select
+                defaultValue="显示条数"
+                style={{ width: 120 }}
+                onChange={this.handleChange}
+                >
+                    <Option value="15">10条/页</Option>
+                    <Option value="20">15条/页</Option>
+                </Select>
+                <Select
+                defaultValue="排序方式"
+                className="seen"
+                style={{ width: 120 }}
+                onChange={this.handleChange}
+                >
               <Option value="15">编号递增</Option>
               <Option value="20">编号递减</Option>
             </Select>
           </div>
         </div>
 
-				<div className="table">
-					<Table  dataSource={data} columns={columns} bordered />
-				</div>
-			</div>
-		);
-	}
+        <div className="table">
+          <Table dataSource={data} columns={columns} bordered />
+        </div>
+      </div>
+    );
+  }
 }

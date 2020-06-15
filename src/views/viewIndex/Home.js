@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, NavLink, Redirect } from "react-router-dom";
+import { Route, NavLink, Redirect, Link } from "react-router-dom";
 import Caigou from "./Caigou";
 import Xiaoshou from "./Xiaoshou";
 import Kucun from "./Kucun";
@@ -15,6 +15,7 @@ import {
   BellFilled,
   CloseCircleOutlined,
 } from "@ant-design/icons";
+import { logoutAction } from "../../store/user/userActions";
 
 export default class Home extends Component {
   constructor(props) {
@@ -32,14 +33,16 @@ export default class Home extends Component {
   
   render() {
     const { match,history } = this.props;
+    const username=localStorage.getItem('username')
 
     function confirm() {
         Modal.confirm({
-          title: 'Confirm',
+          title: '退出',
           icon: <ExclamationCircleOutlined />,
           content: '确定要退出吗',
           onOk(){
             localStorage.removeItem("token");
+            localStorage.removeItem('username')
             history.push({
                 pathname:  "/login",
               });
@@ -64,11 +67,13 @@ export default class Home extends Component {
               <div className="home-icon">
                 <span>
                   <UserOutlined />
-                  管理员
+                  {username}
                 </span>
                 <span>|</span>
                 <span>
+                  <Link style={{margin:0}} to={match.url + "/system"}>
                   <HomeOutlined />
+                  </Link>
                 </span>
                 <span>|</span>
                 <span>
@@ -97,3 +102,4 @@ export default class Home extends Component {
     );
   }
 }
+

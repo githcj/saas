@@ -18,7 +18,10 @@ export const loginActionSync = function(user, history) {
 }
 
 export const logoutAction = ()=> (
-  {
-    type: logoutType
+  function(){
+    localStorage.removeItem("token")
+    this.props.history.push({
+        pathname:  "/login",
+      })
   }
 )
