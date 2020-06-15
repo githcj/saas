@@ -219,19 +219,21 @@ export default class newOrder extends Component {
     }
 
     deldata = (i) => {
-        console.log(i, 'iiiii');
-        const tests = this.state.adddata.filter(item => {
+       
+        const tests=this.state.adddata.filter(item => {
             return item.key !== i
         })
-        var suma = 0;
-        //  tests.splice(i,1);
-        for (var i = 0; i < tests.length; i++) {
-            suma += tests[i].smcount * tests[i].smallUntPrice + tests[i].bgcount * tests[i].bigUntPrice
-        }
-        this.setState({
-            sum: suma,
-            adddata: tests
-        })
+        
+        console.log(tests);
+        
+         var suma =0 ;
+         for(var i=0 ; i<tests.length ; i++){
+            suma += tests[i].smcount *tests[i].smallUntPrice + tests[i].bgcount * tests[i].bigUntPrice
+          }
+            this.setState({
+                sum:suma,
+                adddata:tests
+            })                  
     }
 
 
@@ -256,19 +258,6 @@ export default class newOrder extends Component {
 
 //     }
 
-deldata = (i) => {
-    console.log(i, 'iiiii');
-    const tests = this.state.adddata.splice(i, 1)
-    var suma = 0;
-    tests.splice(i, 1);
-    for (var i = 0; i < tests.length; i++) {
-        suma += tests[i].smcount * tests[i].smallUntPrice + tests[i].bgcount * tests[i].bigUntPrice
-    }
-    this.setState({
-        sum: suma,
-        adddata: tests
-    })
-}
 
 
 
