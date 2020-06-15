@@ -102,3 +102,29 @@
     justify-content: space-evenly;
     width: 100%;
 }
+.photoWall>div{
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.last-pic{
+    height: 300px !important;
+}
+.last-pic .black{
+    height: 45%;
+}
+.pic-setting{
+    width: 100%;
+    height: 24px;
+    background: #ccc;
+    text-align: center;
+    line-height: 24px;
+}
+.goods-pic{
+    width: 104px;
+    height: 104px;
+}
+a{
+    color: #1abc9c;
+}
