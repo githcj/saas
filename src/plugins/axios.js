@@ -3,8 +3,8 @@ import axios from "axios";
 
 
 let config = {
-    baseURL: "http://119.23.228.238:3031/mock/47",
-    // baseURL:'http://172.16.6.27:8080',
+    // baseURL: "http://119.23.228.238:3031/mock/47",
+    baseURL:'http://172.16.6.30:8080',
     timeout: 60*1000, // Timeout
 };
 

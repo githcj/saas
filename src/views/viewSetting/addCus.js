@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react'
 import { Form, Input, Tooltip, Button, InputNumber, message ,Select} from 'antd';
 import ConTitle from '../../components/ConTitle'
@@ -6,6 +7,28 @@ import CompanyImgs from '../../components/CompanyImgs'
 import axios from '../../plugins/axios'
 import { EnvironmentOutlined } from '@ant-design/icons';
 import '../../assets/css/viewSetting/Gongsi.css'
+=======
+// import React, { useState,useEffect } from 'react'
+import React, { Component } from 'react'
+import axios from 'axios'
+import '../../assets/css/sales/order.css'
+import { Table, Button } from 'antd';
+
+
+export default class addCus extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+           userName:'',
+           yymianji:'',
+           phone:'',
+           person:'',
+           fzperson:''
+
+        };
+    }
+ 
+>>>>>>> depart
 
 const addCus = (props)=> {
     

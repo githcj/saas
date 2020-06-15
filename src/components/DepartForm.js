@@ -1,39 +1,28 @@
 import React from 'react'
-import {  Input , Form , Modal } from 'antd'
+import {  Input , Form  } from 'antd'
 
 const { TextArea } = Input
 
 
-const DepartFrom = (props) => {
-    const {ModalVisible,onCancel,onCreate,rowInfo} = props
-    // console.log(rowInfo);
+const DepartForm = (props) => {
+    const {rowInfo} = props
+    const layout = {
+        labelCol: { span: 5 },
+        wrapperCol: { span: 19 },
+    };
    
     const [form] = Form.useForm();
 
     form.setFieldsValue(rowInfo)
     return (
-        <Modal
-        visible={ModalVisible}
-        title="编辑部门信息"
-        okText="提交"
-        cancelText="取消"
-        onCancel={onCancel}
-        onOk={() => {
-            form
-            .validateFields()
-            .then(values => {
-                form.resetFields();
-                onCreate(values,form);
-            })
-            .catch(info => {
-                
-            });
-        }}
-        >
         <Form
+<<<<<<< HEAD
         style={{width:'25vw'}}
+=======
+            {...layout}
+            style={{width:'33vw'}}
+>>>>>>> depart
             form={form}
-            layout="vertical"
             name="form_in_modal"
             initialValues={rowInfo}
         >
@@ -62,11 +51,13 @@ const DepartFrom = (props) => {
                 <TextArea value={rowInfo.dep_describe} autoSize/>
             </Form.Item>
         </Form>
-    </Modal>
     )
     
 }
 
-export default DepartFrom
+// DepartForm = React.forwardRef(())
+
+
+export default DepartForm
 
 

@@ -44,9 +44,14 @@ export default class Operation extends Component {
     constructor(props) {
       super(props)
       this.state={
-
+        opeList:[]
       }
     }
+
+    componentDidMount() {
+        
+    }
+
 
     render() {
         return (
