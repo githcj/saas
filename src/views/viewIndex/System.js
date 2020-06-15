@@ -1,24 +1,27 @@
-import React from "react";
-import { Route, NavLink } from "react-router-dom";
-import Gongsi from "../viewSetting/Gongsi";
-import Department from "../viewSetting/Department";
-import Position from "../viewSetting/Position";
-import Employee from "../viewSetting/Employee";
-import Operation from "../viewSetting/Operation";
-import Cusinfo from "../viewSetting/Cusinfo";
-import Custype from "../viewSetting/Custype";
-import Supplier from "../viewSetting/Supplier";
-import Brandma from "../viewSetting/Brandma";
-import Comclass from "../viewSetting/Comclass";
-import Cominfo from "../viewSetting/Cominfo";
-import addCus from "../viewSetting/addCus";
-import Warehouse from "../viewSetting/Warehouse";
-import AddWare from "../viewSetting/AddWare";
+import React from "react"
+import { Route, NavLink } from "react-router-dom"
+import Gongsi from "../viewSetting/Gongsi"
+import Department from "../viewSetting/Department"
+import Position from "../viewSetting/Position"
+import Employee from "../viewSetting/Employee"
+import Operation from "../viewSetting/Operation"
+import Cusinfo from "../viewSetting/Cusinfo"
+import Custype from "../viewSetting/Custype"
+import Supplier from "../viewSetting/Supplier"
+import Brandma from "../viewSetting/Brandma"
+import Comclass from "../viewSetting/Comclass"
+import Cominfo from "../viewSetting/Cominfo"
+import addCus from "../viewSetting/addCus"
+import Warehouse from "../viewSetting/Warehouse"
+import AddWare from "../viewSetting/AddWare"
 import AddGoods from "../viewSetting/AddGoods"
+import AddClass from "../viewSetting/AddClass"
+import AddBrand from "../viewSetting/AddBrand"
 
 import { Row, Col, Menu } from "antd";
 import "../../assets/css/huang/system.css";
 import Quanxian from "../viewSetting/Quanxian";
+import Secondary from "../viewSetting/Secondary";
 
 const System = (props) => {
 	const { match, history } = props;
@@ -98,10 +101,19 @@ const System = (props) => {
 						
 						{/* 商品管理 */}
 						<Route path={match.url + "/Brandma"} component={Brandma} />
-						<Route path={match.url + "/Comclass"} component={Comclass} />
+						<Route path={match.url + "/Comclass"} component={Comclass} his={history}/>
 						<Route path={match.url + "/Cominfo"} component={Cominfo} his={history}/>
+						<Route path={match.url + "/secondary"} component={Secondary}>
+							<Secondary his={history}></Secondary>
+						</Route>
 						<Route path={match.url + "/addgoods"} component={AddGoods}>
 							<AddGoods his={history}></AddGoods>
+						</Route>
+						<Route path={match.url + "/addclass"} component={AddClass}>
+							<AddClass his={history}></AddClass>
+						</Route>
+						<Route path={match.url + "/addbrand"} component={AddBrand}>
+							<AddBrand his={history}></AddBrand>
 						</Route>
 					</div>
 				</Col>

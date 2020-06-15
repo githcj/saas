@@ -9,3 +9,6 @@ body{
 ul li{
   list-style: none;
 }
+a:hover{
+  color: #1ABC9C;
+}
