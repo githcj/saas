@@ -5,7 +5,7 @@ import axios from 'axios'
 import '../../assets/css/sales/order.css'
 import { Table, Button,Select,Modal } from 'antd';
 import { Route, NavLink } from 'react-router-dom'
-import {yulanAction} from '../../store/order/orderActions'
+
 import {
     SearchOutlined,
     SyncOutlined,
