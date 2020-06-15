@@ -1,12 +1,23 @@
 import React from 'react'
 import '../assets/css/conTitle.css'
-import { SyncOutlined } from '@ant-design/icons';
+import { SyncOutlined,LeftOutlined } from '@ant-design/icons';
 
 const ConTitle = (props)=> {
-    const { titleName } = props 
+    const { titleName,clickName } = props 
     const refresh = () => {
-        window.history.go(0)
+        console.log(clickName);
+        
+        switch(clickName){
+            case undefined:
+                window.history.go(0);
+            break;
+            case '返回':
+                window.history.go(-1);
+            break;
+        }
     }
+
+
         return (
                 <div className='conTile'>
                     <div className='conTitle-top-left'>
@@ -14,8 +25,8 @@ const ConTitle = (props)=> {
                         <p className='conTitle-top-word'>{ titleName }</p>
                     </div>
                     <div className='conTitle-top-right'>
-                        <SyncOutlined />
-                        <p className='conTitle-top-word' onClick={refresh}>刷新</p>
+                        {clickName === '返回' ? <LeftOutlined /> : <SyncOutlined />}
+                        <p className='conTitle-top-word' onClick={refresh}>{clickName === '返回' ? '返回' : '刷新'}</p>
                     </div>
                 </div>
         )

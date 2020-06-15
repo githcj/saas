@@ -12,6 +12,7 @@ import Brandma from '../viewSetting/Brandma'
 import Comclass from '../viewSetting/Comclass'
 import Cominfo from '../viewSetting/Cominfo'
 import addCus from '../viewSetting/addCus'
+import AddEmp from '../viewSetting/AddEmp'
 
 
 import { Row, Col, Menu } from 'antd';
@@ -78,6 +79,7 @@ const System = (props)=> {
                     </Route>
                     <Route path={match.url + '/Quanxian'} component={Quanxian} />
                     <Route path={match.url + '/Employee'} component={Employee} />
+                    <Route path={match.url + '/AddEmp'} component={AddEmp} />
                     <Route path={match.url + '/Operation'} component={Operation} />
                     <Route path={match.url + '/Cusinfo'} component={Cusinfo}>
                       <Cusinfo msg={match.url}></Cusinfo>

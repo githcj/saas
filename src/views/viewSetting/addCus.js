@@ -5,9 +5,6 @@ import '../../assets/css/sales/order.css'
 import { Table, Button } from 'antd';
 
 
-
-
-
 export default class addCus extends Component {
     constructor(props) {
         super(props);

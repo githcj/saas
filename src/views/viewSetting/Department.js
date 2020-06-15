@@ -210,6 +210,7 @@ export default class Department extends Component{
             ModalVisible:false,
         })
         form.resetFields();
+        message.info('取消信息编辑')
         console.log(this.setState.rowInfo,'cancel');
         
     };
