@@ -11,12 +11,14 @@ export default class purchaseApply extends Component {
         this.state = {
             data: [],
             detailData: [],
-            sum: 0
+            sum: 0,
+
         }
     }
+
     componentDidMount() {
         const detailData = this.state.detailData
-       
+
         axios({
             method: 'GET',
             url: '/purchaseApply'
@@ -37,88 +39,91 @@ export default class purchaseApply extends Component {
             sum: suma
         })
     }
-    addbigcount = (i,n) => {
+    addbigcount = (i, n) => {
         var suma = 0
         var addcount = this.state.detailData
-        console.log(i,'i')
-        console.log(n,'n')
-        if(n>0){
-            this.state.detailData.filter((v,x)=>{
-                console.log(x,'x')
-                if( x === i){
-                    addcount[i].bgcount = n+1
+        console.log(i, 'i')
+        console.log(n, 'n')
+        if (n > 0) {
+            this.state.detailData.filter((v, x) => {
+                console.log(x, 'x')
+                if (x === i) {
+                    addcount[i].bgcount = n + 1
                 }
             })
-            for(var i=0; i<addcount.length;i++){
+            for (var i = 0; i < addcount.length; i++) {
                 suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
             }
             this.setState({
-                sum:suma,
-                data:addcount
+                sum: suma,
+                data: addcount
             })
         }
     }
-    addsmcount = (i,n) =>{
+    addsmcount = (i, n) => {
         var suma = 0
         var addcount = this.state.detailData
-        if(n>0){
-            this.state.detailData.filter((v,x)=>{
-                if( x===i){
-                    addcount[i].smcount = n+1
+        if (n > 0) {
+            this.state.detailData.filter((v, x) => {
+                if (x === i) {
+                    addcount[i].smcount = n + 1
                 }
             })
-            for(var i=0;i<addcount.length;i++){
+            for (var i = 0; i < addcount.length; i++) {
                 suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
             }
             this.setState({
-                sum:suma,
-                data:addcount
+                sum: suma,
+                data: addcount
             })
         }
     }
-    redbigcount = (i,n) =>{
+    redbigcount = (i, n) => {
         var suma = 0
         var addcount = this.state.detailData
-        if(n>1){
-            this.state.detailData.filter((v,x)=>{
-                if(x===i){
-                    addcount[i].bgcount = n-1
+        if (n > 1) {
+            this.state.detailData.filter((v, x) => {
+                if (x === i) {
+                    addcount[i].bgcount = n - 1
                 }
             })
-            for(var i=0;i<addcount.length;i++){
+            for (var i = 0; i < addcount.length; i++) {
                 suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
             }
             this.setState({
-                sum:suma,
-                data:addcount
+                sum: suma,
+                data: addcount
             })
         }
     }
-    redsmcount =(i,n)=>{
-        var suma  =0;
+    redsmcount = (i, n) => {
+        var suma = 0;
         var addcount = this.state.detailData
-        if(n>1){
-            this.state.detailData.filter((v,x)=>{
-                if(x===i){
-                    addcount[i].smcount =n-1
+        if (n > 1) {
+            this.state.detailData.filter((v, x) => {
+                if (x === i) {
+                    addcount[i].smcount = n - 1
                 }
             })
-            for(var i=0;i<addcount.length;i++){
+            for (var i = 0; i < addcount.length; i++) {
                 suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
             }
             this.setState({
-                sum:suma,
-                data:addcount
+                sum: suma,
+                data: addcount
             })
         }
     }
     delA = (i) => {
-        const delB = this.state.detailData.filter(item=>(
-             item.key != i
+        const delB = this.state.detailData.filter(item => (
+            item.key != i
         ))
         this.setState({
-            detailData:delB
+            detailData: delB
         })
+    }
+    handleData = () => {
+
     }
     add = (record) => {
         var suma = 0
@@ -158,7 +163,7 @@ export default class purchaseApply extends Component {
         })
     }
     render() {
-        const { data, detailData,sum } = this.state
+        const { data, detailData, sum } = this.state
         for (let i = 0; i < detailData.length; i++) {
             detailData[i].key = i
         }
@@ -178,13 +183,13 @@ export default class purchaseApply extends Component {
                 title: '数量',
                 dataIndex: 'bgcount',
                 align: 'center',
-                render: (text, record,index) => {
-                    console.log('我就是',record.bgcount)
-                    return  <div className="number">
-                            <span onClick={() => this.redbigcount(index,text)} className="count">-</span>
-                            <span>{text}</span>
-                            <span onClick={() => this.addbigcount(index,text)} className="count">+</span>
-                        </div>
+                render: (text, record, index) => {
+                    console.log('我就是', record.bgcount)
+                    return <div className="number">
+                        <span onClick={() => this.redbigcount(index, text)} className="count">-</span>
+                        <span>{text}</span>
+                        <span onClick={() => this.addbigcount(index, text)} className="count">+</span>
+                    </div>
                 }
             }, {
                 title: '小单位价格',
@@ -197,12 +202,12 @@ export default class purchaseApply extends Component {
                 title: '数量',
                 dataIndex: 'smcount',
                 align: 'center',
-                render: (text, record,index) => {
+                render: (text, record, index) => {
                     return <div className="number">
-                            <span onClick={() => this.redsmcount(index,text)} className="count">-</span>
-                            <span>{text}</span>
-                            <span onClick={() => this.addsmcount(index,text)} className="count">+</span>
-                        </div>
+                        <span onClick={() => this.redsmcount(index, text)} className="count">-</span>
+                        <span>{text}</span>
+                        <span onClick={() => this.addsmcount(index, text)} className="count">+</span>
+                    </div>
                 }
             },
             {
@@ -215,12 +220,12 @@ export default class purchaseApply extends Component {
                     )
                 }
             },
-                 {
+            {
                 title: '操作',
                 dataIndex: 'delHandle',
                 align: 'center',
-                render: (text,record) => <span style={{ color: 'rgb(26, 188, 156)' }}
-                onClick={()=>this.delA(record.key)}>删除</span>
+                render: (text, record) => <span style={{ color: 'rgb(26, 188, 156)' }}
+                    onClick={() => this.delA(record.key)}>删除</span>
             }
         ]
         const columns = [
@@ -263,10 +268,9 @@ export default class purchaseApply extends Component {
                 )
             }
         ]
-        
         for (let i = 0; i < detailData.length; i++) {
             detailData[i].key = i
-           }
+        }
         return (
             <div className="apply">
                 <header>
@@ -326,13 +330,6 @@ export default class purchaseApply extends Component {
                     <div className="addstock-search">
                         <div className="addstock-info info-two">
                             <div>
-                                选择品牌：
-                                <Select style={{ width: 160 }}>
-                                    <Option value="jack">Jack</Option>
-                                    <Option value="lucy">Lucy</Option>
-                                </Select>
-                            </div>
-                            <div>
                                 选择分类：
                                 <Select style={{ width: 160 }}>
                                     <Option value="1">全部</Option>
@@ -377,7 +374,9 @@ export default class purchaseApply extends Component {
                             <span className="span-one">金额合计：</span>
                             <span className="span-two">{sum}元</span>
                         </div>
-                        <div className="apply-sub">提交</div>
+                        <div className="apply-sub"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => this.handleData()}>提交</div>
                     </div>
                 </section>
             </div>

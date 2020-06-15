@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import '../../assets/css/viewStock/add.css'
-import { Select,Table } from 'antd'
+import { Select,Table,DatePicker } from 'antd'
+import axios from '../../plugins/axios'
 
 const { Option } = Select;
 export default class AddStockIn extends Component{
@@ -8,70 +9,149 @@ export default class AddStockIn extends Component{
         super(props)
         this.state = {
             data:[],
-            detailData:[]
+            detailData:[],
+            allSum:0
         }
     }
-    componentWillMount(){
-        const data = [];
-        const detailData= []
-        for (let i = 0; i < 20; i++) {
-            data.push({
-                key: i,
-                goodsName: '商品名称',
-                bigUnit: '箱',
-                bigPrice: 100,
-                smallUnit:'瓶',
-                smallPrice:10,
-                storage:'999'
+    componentDidMount(){
+        axios({
+            method:'POST',
+            url:'/inventory'
+        })
+        .then(res => {
+            const data = res.data.data
+            data.map((item,index) => {
+                item.key = index
+                return data
             })
-            detailData.push({
-                key: i,
-                goodsName: '商品名称',
-                big: '箱',
-                bigNum: 9,
-                small:'瓶',
-                smallNum:9,
-                sum:'999.00',
-                productDate:'2020-02-23'
+            this.setState({
+                data:data
             })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    red = (i) => {
+        const detailData = [...this.state.detailData]
+        if(detailData[i].smallNum>1){
+            detailData[i].smallNum -= 1
+            detailData[i].sum = detailData[i].sum - detailData[i].small
+        }
+        var allSum = 0
+        for(let i=0;i<detailData.length;i++){
+            allSum = detailData[i].sum + allSum
         }
         this.setState({
-            data:data,
+            allSum:allSum,
             detailData:detailData
         })
     }
-    red = (data) => {
-        if(data.smallNum>1){
-            data.smallNum -= 1
+    add = (i) => {
+        const detailData = [...this.state.detailData]
+        detailData[i].smallNum += 1
+        detailData[i].sum = detailData[i].sum + detailData[i].small
+        var allSum = 0
+        for(let i=0;i<detailData.length;i++){
+            allSum = detailData[i].sum + allSum
         }
         this.setState({
-    
+            allSum:allSum,
+            detailData:detailData
         })
     }
-    add = (data) => {
-        console.log(data)
-        data.smallNum += 1
-        this.setState({
-
-        })
-    }
-    redBig = (data) => {
-        console.log(data)
-        if(data.bigNum>1){
-            data.bigNum -= 1
+    redBig = (i) => {
+        const detailData = [...this.state.detailData]
+        if(detailData[i].bigNum>1){
+            detailData[i].bigNum -= 1
+            detailData[i].sum = detailData[i].sum - detailData[i].big
+        }
+        var allSum = 0
+        for(let i=0;i<this.state.detailData.length;i++){
+            allSum = this.state.detailData[i].sum + allSum
         }
         this.setState({
-    
+            allSum:allSum,
+            detailData:detailData
         })
     }
-    addBig = (data) => {
-        console.log(data)
-        data.bigNum += 1
+    addBig = (i) => {
+        const detailData = [...this.state.detailData]
+        detailData[i].bigNum += 1
+        detailData[i].sum = detailData[i].sum + detailData[i].big
+        var allSum = 0
+        for(let i=0;i<this.state.detailData.length;i++){
+            allSum = this.state.detailData[i].sum + allSum
+        }
         this.setState({
-
+            allSum:allSum,
+            detailData:detailData
+        })
+    }
+    addStockIn = (data) => {
+        var allSum = 0
+        const detailData = [...this.state.detailData]
+        if(detailData.length === 0){
+            detailData.push({
+                goodsName:data.goodsName,
+                big:data.bigPrice,
+                bigUnit:data.bigUnit,
+                bigNum:1,
+                small:data.smallPrice,
+                smallUnit:data.smallUnit,
+                smallNum:1,
+                sum:data.bigPrice + data.smallPrice
+            })
+            
+        }else{
+            let is = true
+            for(let i=0;i<detailData.length;i++){
+                if(data.goodsName === detailData[i].goodsName){
+                    is = !is
+                    detailData[i].bigNum += 1
+                    detailData[i].smallNum += 1
+                    detailData[i].sum = data.bigPrice*detailData[i].bigNum + data.smallPrice*detailData[i].smallNum
+                }
+            }
+            if(is){
+                detailData.push({
+                    goodsName:data.goodsName,
+                    big:data.bigPrice,
+                    bigUnit:data.bigUnit,
+                    bigNum:1,
+                    small:data.smallPrice,
+                    smallUnit:data.smallUnit,
+                    smallNum:1,
+                    sum:data.bigPrice + data.smallPrice
+                })
+            }
+        }
+        for(let i=0;i<detailData.length;i++){
+            allSum = detailData[i].sum + allSum
+        }
+        detailData.map((item,index) => {
+            item.key = index
+            return detailData
+        })
+        this.setState({
+            detailData:detailData,
+            allSum:allSum
+        })
+    }
+    delGoods = (i) => {
+        const newData = [...this.state.detailData]
+        newData.splice(i,1)
+        var allSum = 0
+        for(let i=0;i<newData.length;i++){
+            allSum = newData[i].sum + allSum
+        }
+        this.setState({
+            detailData:newData,
+            allSum:allSum
         })
     }
     render(){
+        const { data, detailData,allSum } = this.state
         const detail = [
             {
                 title: '商品名称',
@@ -79,30 +159,36 @@ export default class AddStockIn extends Component{
             },{
                 title: '单价/大单位',
                 dataIndex: 'big',
+                render:(text,record) => {
+                    return record.big + '/' + record.bigUnit
+                }
             },{
                 title:'数量',
                 dataIndex:'bigNum',
-                render: (text,record) => {
+                render: (text,record,index) => {
                     return(
                         <div className="number">
-                            <span onClick={() => this.redBig(record)} className="count">-</span>
+                            <span onClick={() => this.redBig(index)} className="count">-</span>
                             <span>{text}</span>
-                            <span onClick={() => this.addBig(record)} className="count">+</span>
+                            <span onClick={() => this.addBig(index)} className="count">+</span>
                         </div>
                     )
                 }
             },{
                 title:'小单位价格',
-                dataIndex:'small'
+                dataIndex:'small',
+                render:(text,record) => {
+                    return record.small + '/' + record.smallUnit
+                }
             },{
                 title:'数量',
                 dataIndex:'smallNum',
-                render: (text,record) => {
+                render: (text,record,index) => {
                     return(
                         <div className="number">
-                            <span onClick={() => this.red(record)} className="count">-</span>
+                            <span onClick={() => this.red(index)} className="count">-</span>
                             <span>{text}</span>
-                            <span onClick={() => this.add(record)} className="count">+</span>
+                            <span onClick={() => this.add(index)} className="count">+</span>
                         </div>
                     )
                 }
@@ -125,11 +211,18 @@ export default class AddStockIn extends Component{
             },
             {
                 title:'生产日期',
-                dataIndex:'productDate'
+                dataIndex:'productDate',
+                render: () => <DatePicker style={{width:'120px'}}/>
             },{
                 title:'操作',
                 dataIndex:'delHandle',
-                render: () => <span style={{color:'rgb(26, 188, 156)'}}>删除</span>
+                render: (text,record,index) => <span 
+                style={{
+                    color:'rgb(26, 188, 156)',
+                    cursor:'pointer'
+                }} 
+                onClick={() => this.delGoods(index)}
+                >删除</span>
             }
         ]
         const columns = [
@@ -159,10 +252,16 @@ export default class AddStockIn extends Component{
             },{
                 title:'操作',
                 dataIndex:'addHandle',
-                render: () => <span style={{color:'rgb(26, 188, 156)'}}>添加</span>
+                render: (text,record) => {
+                    return (
+                        <span 
+                        style={{color:'rgb(26,188,156)',cursor:'pointer'}}
+                        onClick={() => this.addStockIn(record)}
+                        >添加</span>
+                    )
+                }
             }
         ]
-        const { data, detailData } = this.state
         
         return (
             <div className="addstockIn">
@@ -233,7 +332,16 @@ export default class AddStockIn extends Component{
                                 style={{width:'100%'}}
                                 dataSource={data}
                                 columns={columns}
-                                bordered />
+                                bordered
+                                pagination={{
+                                    pageSize:10,
+                                    showQuickJumper:true,
+                                    showTotal:(total) => {
+                                        return (
+                                            <p>共有{Math.ceil(total / 10)}页/{total}条数据</p>
+                                        )
+                                    },
+                                }} />
                         </div>
                     </div>
                 </section>
@@ -245,7 +353,7 @@ export default class AddStockIn extends Component{
                     <Table
                         id="table"
                         style={{width:'100%'}}
-                        // dataSource={detailData}
+                        dataSource={detailData}
                         columns={detail}
                         bordered />
                         <div className="total">
@@ -255,7 +363,7 @@ export default class AddStockIn extends Component{
                             </div>
                             <div>
                                 <span className="span-one">金额合计：</span>
-                                <span className="span-two">{9999.00}元</span>
+                                <span className="span-two">{allSum}元</span>
                             </div>
                         </div>
                 </section>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import '../../assets/css/viewStock/add.css'
 import { Select,Table,DatePicker } from 'antd'
+import axios from '../../plugins/axios'
 
 const { Option } = Select;
 export default class AddStockOut extends Component{
@@ -9,125 +10,226 @@ export default class AddStockOut extends Component{
         this.state = {
             data:[],
             detailData:[],
-            allSum:''
+            allSum:0,
+            custom:'',
+            collect:'',
+            salesman:'',
+            deliveryman:'',
+            ware:'',
+            payType:'',
+            // searchPayType:'',
+            // goodsTitle:''
         }
     }
-    componentWillMount(){
-        const data = []
-        for(let i=0;i<20;i++){
-            data.push({
-                key: i,
-                goodsName: Math.random() > 0.5 ? 'A' : 'B',
-                bigUnit: '箱',
-                bigPrice: 100,
-                smallUnit:'瓶',
-                smallPrice:10,
-                storage:'999'
+    componentDidMount(){
+        axios({
+            method:'POST',
+            url:'/showOutbound'
+        })
+        .then(res => {
+            console.log(res.data.data)
+            const data = res.data.data
+            data.map((item,index) => {
+                item.key = index
+                return data
             })
-        }
-        this.setState({
-            data:data
+            this.setState({
+                data:data
+            })
+        })
+        .catch(err => {
+            console.log(err)
         })
     }
-    red = (data) => {
-        if(data.smallNum>1){
-            data.smallNum -= 1
-        }
-        var allSum = 0
-        for(let i=0;i<this.state.detailData.length;i++){
-            allSum = this.state.detailData[i].sum + allSum
-        }
-        this.setState({
-            allSum:allSum
-        })
-    }
-    add = (data) => {
-        console.log(data)
-        data.smallNum += 1
-        var allSum = 0
-        for(let i=0;i<this.state.detailData.length;i++){
-            allSum = this.state.detailData[i].sum + allSum
-        }
-        this.setState({
-            allSum:allSum
-        })
-    }
-    redBig = (data) => {
-        if(data.bigNum>1){
-            data.bigNum -= 1
-        }
-        var allSum = 0
-        for(let i=0;i<this.state.detailData.length;i++){
-            allSum = this.state.detailData[i].sum + allSum
-        }
-        this.setState({
-            allSum:allSum
-        })
-    }
-    addBig = (data) => {
-        console.log(data)
-        data.bigNum += 1
-        var allSum = 0
-        for(let i=0;i<this.state.detailData.length;i++){
-            allSum = this.state.detailData[i].sum + allSum
-        }
-        this.setState({
-            allSum:allSum
-        })
-    }
-    addStockOut = (data) => {
+    red = (i) => {
         const detailData = [...this.state.detailData]
-        if(detailData.length === 0){
-            detailData.push({
-                goodsName:data.goodsName,
-                big:data.bigPrice + '/' + data.bigUnit,
-                bigNum:1,
-                small:data.smallPrice + '/' + data.smallUnit,
-                smallNum:1,
-                sum:data.bigPrice + data.smallPrice
-            })
-        }else{
-            detailData.map((item,index) => {
-                if(detailData[index].goodsName === data.goodsName){
-                    detailData[index].bigNum += 1
-                    detailData[index].smallNum += 1
-                    return detailData
-                }else{
-                    detailData.push({
-                        goodsName:data.goodsName,
-                        big:data.bigPrice + '/' + data.bigUnit,
-                        bigNum:1,
-                        small:data.smallPrice + '/' + data.smallUnit,
-                        smallNum:1,
-                        sum:data.bigPrice + data.smallPrice
-                    })
-                    return detailData
-                }
-            })
+        if(detailData[i].smallNum>1){
+            detailData[i].smallNum -= 1
+            detailData[i].sum = detailData[i].sum - detailData[i].small
         }
         var allSum = 0
         for(let i=0;i<detailData.length;i++){
             allSum = detailData[i].sum + allSum
         }
-
-        console.log(detailData)
+        this.setState({
+            allSum:allSum,
+            detailData:detailData
+        })
+    }
+    add = (i) => {
+        const detailData = [...this.state.detailData]
+        detailData[i].smallNum += 1
+        detailData[i].sum = detailData[i].sum + detailData[i].small
+        var allSum = 0
+        for(let i=0;i<detailData.length;i++){
+            allSum = detailData[i].sum + allSum
+        }
+        this.setState({
+            allSum:allSum,
+            detailData:detailData
+        })
+    }
+    redBig = (i) => {
+        const detailData = [...this.state.detailData]
+        if(detailData[i].bigNum>1){
+            detailData[i].bigNum -= 1
+            detailData[i].sum = detailData[i].sum - detailData[i].big
+        }
+        var allSum = 0
+        for(let i=0;i<this.state.detailData.length;i++){
+            allSum = this.state.detailData[i].sum + allSum
+        }
+        this.setState({
+            allSum:allSum,
+            detailData:detailData
+        })
+    }
+    addBig = (i) => {
+        const detailData = [...this.state.detailData]
+        detailData[i].bigNum += 1
+        detailData[i].sum = detailData[i].sum + detailData[i].big
+        var allSum = 0
+        for(let i=0;i<this.state.detailData.length;i++){
+            allSum = this.state.detailData[i].sum + allSum
+        }
+        this.setState({
+            allSum:allSum,
+            detailData:detailData
+        })
+    }
+    addStockOut = (data) => {
+        var allSum = 0
+        const detailData = [...this.state.detailData]
+        if(detailData.length === 0){
+            detailData.push({
+                goodsName:data.goods_name,
+                big:data.large_unit_price,
+                bigUnit:data.large_unit,
+                bigNum:1,
+                small:data.small_unit_price,
+                smallUnit:data.small_unit,
+                smallNum:1,
+                sum:data.large_unit_price + data.small_unit_price
+            })
+            
+        }else{
+            let is = true
+            for(let i=0;i<detailData.length;i++){
+                if(data.goods_name === detailData[i].goodsName){
+                    is = !is
+                    detailData[i].bigNum += 1
+                    detailData[i].smallNum += 1
+                    detailData[i].sum = data.large_unit_price*detailData[i].bigNum + data.small_unit_price*detailData[i].smallNum
+                }
+            }
+            if(is){
+                detailData.push({
+                    goodsName:data.goods_name,
+                    big:data.large_unit_price,
+                    bigUnit:data.large_unit,
+                    bigNum:1,
+                    small:data.small_unit_price,
+                    smallUnit:data.small_unit,
+                    smallNum:1,
+                    sum:data.large_unit_price + data.small_unit_price
+                })
+            }
+        }
+        for(let i=0;i<detailData.length;i++){
+            allSum = detailData[i].sum + allSum
+        }
+        detailData.map((item,index) => {
+            item.key = index
+            return detailData
+        })
         this.setState({
             detailData:detailData,
             allSum:allSum
         })
-
     }
-    delGoods = (index) => {
-        console.log(this.state.detailData)
-        console.log(index)
-        const newData = this.state.detailData.splice(index,1)
+    delGoods = (i) => {
+        const newData = [...this.state.detailData]
+        newData.splice(i,1)
+        var allSum = 0
+        for(let i=0;i<newData.length;i++){
+            allSum = newData[i].sum + allSum
+        }
         this.setState({
-            ...this.state,
-            detailData:newData
+            detailData:newData,
+            allSum:allSum
         })
     }
+    getCustom = (e) => {
+        console.log(e)
+        this.setState({
+            custom:e
+        })
+    }
+    getCollect = (e) => {
+        this.setState({
+            collect:e
+        })
+    }
+    getSalesMan = (e) => {
+        this.setState({
+            salesman:e
+        })
+    }
+    getDeliveryman = (e) => {  
+        this.setState({
+            deliveryman:e
+        })
+    }
+    getWare = (e) => {
+        this.setState({
+            ware:e
+        })
+    }
+    payMode = (e) => {
+        this.setState({
+            payType:e
+        })
+    }
+    submit = () => {
+        axios({
+            method:'POST',
+            url:'/addOutbound',
+            data:{
+                customer_name:this.state.custom,
+                collect_method:this.state.collect,
+                salesman:this.state.salesman,
+                deliveryman:this.state.deliveryman,
+                ware_name:this.state.ware,
+                data:this.state.detailData,
+                pay_type:this.state.payType,
+                sales_payable:this.state.allSum
+            }
+        })
+        .then(res => {
+            console.log(res.data.code)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    payType = (e) => {
+        this.setState({
+            searchPayType:e
+        })
+    }
+    goodsTitle = (e) => {
+        this.setState({
+            goodsTitle:e.target.value
+        })
+    }
+    // search = () => {
+    //     axios({
+    //         method:'POST',
+    //         url:''
+    //     })
+    // }
     render(){
-        const { data,detailData,allSum } = this.state
+        const { data,detailData,allSum,custom,collect,salesman,deliveryman,ware,payType,goodsTitle,searchPayType } = this.state
         const detail = [
             {
                 title: '商品名称',
@@ -135,30 +237,36 @@ export default class AddStockOut extends Component{
             },{
                 title: '单价/大单位',
                 dataIndex: 'big',
+                render:(text,record) => {
+                    return record.big + '/' + record.bigUnit
+                }
             },{
                 title:'数量',
                 dataIndex:'bigNum',
-                render: (text,record) => {
+                render: (text,record,index) => {
                     return(
                         <div className="number">
-                            <span onClick={() => this.redBig(record)} className="count">-</span>
+                            <span onClick={() => this.redBig(index)} className="count">-</span>
                             <span>{text}</span>
-                            <span onClick={() => this.addBig(record)} className="count">+</span>
+                            <span onClick={() => this.addBig(index)} className="count">+</span>
                         </div>
                     )
                 }
             },{
                 title:'小单位价格',
-                dataIndex:'small'
+                dataIndex:'small',
+                render:(text,record) => {
+                    return record.small + '/' + record.smallUnit
+                }
             },{
                 title:'数量',
                 dataIndex:'smallNum',
-                render: (text,record) => {
+                render: (text,record,index) => {
                     return(
                         <div className="number">
-                            <span onClick={() => this.red(record)} className="count">-</span>
+                            <span onClick={() => this.red(index)} className="count">-</span>
                             <span>{text}</span>
-                            <span onClick={() => this.add(record)} className="count">+</span>
+                            <span onClick={() => this.add(index)} className="count">+</span>
                         </div>
                     )
                 }
@@ -198,31 +306,30 @@ export default class AddStockOut extends Component{
         const columns = [
             {
                 title: '商品名称',
-                dataIndex: 'goodsName',
+                dataIndex: 'goods_name',
             },
             {
                 title: '大单位',
-                dataIndex: 'bigUnit',
+                dataIndex: 'large_unit',
             },
             {
                 title: '大单位单价',
-                dataIndex: 'bigPrice',
+                dataIndex: 'large_unit_price',
             },
             {
                 title:'小单位',
-                dataIndex:'smallUnit'
+                dataIndex:'small_unit'
             },
             {
                 title:'小单位价格',
-                dataIndex:'smallPrice'
+                dataIndex:'small_unit_price'
             },
             {
                 title:'现有库存',
-                dataIndex:'storage'
+                dataIndex:'stock'
             },{
                 title:'操作',
                 dataIndex:'addHandle',
-                // render: (text,record) => <span style={{color:'rgb(26, 188, 156)'}}>添加</span>
                 render: (text,record) => {
                     return (
                         <span 
@@ -250,14 +357,20 @@ export default class AddStockOut extends Component{
                     <div className="addstock-info">
                         <div>
                             客户名称：
-                            <Select style={{ width: 160 }}>
+                            <Select 
+                            style={{ width: 160 }} 
+                            onChange={this.getCustom}
+                            value={custom}>
                                 <Option value="jack">Jack</Option>
                                 <Option value="lucy">Lucy</Option>
                             </Select>
                         </div>
                         <div>
                             收款方式：
-                            <Select style={{ width: 160 }}>
+                            <Select 
+                            style={{ width: 160 }} 
+                            onChange={this.getCollect}
+                            value={collect}>
                                 <Option value="1">全部</Option>
                                 <Option value="2">预付款</Option>
                                 <Option value="3">货到付款</Option>
@@ -265,7 +378,10 @@ export default class AddStockOut extends Component{
                         </div>
                         <div>
                             业务员：
-                            <Select style={{ width: 160 }}>
+                            <Select 
+                            style={{ width: 160 }} 
+                            onChange={this.getSalesMan}
+                            value={salesman}>
                                 <Option value="1">A</Option>
                                 <Option value="2">B</Option>
                                 <Option value="3">C</Option>
@@ -273,7 +389,10 @@ export default class AddStockOut extends Component{
                         </div>
                         <div>
                             跟车配送员：
-                            <Select style={{ width: 160 }}>
+                            <Select 
+                            style={{ width: 160 }} 
+                            onChange={this.getDeliveryman}
+                            value={deliveryman}>
                                 <Option value="1">A</Option>
                                 <Option value="2">B</Option>
                                 <Option value="3">C</Option>
@@ -281,7 +400,10 @@ export default class AddStockOut extends Component{
                         </div>
                         <div>
                             出货仓库：
-                            <Select style={{ width: 160 }}>
+                            <Select 
+                            style={{ width: 160 }} 
+                            onChange={this.getWare}
+                            value={ware}>
                                 <Option value="1">A</Option>
                                 <Option value="2">B</Option>
                                 <Option value="3">C</Option>
@@ -305,7 +427,7 @@ export default class AddStockOut extends Component{
                             </div>
                             <div>
                                 选择分类：
-                                <Select style={{ width: 160 }}>
+                                <Select style={{ width: 160 }} value={searchPayType} onChange={this.payType}>
                                     <Option value="1">全部</Option>
                                     <Option value="2">预付款</Option>
                                     <Option value="3">货到付款</Option>
@@ -313,9 +435,9 @@ export default class AddStockOut extends Component{
                             </div>
                             <div>
                                 商品标题：
-                                <input type="text" className="goodsTitle"></input>
+                                <input type="text" className="goodsTitle" value={goodsTitle} onChange={this.goodsTitle}></input>
                             </div>
-                            <div className="goodsSearch">搜索</div>
+                            <div className="goodsSearch" onClick={this.search}>搜索</div>
                         </div>
 
                         <div className="search-result">
@@ -327,7 +449,16 @@ export default class AddStockOut extends Component{
                                 style={{width:'100%'}}
                                 dataSource={data}
                                 columns={columns}
-                                bordered />
+                                bordered 
+                                pagination={{
+                                    pageSize:10,
+                                    showQuickJumper:true,
+                                    showTotal:(total) => {
+                                        return (
+                                            <p>共有{Math.ceil(total / 10)}页/{total}条数据</p>
+                                        )
+                                    },
+                                }}/>
                         </div>
                     </div>
                 </section>
@@ -349,7 +480,7 @@ export default class AddStockOut extends Component{
                             </div>
                             <div>
                                 <span className="span-one">金额合计：</span>
-                                <span className="span-two">{allSum}元</span>
+                                <span className="span-two">{allSum}.00元</span>
                             </div>
                         </div>
                 </section>
@@ -362,7 +493,11 @@ export default class AddStockOut extends Component{
                         <div className="payMode">
                             <div>
                                 付款类型：
-                                <Select style={{ width: 160 }}>
+                                <Select 
+                                style={{ width: 160 }}
+                                value={payType}
+                                onChange={this.payMode}
+                                >
                                     <Option value="1">现金</Option>
                                     <Option value="2">微信</Option>
                                     <Option value="3">支付宝</Option>
@@ -379,10 +514,10 @@ export default class AddStockOut extends Component{
                         </div>
                         <div>
                             <span className="span-one">应付款金额：</span>
-                            <span className="span-two">{9999.00}元</span>
+                            <span className="span-two">{allSum}.00元</span>
                         </div>
                         <div>
-                            <button type="button">提交</button>
+                            <button type="button" onClick={this.submit}>提交</button>
                         </div>
                     </div>
                 </footer>

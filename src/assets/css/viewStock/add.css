@@ -184,6 +184,7 @@ footer .payInfo-detail{
     color: white;
     background: rgb(69, 206, 211);
     border-radius: 5px;
+    cursor: pointer;
 }
 .payInfo-detail .payment{
     width: 100%;

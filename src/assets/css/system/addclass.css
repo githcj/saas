@@ -1,0 +1,25 @@
+.addclass-con{
+    width: 50%;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+.content-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+.acc-span{
+    width: 100px;
+    display: flex;
+    justify-content: flex-end;
+}
+.import-span::before{
+    content: '*';
+    color: red;
+}
+.acc-tips{
+    color: #ccc;
+    font-size: 14px;
+    margin-left: 50px;
+}
