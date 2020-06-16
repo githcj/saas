@@ -47,7 +47,7 @@ const Stock = (props) => {
                         <Route path={match.url + '/stockindetail'}><StockInDetail msg={props.location} /></Route>
                         <Route path={match.url + '/stockoutdetail'}><StockOutDetail msg={props.location} /></Route>
 
-                        <Redirect to={match.url + '/stockout'} />
+                        <Redirect exact to={match.url + '/stockout'} />
                     </div>
                 </Col>
             </Row>
