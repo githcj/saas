@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../../assets/css/viewStock/add.css'
-import { Select,Table,DatePicker } from 'antd'
+import { Select,Table,DatePicker,message } from 'antd'
 import axios from '../../plugins/axios'
 
 const { Option } = Select;
@@ -21,6 +21,7 @@ export default class AddStockOut extends Component{
             // goodsTitle:''
         }
     }
+    //库存
     componentDidMount(){
         axios({
             method:'POST',
@@ -190,6 +191,7 @@ export default class AddStockOut extends Component{
             payType:e
         })
     }
+    //添加出库单
     submit = () => {
         axios({
             method:'POST',
@@ -207,9 +209,14 @@ export default class AddStockOut extends Component{
         })
         .then(res => {
             console.log(res.data.code)
+            this.props.msg.push({
+                pathname:'/home/kucun/stockout'
+            })
+            message.success('出库单添加成功')
         })
         .catch(err => {
             console.log(err)
+            message.error('出库单添加失败')
         })
     }
     payType = (e) => {
