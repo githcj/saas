@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, DatePicker, Select } from 'antd'
+import { Table, DatePicker, Select, Modal } from 'antd'
 import { SyncOutlined, SearchOutlined, DownOutlined, UpOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewStock/stock.css'
 import axios from '../../plugins/axios'
@@ -10,26 +10,29 @@ export default class StockOut extends Component {
         super(props)
         this.state = {
             outData:[],
-            pagesize:10
+            pagesize:10,
+            visible:false,
+            approveIdea:'',
+            index:''
         }
     }
     toAddStockOut = () => {
         this.props.msg.push({
-            pathname:'/home/kucun/addstockout'
+            pathname:'/home/Kucun/addstockout'
         })
     }
     todetail = (data) => {
         this.props.msg.push({
-            pathname:'/home/kucun/stockoutdetail',
+            pathname:'/home/Kucun/stockoutdetail',
             params:data
         })
     }
-    editHandle = (data) => {
-        this.props.msg.push({
-            pathname:'/home/kucun/addstockout',
-            params:data
-        })
-    }
+    // editHandle = (data) => {
+    //     this.props.msg.push({
+    //         pathname:'/home/kucun/addstockout',
+    //         params:data
+    //     })
+    // }
     pagesizeChange = (value) => {
         if(value === '10'){
             this.setState({
@@ -45,6 +48,7 @@ export default class StockOut extends Component {
             })
         }
     }
+    //出库管理
     componentDidMount(){
         axios({
             method:'POST',
@@ -64,6 +68,7 @@ export default class StockOut extends Component {
             console.log(err)
         })
     }
+    //删除出库单
     del = (data) => {
         axios({
             method:'POST',
@@ -74,10 +79,60 @@ export default class StockOut extends Component {
         })
         .then(res => {
             console.log(res.data.code)
+            console.log(data)
+            // const newData = [...this.state.outData]
+            // newData.splice(data.key,1)
+            // this.setState({
+            //     outData:newData
+            // })
         })
         .catch(err => {
             console.log(err)
         })
+    }
+    approve = (i) => {
+        this.setState({
+            visible:true,
+            index:i
+        })
+    }
+    getIdea = (e) => {
+        this.setState({
+            approveIdea:e.target.value
+        })
+        console.log(e.target.value)
+    }
+    hideModal = () => {
+        this.setState({
+            visible:false
+        })
+    }
+    //出库审批
+    agree = () => {
+        axios({
+            method:'POST',
+            url:'/checkOutbound',
+            data:{
+                approval_opinion:this.state.approveIdea,
+                isOk:true
+            }
+        })
+        .then(res => {
+            console.log(res.data.code)
+            const newData = [...this.state.outData]
+            const i = this.state.index
+            newData[i].out_status = '已通过'
+            this.setState({
+                outData:newData,
+                visible:false
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    getDate = (e) => {
+        console.log(e)
     }
     render() {
         const columns = [
@@ -131,7 +186,7 @@ export default class StockOut extends Component {
                 dataIndex:'approveState', 
                 render: (text, record)=> {
                     if(record.out_status === '待审批') {
-                        return <span style={{color:'rgb(26, 188, 156)'}}>审批</span>
+                        return <span style={{color:'rgb(26, 188, 156)',cursor:'pointer'}} onClick={() => this.approve(record.key)}>审批</span>
                     } else if(record.out_status === '已入库') {
                         return null
                     }
@@ -143,7 +198,7 @@ export default class StockOut extends Component {
                     if(record.out_status === '待审批'){
                         return (
                             <p className="tableHandle">
-                                <span onClick={() => this.editHandle(record)}>编辑</span>
+                                {/* <span onClick={() => this.editHandle(record)}>编辑</span> */}
                                 <span onClick={() => this.todetail(record)}>预览</span>
                                 <span onClick={() => this.del(record)}>删除</span>
                             </p>
@@ -160,7 +215,7 @@ export default class StockOut extends Component {
             }
         ]
         const {RangePicker} = DatePicker
-        const { outData } = this.state
+        const { outData,visible,pagesize,approveIdea } = this.state
         return (
             <div className="stockOut">
                 <header>
@@ -187,6 +242,7 @@ export default class StockOut extends Component {
                             出库日期：
                             <RangePicker
                             format='YYYY-MM-DD HH:mm'
+                            onChange={this.getDate}
                             />
                         </div>
                         <div>
@@ -251,15 +307,27 @@ export default class StockOut extends Component {
                         columns={columns}
                         bordered
                         pagination={{
-                            pageSize:this.state.pagesize,
+                            pageSize:pagesize,
                             showQuickJumper:true,
                             showTotal:(total) => {
                                 return (
-                                    <p>共有{Math.ceil(total / this.state.pagesize)}页/{total}条数据</p>
+                                    <p>共有{Math.ceil(total / pagesize)}页/{total}条数据</p>
                                 )
                             },
                         }}  />
                 </div>
+                <Modal
+                visible={visible}
+                title='审批意见'
+                okText='同意'
+                cancelText='取消'
+                onOk={this.agree}
+                onCancel={this.hideModal}>
+                    <div>
+                        <label>审批意见:</label>
+                        <input type="text" onChange={this.getIdea} value={approveIdea}></input>
+                    </div>
+                </Modal>
             </div>
         )
     }

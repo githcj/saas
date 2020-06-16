@@ -8,6 +8,7 @@ export default class StockInDetail extends Component{
     constructor(props){
         super(props)
     }
+    //入库预览
     componentDidMount(){
         axios({
             method:'POST',

@@ -13,6 +13,7 @@ export default class StockOutDetail extends Component{
             infoData:''
         }
     }
+    //预览出库单
     componentDidMount(){
         axios({
             method:'POST',
