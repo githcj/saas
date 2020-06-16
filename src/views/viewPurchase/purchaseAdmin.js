@@ -42,7 +42,7 @@ class purchaseAdmin extends React.Component {
         })
             .then(res => {
                 const newData = res.data
-                newData.map((item,index) => {
+                newData.map((item, index) => {
                     newData[index].key = index
                     return newData
                 })
@@ -88,19 +88,19 @@ class purchaseAdmin extends React.Component {
             params: record
         })
     }
-    showModal = (i,index) => {
+    showModal = (i, index) => {
         console.log('我触发了', i, this.state)
         this.setState({
             visible: true,
             id: i,
-            i:index
+            i: index
         })
     };
-    showModelR = (i,index) => {
+    showModelR = (i, index) => {
         this.setState({
             visible: true,
             id: i,
-            i:index
+            i: index
         })
     }
     handleOk = () => {
@@ -110,18 +110,18 @@ class purchaseAdmin extends React.Component {
         var year = dt.getFullYear()
         var mounth = dt.getMonth() + 1
         var day = dt.getDate()
-        if(mounth<10){
+        if (mounth < 10) {
             mounth = "0" + mounth
         }
-        if(day<10){
+        if (day < 10) {
             day = "0" + day
         }
-        var timing = year +"-" + mounth + "-" + day
+        var timing = year + "-" + mounth + "-" + day
         data2.filter(item => {
             if (id === item.purchase_id && item.purchase_status === 3) {
                 item.purchase_status = 4
                 item.rktiming = timing
-            }else if (id === item.purchase_id) {
+            } else if (id === item.purchase_id) {
                 console.log(item.purchase_id + '我今天吃的水饺' + id)
                 item.purchase_status = 3
                 item.yijian = shenpiyijian
@@ -140,10 +140,10 @@ class purchaseAdmin extends React.Component {
         const newData = [...this.state.data]
         const i = this.state.i
         newData[i].purchase_status = 2
-        this.setState({ 
+        this.setState({
             visible: false,
-            data:newData
-         })
+            data: newData
+        })
     }
     yijianChange = (e) => {
         this.setState({
@@ -224,21 +224,21 @@ class purchaseAdmin extends React.Component {
                         return <div>
                             <span type="primary"
                                 style={{ cursor: 'pointer' }}
-                                onClick={() => this.showModal(record.purchase_id,record.key)}>
+                                onClick={() => this.showModal(record.purchase_id, record.key)}>
                                 审批</span>
                         </div>
                     } else if (record.purchase_status === 2) {
                         return <div>
                             <span type="primary"
                                 style={{ cursor: 'pointer' }}
-                                onClick={() => this.showModal(record.purchase_id,record.key)}>
+                                onClick={() => this.showModal(record.purchase_id, record.key)}>
                                 审批</span>
                         </div>
                     } else if (record.purchase_status === 3) {
                         return <div>
                             <span
                                 style={{ cursor: 'pointer' }}
-                                onClick={() => this.showModelR(record.purchase_id,record.key)}>
+                                onClick={() => this.showModelR(record.purchase_id, record.key)}>
                                 入库</span>
                         </div>
                     } else if (record.purchase_status === 4) {

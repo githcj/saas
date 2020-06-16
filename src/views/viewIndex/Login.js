@@ -2,15 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 import { loginActionSync } from "../../store/user/userActions";
 import '../../assets/css/huang/login.css'
-import axios from '../../plugins/axios'
+// import axios from '../../plugins/axios'
+import axios from 'axios'
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
-	  password: "",
-	  token:""
+      password: "",
+      token: ""
     }
   }
 
@@ -26,36 +27,39 @@ class Login extends React.Component {
     });
   };
 
-  getLogin = async () => {
-	  await axios({
-		  method:'POST',
-		  url:'/login',
-		  data:{
-			  emp_account:this.state.username,
-        emp_password:this.state.password,
-        emp_last_time:new Date()
+  getLogin =  () => {
+     axios({
+      method: 'POST',
+      url: 'http://172.16.6.30:8080/login/login',
+      data: {
+        emp_account: this.state.username,
+        emp_password: this.state.password,
+        emp_last_time: new Date()
       }
-	  })
-	  .then(res=> {
-		  console.log(res.data)
-		  this.setState({
-			  token:res.data.token
-      })
-      localStorage.setItem('token',this.state.token)
-      localStorage.setItem('username',this.state.username)
-      this.props.loginHandler(
-        {
-          username: this.state.username
-        },
-        this.props.history
-      );
-	  })
-	  .catch(err=> {
-		  console.log('err',err)
     })
+      .then(res => {
+        console.log(res.data)
+        this.setState({
+          token: res.data.token,
+          username:res.data.data.emp_name
+        })
+        if(this.state.token){
+          localStorage.setItem('token', this.state.token)
+          localStorage.setItem('username',this.state.username )
+        }
+        else{console.log(111)}
+        this.props.loginHandler(
+          {
+            username: this.state.username
+          },
+          this.props.history
+        );
+      })
+      .catch(err => {
+        console.log('err', err)
+      })
     this.setState({
-      username:'',
-      password:''
+      password: ''
     })
   };
 
@@ -64,10 +68,10 @@ class Login extends React.Component {
     return (
       <div className="login">
         <div className='login-form'>
-			<div className='login-biaoti'>
-				<h1>Saas经销商业务管理系统</h1>
-				<p>Saas Dealer Management System</p>
-			</div>
+          <div className='login-biaoti'>
+            <h1>Saas经销商业务管理系统</h1>
+            <p>Saas Dealer Management System</p>
+          </div>
           <input
             type="text"
             placeholder="请输入账号"
@@ -76,8 +80,8 @@ class Login extends React.Component {
           />
           <input
             type="password"
-			placeholder="请输入密码"
-			value={password}
+            placeholder="请输入密码"
+            value={password}
             onChange={this.setPassword}
           />
 

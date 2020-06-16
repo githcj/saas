@@ -12,7 +12,10 @@ export default class purchaseApply extends Component {
             data: [],
             detailData: [],
             sum: 0,
-
+            changShang:'',
+            fuKuan:'',
+            shenPiren:'',
+            caiGouDate:''
         }
     }
 
@@ -37,6 +40,45 @@ export default class purchaseApply extends Component {
         }
         this.setState({
             sum: suma
+        })
+    }
+    getchangShang = (e) =>{
+        console.log(e)
+        this.setState({
+            changShang:e
+        })
+    }
+    getfuKuan = (e) =>{
+        this.setState({
+            fuKuan:e
+        })
+    }
+    getshenPi = (e) =>{
+        this.setState({
+            shenPiren:e
+        })
+    }
+    getcaiGouD = (e) =>{
+        this.setState({
+            caiGouDate:e
+        })
+    }
+    submit = () =>{
+        axios({
+            method:'POST',
+            url:'/purchase/querypurchasebyid',
+            data:{
+                supplier_name:this.state.changShang,
+                pay_type_name:this.state.fuKuan,
+                approver:this.state.shenPiren,
+                create_time:this.state.caiGouDate,
+            }
+        })
+        .then(res=>{
+            console.log(res.data.code)
+        })
+        .catch(err=>{
+            console.log(err)
         })
     }
     addbigcount = (i, n) => {
@@ -163,7 +205,7 @@ export default class purchaseApply extends Component {
         })
     }
     render() {
-        const { data, detailData, sum } = this.state
+        const { data, detailData, sum,changShang,fuKuan,shenPiren,caiGouDate } = this.state
         for (let i = 0; i < detailData.length; i++) {
             detailData[i].key = i
         }
@@ -288,7 +330,10 @@ export default class purchaseApply extends Component {
                         <div>
                             <span style={{ color: 'red' }}>*</span>
                             供货厂商：
-                            <Select style={{ width: 160 }}>
+                            <Select 
+                            style={{ width: 160 }}
+                            value={changShang}
+                            onChange={this.getchangShang}>
                                 <Option value="jack">Jack</Option>
                                 <Option value="lucy">Lucy</Option>
                             </Select>
@@ -296,7 +341,10 @@ export default class purchaseApply extends Component {
                         <div>
                             <span style={{ color: 'red' }}>*</span>
                             付款类型：
-                            <Select style={{ width: 160 }}>
+                            <Select 
+                            style={{ width: 160 }}
+                            value={fuKuan}
+                            onChange={this.getfuKuan}>
                                 <Option value="1">全部</Option>
                                 <Option value="2">预付款</Option>
                                 <Option value="3">货到付款</Option>
@@ -305,7 +353,10 @@ export default class purchaseApply extends Component {
                         <div>
                             <span style={{ color: 'red' }}>*</span>
                             审批人：
-                            <Select style={{ width: 160 }}>
+                            <Select 
+                            style={{ width: 160 }}
+                            value={shenPiren}
+                            onChange={this.getshenPi}>
                                 <Option value="1">A</Option>
                                 <Option value="2">B</Option>
                                 <Option value="3">C</Option>
@@ -314,7 +365,10 @@ export default class purchaseApply extends Component {
                         <div>
                             <span style={{ color: 'red' }}>*</span>
                             采购日期：
-                            <Select style={{ width: 160 }}>
+                            <Select 
+                            style={{ width: 160 }}
+                            value={caiGouDate}
+                            onChange={this.getcaiGouD}>
                                 <Option value="1">2017</Option>
                                 <Option value="2">预付款</Option>
                                 <Option value="3">货到付款</Option>
@@ -376,7 +430,7 @@ export default class purchaseApply extends Component {
                         </div>
                         <div className="apply-sub"
                             style={{ cursor: 'pointer' }}
-                            onClick={() => this.handleData()}>提交</div>
+                            onClick={this.submit}>提交</div>
                     </div>
                 </section>
             </div>
