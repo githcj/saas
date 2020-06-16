@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, DatePicker, Select } from 'antd'
+import { Table, DatePicker, Select, Modal } from 'antd'
 import { SyncOutlined, SearchOutlined, DownOutlined, UpOutlined, UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewStock/stock.css'
 import axios from '../../plugins/axios'
@@ -10,7 +10,9 @@ export default class StockIn extends Component{
         super(props)
         this.state = {
             indata:[],
-            pagesize:10
+            pagesize:10,
+            visible:false,
+            approveIdea:''
         }
     }
     pagesizeChange = (value) => {
@@ -28,6 +30,7 @@ export default class StockIn extends Component{
             })
         }
     }
+    //入库管理
     componentDidMount(){
         axios({
             method:'POST',
@@ -50,13 +53,54 @@ export default class StockIn extends Component{
     }
     toAddStockIn = () => {
         this.props.msg.push({
-            pathname:'/home/kucun/addstockin'
+            pathname:'/home/Kucun/addstockin'
         })
     }
     todetail = (data) => {
         this.props.msg.push({
-            pathname:'/home/kucun/stockindetail',
+            pathname:'/home/Kucun/stockindetail',
             params:data
+        })
+    }
+    approve = (i) => {
+        this.setState({
+            visible:true,
+            index:i
+        })
+    }
+    getIdea = (e) => {
+        this.setState({
+            approveIdea:e.target.value
+        })
+        console.log(e.target.value)
+    }
+    hideModal = () => {
+        this.setState({
+            visible:false
+        })
+    }
+    //审批
+    agree = () => {
+        axios({
+            method:'POST',
+            url:'/checkEnterWare',
+            data:{
+                approval_opinion:this.state.approveIdea,
+                isOk:true
+            }
+        })
+        .then(res => {
+            console.log(res.data.code)
+            const newData = [...this.state.outData]
+            const i = this.state.index
+            newData[i].out_status = '已通过'
+            this.setState({
+                outData:newData,
+                visible:false
+            })
+        })
+        .catch(err => {
+            console.log(err)
         })
     }
     render(){
@@ -111,7 +155,9 @@ export default class StockIn extends Component{
                 dataIndex:'approveState', 
                 render: (text, record, index)=> {
                     if(record.out_status === '待审批') {
-                        return <span>审批</span>
+                        return <span 
+                        style={{color:'rgb(26, 188, 156)',cursor:'pointer'}}
+                        onClick={() => this.approve(record.key)}>审批</span>
                     } else if(record.out_status === '已入库') {
                         return null
                     }
@@ -123,7 +169,7 @@ export default class StockIn extends Component{
                     if(record.out_status === '待审批'){
                         return (
                             <p className="tableHandle">
-                                <span>编辑</span>
+                                {/* <span>编辑</span> */}
                                 <span onClick={() => this.todetail(record)}>预览</span>
                                 <span>删除</span>
                             </p>
@@ -139,7 +185,7 @@ export default class StockIn extends Component{
                 }
             }
         ]
-        const { indata } = this.state
+        const { indata,pagesize,visible,approveIdea } = this.state
         return (
             <div className="stockIn">
                 <header>
@@ -232,7 +278,7 @@ export default class StockIn extends Component{
                         columns={columns}
                         bordered
                         pagination={{
-                            pageSize:this.state.pagesize,
+                            pageSize:pagesize,
                             showQuickJumper:true,
                             showTotal:(total) => {
                                 return (
@@ -241,6 +287,20 @@ export default class StockIn extends Component{
                             },
                         }} />
                 </div>
+
+                <Modal
+                visible={visible}
+                title='审批意见'
+                okText='同意'
+                cancelText='取消'
+                onOk={this.agree}
+                onCancel={this.hideModal}>
+                    <div>
+                        <label>审批意见:</label>
+                        <input type="text" onChange={this.getIdea} value={approveIdea}></input>
+                    </div>
+                </Modal>
+
             </div>
         )
     }
