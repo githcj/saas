@@ -22,22 +22,8 @@ class AddBrand extends React.Component {
     }
     componentWillMount() {
         const obj = this.props.his.location.params
-        axios({
-            method:'POST',
-            url:'/brand/wherequery',
-            data:{
-                token:'dasdas',
-                brand_name:obj
-            }
-        })
-        .then(res => {
-            this.setState({
-                data:res.data.data,
-                name:res.data.data.brand_name
-            })
-        })
-        .catch(err => {
-            console.location(err)
+        this.setState({
+            name:obj.brand_name
         })
     }
     // 返回
@@ -46,19 +32,45 @@ class AddBrand extends React.Component {
     }
     // 提交
     submitAdd = () => {
-        axios({
-            method:'POST',
-            url:'/brand/add',
-            data:{
-                token:'dsadas',
-            }
-        })
-        .then(res => {
-
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        const { name, story } = this.state
+        const obj = this.props.his.location.params
+        if(obj === '添加'){
+            axios({
+                method:'POST',
+                url:'/brand/add',
+                data:{
+                    token:'dsadas',
+                    brand_name:name,
+                    brand_remarks:story
+                }
+            })
+            .then(res => {
+                console.log(res)
+                this.props.his.push('/home/system/Brandma')
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+        else{
+            axios({
+                method:'POST',
+                url:'/brand/update',
+                data:{
+                    token:'sdasd',
+                    brand_id:obj.brand_id,
+                    brand_name:name,
+                    brand_remarks:story
+                }
+            })
+            .then(res => {
+                console.log(res)
+                this.props.his.push('/home/system/Brandma')
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
     }
     // 
     changeName = (e) => {
