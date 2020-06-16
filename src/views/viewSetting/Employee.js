@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Select , Input , Switch, message ,DatePicker  } from 'antd'
+import { Table, Select , Input , Switch, message ,DatePicker } from 'antd'
 import ConTitle from '../../components/ConTitle'
 import { UnorderedListOutlined,SearchOutlined,UpOutlined,DownOutlined } from '@ant-design/icons'
 import moment from 'moment'
@@ -19,9 +19,13 @@ export default class Employee extends Component{
             eachPage:10,
             title:'修改密码',
             emp_id:0,
-            searchInfo:{},
+            searchInfo:{
+                info:'',
+                dep_id:null,
+            },
             ModalVisible:false,
-            depList:[]
+            depList:[],
+            isSearch:true,
         }
     }
 
@@ -70,16 +74,22 @@ export default class Employee extends Component{
     
     // 组件加载完毕请求数据
     async componentDidMount() {
-        let emp_id = this.props.location.params
-        const { searchInfo } = this.state
-        searchInfo.emp_id = emp_id
-        this.setState({
-            searchInfo
-        })
-        const {data} = await axios.post('/employee/queEmp',this.state.searchInfo)
+        // console.log(this,'this');
+        
+        let dep_id = this.props.location.params
+        if(dep_id) {
+            const { searchInfo } = this.state
+            searchInfo.dep_id = dep_id
+            this.setState({
+                searchInfo
+            })
+        }
+        const {data} = await axios.post('/employee/queEmpbyCondition',this.state.searchInfo)
+        console.log(data);
+        
         const {data:res} = data
-        const {data:depData} = await axios.post('/gettingdep')
-        console.log(res);
+        const {data:depData} = await axios.post('/department/gettingdep')
+        console.log(depData,'depdddddd');
         
         res.map(item =>{
             item.emp_birth = moment(item.emp_birth).format('YYYY-MM-DD')
@@ -91,6 +101,7 @@ export default class Employee extends Component{
             empList:res,
             depList:depData.data,
         })
+        message.success('请求数据成功!')
         console.log(this.state.empList);
         
     }
@@ -166,7 +177,6 @@ export default class Employee extends Component{
         })
     }
     // 表单提交
-
     resetPass = async (value,form) => {
         console.log(value);
         let params = {}
@@ -182,6 +192,41 @@ export default class Employee extends Component{
         this.setState({
             ModalVisible:false
         })
+    }
+    // 搜索状态
+    changeIsSearch = () => {
+        let isSearch = this.state.isSearch
+        this.setState({
+            isSearch: !isSearch
+        })
+    }
+
+    // 搜索
+    async toSearch(e) {
+        if(e.keyCode == 13) {
+            if(e.target.value.trim()){
+                let searchInfo = this.state.searchInfo
+                searchInfo.info = e.target.value.trim()
+                this.setState({
+                    searchInfo
+                })
+                this.componentDidMount()
+            }
+        }
+    }
+
+    searching = () => {
+        this.componentDidMount()
+    }
+    //部门改变
+    depChange = (value)=>{
+        let searchInfo = this.state.searchInfo
+        searchInfo.dep_id = value
+        this.setState({
+            searchInfo
+        })
+        console.log(value,this.state.searchInfo);
+        
     }
 
     //取消编辑
@@ -221,22 +266,21 @@ export default class Employee extends Component{
                             <span>筛选查询</span>
                         </div>
                         <div className="right">
-                            <div>
-                                <DownOutlined />
-                                <UpOutlined />
-                                <span>收起筛选</span>
+                            <div style={{cursor:'pointer'}} onClick={this.changeIsSearch}>
+                                {this.state.isSearch ? <UpOutlined /> : <DownOutlined />}
+                                {this.state.isSearch ? <span>收起筛选</span> : <span>展开筛选</span>}
                             </div>
-                            <div className="searchResult">查询结果</div>
+                            <div className="searchResult" style={{cursor:'pointer'}} onClick={this.searching}>查询结果</div>
                         </div>
                     </div>
-                    <div className="search">
-                    <div>
-                            输入搜索：
-                            {/* <Input /> */}
+                    <div className="search" style={this.state.isSearch ? {display:'flex'}:{display:'none'}}>
+                        <div style={{display:'flex',alignItems:'center'}}>
+                            <span style={{display:'inline-block',width:'100px'}}>输入搜索：</span>
+                            <Input allowClear onKeyDown={(e)=>this.toSearch(e)}/>
                         </div>
                         <div>
                             所属部门：
-                            <Select style={{ width: 160 }} onChange={this.handleChange}>
+                            <Select style={{ width: 160 }} onChange={this.depChange}>
                                 {this.state.depList.map(item => {
                                     return <Option value={item.dep_id}>{item.dep_name}</Option>
                                 })}

@@ -89,7 +89,7 @@ const System = (props) => {
                         <Route path={match.url + '/AddEmp'} component={AddEmp} />
 						<Route path={match.url + "/Operation"} component={Operation} />
 						<Route path={match.url + "/Warehouse"} component={Warehouse}>
-							<Warehouse msg={match.url} his={props.history}></Warehouse>
+							<Warehouse msg={match.url} history={props.history}></Warehouse>
 						</Route>
 						<Route path={match.url + "/AddWare"} component={AddWare} />
 						<Route path={match.url + "/Cusinfo"} component={Cusinfo}>

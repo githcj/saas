@@ -70,13 +70,15 @@ class AddEmp extends Component {
             })
         }
         //下拉列表选项查询
-        const {data:depData} = await axios.post('/gettingdep')
-        const {data:posData} = await axios.post('/gettingposition')
+        console.log('gdsagjdghj')
+        const {data:depData} = await axios.post('/department/gettingdep')
+        const {data:posData} = await axios.post('/position/gettingposition')
         this.setState({
             depList:depData.data,
             posNameList:posData.data,
         })
-
+        console.log(this.setState);
+        
     }
 
     render() {
