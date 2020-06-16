@@ -274,35 +274,42 @@ render() {
     const columns = [
         {
             title: '商品名称',
+            align:'center',
             dataIndex: 'goodsname',
         },
         {
             title: '大单位',
+            align:'center',
             dataIndex: 'bigUnt',
         },
         {
             title: '大单位单价',
+            align:'center',
             dataIndex: 'bigUntPrice',
         },
         {
             title: '小单位',
+            align:'center',
             dataIndex: 'smallUnt',
         },
         {
             title: '小单位单价',
+            align:'center',
             dataIndex: 'smallUntPrice',
         },
         {
             title: '现有库存',
+            align:'center',
             dataIndex: 'stock',
         },
 
         {
             title: '操作',
+            align:'center',
             render: (record, index) => (
                 <span>
-                    <a >delete</a>
-                    <div onClick={this.add.bind(this, record)}>add</div>
+                    <a >删除</a>
+                    <a onClick={this.add.bind(this, record)}>添加</a>
                 </span>
             )
         },
@@ -311,18 +318,21 @@ render() {
     const goodscolumns = [
         {
             title: '商品名称',
+            align:'center',
             dataIndex: 'goodsname',
         },
         {
             title: '单价/大单位',
+            align:'center',
             // dataIndex: 'goodsname',
             render: (text, record, index) => <span>{record.bigUntPrice}</span>
         },
         {
             title: '数量',
+            align:'center',
             dataIndex: 'bgcount',
             render: (text, record, index) => {
-                return <div>
+                return <div className="number">
                     <span onClick={() => this.redbigcount(index, text)}>-</span>
                     <span>{text}</span>
                     <span onClick={() => this.addbigcount(index, text)}>+</span>
@@ -331,6 +341,7 @@ render() {
         },
         {
             title: '小单位/单价',
+            align:'center',
             render: (text, record, index) =>
                 <span>
                     {record.smallUntPrice + '/' + record.bigUnt}
@@ -339,9 +350,10 @@ render() {
         },
         {
             title: '数量',
+            align:'center',
             dataIndex: 'smcount',
             render: (text, record, index) => {
-                return <div>
+                return <div className="number">
                     <span onClick={() => this.redsmcount(index, text)}>-</span>
                     <span>{text}</span>
                     <span onClick={() => this.addsmcount(index, text)}>+</span>
@@ -350,19 +362,22 @@ render() {
         },
         {
             title: '金额',
+            align:'center',
             render: (text, record, index) => {
                 return <span>{Math.abs(record.smcount * record.smallUntPrice + record.bgcount * record.bigUntPrice).toString()}</span>
             }
         },
         {
             title: '现有库存',
+            align:'center',
             dataIndex: 'stock',
         },
         {
             title: '操作',
+            align:'center',
             render: (text, record, index) => (
                 <span>
-                    <span onClick={() => this.deldata(record.key)}>delete</span>
+                    <a onClick={() => this.deldata(record.key)}>删除</a>
                 </span>
             )
         },

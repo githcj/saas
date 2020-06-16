@@ -41,23 +41,23 @@ export default class Order extends Component {
         
     }
 
-    // showModal = () => {
-	// 	this.setState({
-	// 	  	visible: true,
-	// 	});
-	// }
-	// handleOk = e => {
-	// 	console.log(e);
-	// 	this.setState({
-	// 	  	visible: false,
-	// 	});
-	// }
-	// handleCancel = e => {
-	// 	console.log(e);
-	// 	this.setState({
-	// 	  	visible: false,
-	// 	});
-	// }
+    showModal = () => {
+		this.setState({
+		  	visible: true,
+		});
+	}
+	handleOk = e => {
+		console.log(e);
+		this.setState({
+		  	visible: false,
+		});
+	}
+	handleCancel = e => {
+		console.log(e);
+		this.setState({
+		  	visible: false,
+		});
+	}
 
     componentDidMount() {
         axios({
@@ -141,66 +141,77 @@ export default class Order extends Component {
         const columns = [
             {
                 title: '编号',
+                align:'center',
                 dataIndex: 'bianhao',
             },
             {
                 title: '销售类型',
+                align:'center',
                 dataIndex: 'sales',
             },
             {
                 title: '金额合计',
+                align:'center',
                 dataIndex: 'jine',
             },
             {
                 title: '创建日期',
+                align:'center',
                 dataIndex: 'cjrq',
             },
             {
                 title: '订单类型',
+                align:'center',
                 dataIndex: 'order',
             },
             {
                 title: '客户类型',
+                align:'center',
                 dataIndex: 'userlx',
             },
             {
                 title: '客户名称',
+                align:'center',
                 dataIndex: 'username',
             },
             {
                 title: '业务员',
+                align:'center',
                 dataIndex: 'person',
             },
             {
                 title: '出库仓库',
+                align:'center',
                 dataIndex: 'ckck',
             },
             {
                 title: '配送车辆',
+                align:'center',
                 dataIndex: 'car',
-                render: (text,record)=> {
-                   return <div>
-                        <Select defaultValue='客户名称' onChange={(value) => this.editval(value,record.key)}>
-                            <Option value="ten">car1</Option>
-                            <Option value="twenty">car2</Option>
-                            <Option value="thirty">car2</Option>
-                       </Select>
-                    </div>
-                    
-                }
             },
             {
                 title: 'Adress',
+                align:'center',
                 dataIndex: 'address',
             },
             {
                 title: 'Axios',
-                render: (text,record,index) => (
-                    <span>
-                        <a>删除</a>
-                        <div onClick={()=> this.yulan(record)}>预览</div>
-                    </span>
-                )
+                align:'center',
+                render: (text,record,index) => {
+                    if(record.order !== '普通订单'){
+                       return    <span className="order-axios">
+                                    <a onClick={()=>this.showModal(record)}>编辑</a>
+                                    <a>删除</a>
+                                    <a onClick={()=> this.yulan(record)}>预览</a>
+                         </span>
+                    }else{
+                      return  <span >
+                       <a>删除</a>
+                       <a onClick={()=> this.yulan(record)}>预览</a>
+                     </span>
+                    }
+                    
+                }
             },
         
         ];
@@ -285,6 +296,7 @@ export default class Order extends Component {
                     className="order-table"
                     rowSelection={rowSelection} 
                     columns={columns} 
+                    align="center"
                     dataSource={orderList}
                     bordered 
                     pagination={{
@@ -300,7 +312,7 @@ export default class Order extends Component {
                         }}
                     />
 
-                      {/* <Modal
+                      <Modal
 						title="编辑"
 						centered
 						visible={this.state.visible}
@@ -311,7 +323,7 @@ export default class Order extends Component {
 						onCancel={this.handleCancel}
 						>
 						<div className='modal-item'>
-							<p>商品类型：</p>
+							<p>编号：</p>
 							<Select defaultValue="请选择商品分类" style={{ width: '60%' }}>
 								<Option value="jack">Jack</Option>
 								<Option value="lucy">Lucy</Option>
@@ -319,7 +331,7 @@ export default class Order extends Component {
 							</Select>
 						</div>
 						<div className='modal-item'>
-							<p>厂商名称：</p>
+							<p>订单类型：</p>
 							<Select defaultValue="请选择厂商" style={{ width: '60%' }}>
 								<Option value="jack">Jack</Option>
 								<Option value="lucy">Lucy</Option>
@@ -327,13 +339,13 @@ export default class Order extends Component {
 							</Select>
 						</div>
 						<div className='modal-item'>
-							<p>上下架</p>
+							<p>配送车辆：</p>
 							<Select defaultValue="全部" style={{ width: '60%' }}>
 								<Option value="shelve">上架</Option>
 								<Option value="xiajia">下架</Option>
 							</Select>
 						</div>
-					</Modal> */}
+					</Modal>
                 </div>
             </div>
         )
