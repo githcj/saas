@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React from 'react'
-=======
 import React, { useState, useEffect } from 'react'
->>>>>>> d744b617985b9ce6736c23b30f90d8ae37a1234d
 import { Form, Input, Tooltip, Button, InputNumber, message ,Select} from 'antd';
 import ConTitle from '../../components/ConTitle'
 import WXUpLoad from '../../components/WXUpLoad'
@@ -11,15 +7,10 @@ import axios from '../../plugins/axios'
 import { EnvironmentOutlined } from '@ant-design/icons';
 import '../../assets/css/viewSetting/Gongsi.css'
 
-<<<<<<< HEAD
-const addCus = (props)=> {
-    
-=======
 const AddCus = (props) => {
     const [kehu,setKehu] = useState([])
     const [fuze,setfuze] = useState([])
     const [jiage,setjiage] = useState([])
->>>>>>> d744b617985b9ce6736c23b30f90d8ae37a1234d
     const layout = {
         labelCol: {
           span: 8,
