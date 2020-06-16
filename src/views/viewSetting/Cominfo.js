@@ -56,10 +56,31 @@ class Cominfo extends React.Component {
 		});
 	}
 	handleOk = (e) => {
-		console.log(e);
-		this.setState({
-		  	visible: false,
-		});
+		const { modalInfo } = this.state
+		axios({
+			method:'POST',
+			url:'/goods/queryall',
+			data:{
+				token:'dsadas',
+				goods_name:modalInfo.goodsType,
+				commodity_level_id:modalInfo.vendor,
+				goods_state:modalInfo.state
+			}
+		})
+		.then(res => {
+			this.setState({
+				visible: false,
+				modalInfo:{
+					goodsType:'',
+					vendor:'',
+					state:''
+				},
+				data: res.data.data,
+			});
+		})
+		.catch(err => {
+			console.log(err)
+		})
 	}
 	handleCancel = e => {
 		console.log(e);
@@ -69,36 +90,38 @@ class Cominfo extends React.Component {
 	}
 	// 上架/下架 商品
 	shangxiaJia = (s) => {
-		const { data } = this.state
-		let newList = data.map(item => {
-			if(item.goods_id === s){
-				if(item.goods_state === 0){
-					item.goods_state = 1
-				}else if(item.goods_state === 1){
-					item.goods_state = 0
-				}
+		axios({
+			method:'POST',
+			url:'/goods/upper_and_lower',
+			data:{
+				token:'asdasd',
+				goods_id:s
 			}
-			return item
 		})
-		this.setState({
-			data:newList
+		.then(res => {
+			this.getData()
+		})
+		.catch(err => {
+			console.log(err)
 		})
 	}
 	// 锁定/解锁 价格
 	priceLock = (record) => {
 		const { data } = this.state
-		let newList = data.map(item => {
-			if(item.goods_id === record.goods_id){
-				if(item.goods_price_lock === 0){
-					item.goods_price_lock = 1
-				}else if(item.goods_price_lock === 1){
-					item.goods_price_lock = 0
-				}
+		let newList
+		axios({
+			method:'POST',
+			url:'/goods/price_lock',
+			data:{
+				token:'dsadas',
+				goods_id:record.goods_id
 			}
-			return item
 		})
-		this.setState({
-			data:newList
+		.then(res => {
+			this.getData()
+		})
+		.catch(err => {
+			console.log(err)
 		})
 	}
 	// tab 选项切换
@@ -288,7 +311,7 @@ class Cominfo extends React.Component {
 									className='caozuoA midA'
 								>删除</a>
 							</Popconfirm>
-							{record.lock === 0 
+							{record.goods_price_lock === 0 
 								? <a 
 									className='caozuoA jiesuo' 
 									onClick={() => this.priceLock(record)}

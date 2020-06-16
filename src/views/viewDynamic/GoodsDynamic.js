@@ -19,12 +19,15 @@ class GoodsDynamic extends React.Component {
     //组件挂载完毕加载
     componentWillMount() {
         axios({
-            method:'GET',
-            url:'/goodsdynamic'
+            method:'POST',
+            url:'/sales_trends/goods_queryall',
+            data:{
+                token:'dasdas'
+            }
         })
         .then(res => {
             this.setState({
-                data:res.data
+                data:res.data.data
             })
         })
         .catch(err => {
@@ -54,22 +57,22 @@ class GoodsDynamic extends React.Component {
         const newData = [...this.state.data]
         if(value === 'saleLowHight') {
             newData.sort((a, b) => {
-                return a.sales - b.sales
+                return a.goods_num - b.goods_num
             })
         }
         if(value === 'saleHightLow') {
             newData.sort((a, b) => {
-                return b.sales - a.sales
+                return b.goods_num - a.goods_num
             })
         }
         if(value === 'amountLowHight') {
             newData.sort((a, b) => {
-                return a.amount - b.amount
+                return a.whole_num - b.whole_num
             })
         }
         if(value === 'amountHightLow') {
             newData.sort((a, b) => {
-                return b.amount - a.amount
+                return b.whole_num - a.whole_num
             })
         }
         this.setState({
@@ -82,23 +85,23 @@ class GoodsDynamic extends React.Component {
         const columns = [
             {
                 title: '序号',
-                dataIndex: 'serialNum',
-                key: 'serialNum',
+                dataIndex: 'goods_id',
+                key: 'goods_id',
             },
             {
                 title: '商品名称',
-                dataIndex: 'goodsname',
-                key: 'goodsname',
+                dataIndex: 'goods_name',
+                key: 'goods_name',
             },
             {
                 title: '销售额',
-                dataIndex: 'sales',
-                key: 'sales',
+                dataIndex: 'goods_num',
+                key: 'goods_num',
             },
             {
                 title: '销量',
-                dataIndex: 'amount',
-                key: 'amount',
+                dataIndex: 'whole_num',
+                key: 'whole_num',
             },
         ];
         //给表格数据添加 key 值

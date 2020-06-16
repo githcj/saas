@@ -24,6 +24,7 @@ class AddGoods extends React.Component {
             previewImage: '',
             previewTitle: '',
             fileList: [],
+            pic1:''
         }
     }
 
@@ -46,18 +47,44 @@ class AddGoods extends React.Component {
     goBack = () => {
         this.props.his.goBack()
     }
-    
+    // 设置主图
+    tomainPic = (u) => {
+        const { fileList } = this.state
+        let arr = fileList
+        let mainPic = fileList[0]
+        arr.splice(0,1)
+        arr.map((item, index) => {
+            if(item === u){
+                fileList.splice(index, 1)
+            }
+        })
+        arr.unshift(u)
+        arr.push(mainPic)
+        this.setState({
+            fileList:arr
+        })
+    }
+    // 删除图片
+    delPic = (i) => {
+        const { fileList } = this.state
+        let newArr = fileList.filter((item, index) => {
+            if(index !== i){
+                return item
+            }
+        })
+        this.setState({
+            fileList:newArr
+        })
+    }
+    // 提交
+    toSubmit = () => {
+        console.log(this.state.fileList)
+    }
 
     render() {
         const { Option } = Select
         const { TextArea } = Input
         const { fileList } = this.state
-        const props2 = {
-            action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-            listType: 'picture',
-            defaultFileList: [...fileList],
-            className: 'upload-list-inline',
-        }
         return (
             <div className='addgoods'>
                 <div className='dynamic-top'>
@@ -257,34 +284,83 @@ class AddGoods extends React.Component {
                             <div className='photoWall'>
                                 <div style={{width:106,height:130,border:'1px solid'}}>
                                     <div className='pic-setting'>
-                                        <a>设为主图</a>
+                                        <img 
+                                            src={fileList[0] ? fileList[0].thumbUrl : null}
+                                            style={{width:'104px',height:'104px'}}></img>
+                                        <div>
+                                            <span className='main-pic'>商品主图</span>
+                                            <span 
+                                                className='del-pic'
+                                                onClick={() => this.delPic(0)}>删除图片</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div style={{width:106,height:130,border:'1px solid'}}>
                                     <div className='pic-setting'>
-                                        <a>设为主图</a>
+                                        <img 
+                                            src={fileList[1] ? fileList[1].thumbUrl : null}
+                                            style={{width:'104px',height:'104px'}}></img>
+                                        <div>
+                                            <span className='tomain' onClick={() => this.tomainPic(fileList[1])}>设为主图</span>
+                                            <span 
+                                                className='del-pic'
+                                                onClick={() => this.delPic(1)}>删除图片</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div style={{width:106,height:130,border:'1px solid'}}>
                                     <div className='pic-setting'>
-                                        <a>设为主图</a>
+                                        <img 
+                                            src={fileList[2] ? fileList[2].thumbUrl : null}
+                                            style={{width:'104px',height:'104px'}}></img>
+                                        <div>
+                                            <span className='tomain' onClick={() => this.tomainPic(fileList[2])}>设为主图</span>
+                                            <span 
+                                                className='del-pic'
+                                                onClick={() => this.delPic(2)}>删除图片</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div style={{width:106,height:130,border:'1px solid'}}>
                                     <div className='pic-setting'>
-                                        <a>设为主图</a>
+                                        <img 
+                                            src={fileList[3] ? fileList[3].thumbUrl : null}
+                                            style={{width:'104px',height:'104px'}}></img>
+                                        <div>
+                                            <span 
+                                                className='tomain' 
+                                                onClick={() => this.tomainPic(fileList[3])}>设为主图</span>
+                                            <span 
+                                                className='del-pic'
+                                                onClick={() => this.delPic(3)}>删除图片</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div className='uploadPart'>
-                                <Upload {...props2}>
+                                <Upload 
+                                    action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
+                                    listType='picture'
+                                    defaultFileList={fileList}
+                                    className='upload-list-inline'
+                                    onChange={(file) =>{
+                                        console.log(file)
+                                        this.setState({
+                                            fileList:file.fileList
+                                        })
+                                    }
+                                    }>
                                     
                                     <Button type="primary" size='large'>上传图片</Button>
                                 </Upload>
                                 <p>按住ctrl可同时批量选择多张图片上传，最多可以上传4张图片，建议尺寸800*800px</p>
                             </div>
                             <div className='submitPart'>
-                                <Button type="primary" size='large' style={{width:200}}>提交</Button>
+                                <Button 
+                                    type="primary" 
+                                    size='large' 
+                                    style={{width:200}}
+                                    onClick={this.toSubmit}>提交</Button>
                             </div>
                         </div>
                     </div>

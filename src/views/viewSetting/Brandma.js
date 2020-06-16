@@ -142,7 +142,7 @@ class Brandma extends React.Component {
     toEditBrand = (item) => {
         this.props.history.push({
             pathname:'/home/system/addbrand',
-            params:item.brand_name
+            params:item
         })
     }
     render(){
