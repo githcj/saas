@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import '../../assets/css/sales/order.css'
-import { Table, Button,Modal,Select } from 'antd';
+import { Table, Button,Modal,Select ,message} from 'antd';
 const { Option } = Select
 
 
@@ -23,19 +23,28 @@ export default class Custype extends Component {
             visible:false,
             bianji:[],
             tianjia:[],
-            addmodels:false
+            addmodels:false,
+            fujity:[],
+            kehu:[]
         };
     }
-    editfuji = async(v) => {
-         await  this.setState({
+    editfuji = (v) => {
+        console.log(v,'vvv');
+       this.setState({
               fuji:v
           })
+
     }
 
-    editusername = async(v) => {
-         await  this.setState({
-              username:v
-          })
+    editusename = (e) => {
+     
+            const bianji=this.state.bianji
+            bianji.customer_type_name=e.target.value
+          
+
+          this.setState({
+              bianji:bianji
+          }) 
     }
 
     addfuji = async(v) => {
@@ -44,49 +53,98 @@ export default class Custype extends Component {
          })
    }
 
-   addusername = async(v) => {
-        await  this.setState({
-             addusername:v
+   addusename = (e) => {
+
+      this.setState({
+             addusername:e.target.value
          })
    }
 
-        showModal = (row) => {
-		this.setState({
+        showModal = async(row) => {            
+	    await	this.setState({
             bianji:row,  
             visible: true,
-		});
+        });
+        console.log(this.state.bianji,'bianji');
+        
        }
        addModal = () => {
         this.setState({
             addmodels: true,
         });
        
+     }
+    
+	handlebianjiOk = e => {
+        console.log(this.state.fuji,'zzzzzzzzzz');
+        
+        console.log(e);
+        axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/customer_type/update',
+            data:{
+                token:'123',
+                 customer_type_id:this.state.bianji.customer_type_id,
+                 customer_type_father_id:this.state.fuji,
+                 customer_type_name:this.state.bianji.customer_type_name,
+
+            }
+        })
+            .then(res => {
+                // this.setState({
+                //     orderList: res.data.data
+                // })
+                message.success(res.message)
+
+                this.componentDidMount()
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+
+		this.setState({
+              visible: false,
+              addmodels:false
+        });
+    }
+
+    handlexinzenOk = e => {
+        console.log(this.state.addfuji,'0000000');
+        console.log(this.state.addusername,'0000000');
+        
+        console.log(e);
         axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/customer_type/add',
             data:{
                 token:'123',
-                
+                customer_type_father_id:this.state.addfuji,
+                customer_type_name:this.state.addusername
             }
         })
             .then(res => {
-                this.setState({
-                    orderList: res.data.data
-                })
+                // this.setState({
+                //     orderList: res.data.data
+                // })
+                message.success(res.message)
+
+                this.componentDidMount()
             })
             .catch(err => {
                 console.log(err);
             })
-       
-     }
-    
-	handleOk = e => {
-        console.log(e);
+
+
 		this.setState({
               visible: false,
               addmodels:false
-		});
-	}
+        });
+    }
+    
+
+
+
 	handleCancel = e => {
 		console.log(e);
 		this.setState({
@@ -95,8 +153,8 @@ export default class Custype extends Component {
 		});
 	}
 
-    componentDidMount() {
-        axios({
+   async componentDidMount() {
+      await  axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/customer_type/querysubclass',
             data:{
@@ -104,8 +162,6 @@ export default class Custype extends Component {
             }
         })
             .then(res => {
-                console.log(res,'res');
-                
                 this.setState({
                     orderList: res.data.data
                 })
@@ -113,6 +169,40 @@ export default class Custype extends Component {
             .catch(err => {
                 console.log(err);
             })
+
+            await  axios({
+                method: 'POST',
+                url: 'http://172.16.6.27:8080/combobox/queryfather',
+            })
+                .then(res => {
+                    console.log(res.data.data,'data');
+                    
+                    this.setState({
+                        fujity: res.data.data
+                    })
+                    console.log(this.state.fujity,'fuji');
+                    
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+            await  axios({
+                method: 'POST',
+                url: 'http://172.16.6.27:8080/combobox/customer',
+            })
+                .then(res => {
+                    this.setState({
+                        kehu: res.data.data
+                    })
+                    console.log(this.state.kehu,'kehu');
+                    
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+
     }
 
     setphone = (e) => {
@@ -133,28 +223,74 @@ export default class Custype extends Component {
     })
 }
 
+     dellist =(row)=>{
+         console.log(row,'delrow');
+         
+         const list = this.state.orderList.filter((v,i) => {
+               return v.customer_type_id == row.customer_type_id
+         })
+
+         const id = list[0].customer_type_id
+
+         console.log(id,'iddddd');
+         
+         axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/customer_type/delete',
+            data:{
+                token:'123',
+                customer_type_id:id
+            }
+        })
+            .then(res => {
+                console.log(res.message ,'成功');
+                this.componentDidMount() 
+            })
+            .catch(err => {
+                console.log(err);
+            })   
+
+     }
+
     // onSelectChange = selectedRowKeys => {
     //     console.log('selectedRowKeys changed: ', selectedRowKeys);
     //     this.setState({ selectedRowKeys });
     // };
     render() {
-        const { orderList, selectedRowKeys ,phone ,sousuo , dates,bianji } = this.state;
+        const { orderList, selectedRowKeys ,phone ,sousuo ,fuji, dates,bianji,fujity ,kehu,username,addusername} = this.state;
+
+        console.log('fujity: ', fujity)
+        const pre = fujity.map((item,index)=> (
+            <Option value={item.customer_type_father_id }>
+                 {item['customer_type_father_name '] }
+           </Option>
+         )) 
+         console.log('pre: ', pre)
+
+        // const kehutype= kehu.map((item,index)=> (
+        //         <Option value={item.customer_type_id}>
+        //             {item.customer_type_name }
+        //         </Option>
+        // )) 
 
         const columns = [
             {
                 title: '父类型',
+                align:'center',
                 dataIndex: 'customer_type_father_name',
             },
             {
                 title: '客户类型名称',
+                align:'center',
                 dataIndex: 'customer_type_name',
             },
             {
                 title: 'Axios',
+                align:'center',
                 render: (text,row,index) => (
-                  <span>
+                  <span className="order-axios">
                        <a onClick={()=> this.showModal(row)}>编辑</a>
-                       <a>删除</a>
+                       <a onClick={()=> this.dellist(row)}>删除</a>
                   </span>
                 )
             },
@@ -165,6 +301,9 @@ export default class Custype extends Component {
         for (let i = 0; i < orderList.length; i++) {
             orderList[i].key = i
         }
+
+     
+
 
         return (
             <div>
@@ -196,7 +335,7 @@ export default class Custype extends Component {
 						title="编辑"
 						centered
 						visible={this.state.visible}
-						onOk={this.handleOk}
+						onOk={this.handlebianjiOk}
 						okText='确定'
 						okType='primary'
 						cancelText='重置'
@@ -204,19 +343,14 @@ export default class Custype extends Component {
 						>
 						<div className='modal-item'>
 							<p>父级类型：</p>
-							<Select defaultValue={bianji.useName} onChange={(value) => this.editfuji(value)}  style={{ width: '60%' }}>
-								<Option value="jack">Jack</Option>
-								<Option value="lucy">Lucy</Option>
-								<Option value="Yim">yim</Option>
+							<Select defaultValue={bianji.customer_type_father_name} onChange={(value) => this.editfuji(value)}  style={{ width: '60%' }}>
+								 {pre}
 							</Select>
 						</div>
 						<div className='modal-item'>
 							<p>客户类型名称：</p>
-							<Select defaultValue={bianji.Customer} onChange={(value) => this.editusername(value)} style={{ width: '60%' }}>
-								<Option value="jack">Jack</Option>
-								<Option value="lucy">Lucy</Option>
-								<Option value="Yim">yim</Option>
-							</Select>
+							<input value={bianji.customer_type_name} onChange={this.editusename} style={{ width: '60%' }}>
+							</input>
 						</div>
 					</Modal>
                    
@@ -224,7 +358,7 @@ export default class Custype extends Component {
 						title="新增"
 						centered
 						visible={this.state.addmodels}
-						onOk={this.handleOk}
+						onOk={this.handlexinzenOk}
 						okText='确定'
 						okType='primary'
 						cancelText='重置'
@@ -233,18 +367,13 @@ export default class Custype extends Component {
 						<div className='modal-item'>
 							<p>父级类型：</p>
 							<Select defaultValue='' onChange={(value) => this.addfuji(value)} style={{ width: '60%' }}>
-								<Option value="jack">Jack</Option>
-								<Option value="lucy">Lucy</Option>
-								<Option value="Yim">yim</Option>
+								{pre}
 							</Select>
 						</div>
 						<div className='modal-item'>
 							<p>客户类型名称：</p>
-							<Select defaultValue='' onChange={(value) => this.addusername(value)} style={{ width: '60%' }}>
-								<Option value="jack">Jack</Option>
-								<Option value="lucy">Lucy</Option>
-								<Option value="Yim">yim</Option>
-							</Select>
+							<input value={addusername} onChange={ this.addusename} style={{ width: '60%' }}>
+							</input>
 						</div>
 					</Modal>
 

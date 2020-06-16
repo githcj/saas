@@ -11,7 +11,7 @@ import Supplier from "../viewSetting/Supplier"
 import Brandma from "../viewSetting/Brandma"
 import Comclass from "../viewSetting/Comclass"
 import Cominfo from "../viewSetting/Cominfo"
-import addCus from "../viewSetting/addCus"
+import AddCus from "../viewSetting/addCus"
 import Warehouse from "../viewSetting/Warehouse"
 import AddWare from "../viewSetting/AddWare"
 import AddGoods from "../viewSetting/AddGoods"
@@ -93,11 +93,13 @@ const System = (props) => {
 						</Route>
 						<Route path={match.url + "/AddWare"} component={AddWare} />
 						<Route path={match.url + "/Cusinfo"} component={Cusinfo}>
-							<Cusinfo msg={match.url}></Cusinfo>
+							<Cusinfo msg={match.url }></Cusinfo>
 						</Route>
 						<Route path={match.url + "/Custype"} component={Custype} />
 						<Route path={match.url + "/Supplier"} component={Supplier} />
-						<Route path={match.url + "/addCus"} component={addCus}></Route>
+						<Route path={match.url + "/addCus"}>
+							<AddCus his={props.history}></AddCus>
+						</Route>
 
 						
 						{/* 商品管理 */}
@@ -114,7 +116,7 @@ const System = (props) => {
 							<AddClass his={history}></AddClass>
 						</Route>
 						<Route path={match.url + "/addbrand"} component={AddBrand}>
-							<AddBrand his={history}></AddBrand>
+							<AddBrand  his={history}></AddBrand>
 						</Route>
 					</div>
 				</Col>

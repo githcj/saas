@@ -117,5 +117,12 @@ a{
 }
 .order-table{
     width:80%;;
-
+}
+.order-axios{
+    margin:auto;
+     width:80px;
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     justify-content: space-evenly;
 }
