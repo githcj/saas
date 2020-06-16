@@ -22,6 +22,7 @@ import { Row, Col, Menu } from "antd";
 import "../../assets/css/huang/system.css";
 import Quanxian from "../viewSetting/Quanxian";
 import Secondary from "../viewSetting/Secondary";
+import Unit from '../viewSetting/Unit'
 
 const System = (props) => {
 	const { match, history } = props;
@@ -46,31 +47,34 @@ const System = (props) => {
 									<NavLink to={match.url + "/Employee"}>员工管理</NavLink>
 								</Menu.Item>
 								<Menu.Item key="5">
-									<NavLink to={match.url + "/Operation"}>操作日志</NavLink>
+									<NavLink to={match.url + "/Warehouse"}>仓库管理</NavLink>
 								</Menu.Item>
 								<Menu.Item key="6">
-									<NavLink to={match.url + "/Warehouse"}>仓库管理</NavLink>
+									<NavLink to={match.url + "/Unit"}>计量单位管理</NavLink>
+								</Menu.Item>
+								<Menu.Item key="7">
+									<NavLink to={match.url + "/Operation"}>操作日志</NavLink>
 								</Menu.Item>
 							</Menu.ItemGroup>
 							<Menu.ItemGroup title="客户管理">
-								<Menu.Item key="7">
+								<Menu.Item key="8">
 									<NavLink to={match.url + "/Cusinfo"}>客户信息</NavLink>
 								</Menu.Item>
-								<Menu.Item key="8">
+								<Menu.Item key="9">
 									<NavLink to={match.url + "/Custype"}>客户类型</NavLink>
 								</Menu.Item>
-								<Menu.Item key="9">
+								<Menu.Item key="10">
 									<NavLink to={match.url + "/Supplier"}>供应厂商</NavLink>
 								</Menu.Item>
 							</Menu.ItemGroup>
 							<Menu.ItemGroup title="商品管理">
-								<Menu.Item key="10">
+								<Menu.Item key="11">
 									<NavLink to={match.url + "/Brandma"}>品牌管理</NavLink>
 								</Menu.Item>
-								<Menu.Item key="11">
+								<Menu.Item key="12">
 									<NavLink to={match.url + "/Comclass"}>商品分类</NavLink>
 								</Menu.Item>
-								<Menu.Item key="12">
+								<Menu.Item key="13">
 									<NavLink to={match.url + "/Cominfo"}>商品信息</NavLink>
 								</Menu.Item>
 							</Menu.ItemGroup>
@@ -85,6 +89,7 @@ const System = (props) => {
 							<Position msg={match.url} />
 						</Route>
 						<Route path={match.url + "/Quanxian"} component={Quanxian} />
+                        <Route path={match.url + "/Unit"} component={Unit} />
 						<Route path={match.url + "/Employee"} component={Employee} />
                         <Route path={match.url + '/AddEmp'} component={AddEmp} />
 						<Route path={match.url + "/Operation"} component={Operation} />

@@ -204,7 +204,7 @@ export default class Warehouse extends Component{
             <div className="stockOut">
                 <header>
                     <div className="stockout-top">
-                        <ConTitle titleName='员工管理' />
+                        <ConTitle titleName='仓库管理' />
                     </div>
                 </header>
 

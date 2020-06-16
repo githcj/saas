@@ -4,7 +4,7 @@ import ConTitle from '../../components/ConTitle'
 import { UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewSetting/Department.css'
 import axios from '../../plugins/axios'
-import DepartModal from '../../components/DepartModal'
+import UnitModal from '../../components/UnitModal'
 import DepartDelPop from '../../components/DepartDel'
 import moment from 'moment'
 
@@ -15,7 +15,7 @@ export default class Department extends Component{
     constructor(props){
         super(props)
         this.state = {
-            departList:[],
+            unitList:[],
             eachPage:10,
             ModalVisible:false,
             rowInfo:{},
@@ -26,35 +26,20 @@ export default class Department extends Component{
 
     columns = [
         {
-          title: '部门名称',
-          dataIndex: 'dep_name',
-          width:'120px',
-          key:'dep_name'
-        },
-        {
-          title: '职能描述',
-          dataIndex: 'dep_describe',
-          width:'150px',
-          key:'dep_describe'
-        },
-        {
-          title: '员工数量',
-          dataIndex: 'dep_count',
-          key:'dep_count',
-          render: (text,row,index) => <a style={{color: '#08b990'}} onClick={()=>this.toEmp(row.dep_id)}>{text}</a>,
+          title: '单位名称',
+          dataIndex: 'unit_name',
+          key:'unit_name'
         },{
             title: '添加时间',
-            dataIndex: 'dep_addtime',
-            width:'200px',
-            key:'dep_addtime'
+            dataIndex: 'unit_addtime',
+            key:'unit_addtime'
         },{
             title: '是否启用',
-            dataIndex:'dep_status',
-            key:'dep_status',
+            dataIndex:'unit_status',
+            key:'unit_status',
             render: (text,row) => (<Switch checked={text ? true : false} onChange={()=>this.changeStatus(row)} />)
         },{
             title: '操作',
-            width:'150px',
             key:'toDo',
             render: (text,row) => (<div className='toDo'><a onClick={()=>this.showModel(row)}>编辑</a>
             <DepartDelPop confirm={(e)=>this.confirm(row.dep_id,e)} cancel={this.cancel} /></div>)
@@ -63,17 +48,17 @@ export default class Department extends Component{
     
     // 组件加载完毕请求数据
     async componentDidMount() {
-        const {data} = await axios.post('/department/depManagement')
+        const {data} = await axios.post('/unit/showunit')
         const {data:res} = data
         res.map (item =>{
-            item.dep_addtime = moment(item.dep_addtime).format('YYYY-MM-DD HH:mm:ss')
+            item.unit_addtime = moment(item.unit_addtime).format('YYYY-MM-DD HH:mm:ss')
             return item
         })
         this.setState({
-            departList:res
+            unitList:res
         })
+        
         console.log(res);
-  
     }
 
     // 分页
@@ -85,48 +70,36 @@ export default class Department extends Component{
 
     //排序
     sortChange = (value) => {
-        const newList = [...this.state.departList]
+        const newList = [...this.state.unitList]
         switch (value) {
             case 'addName':
                 newList.sort(
                     function compareFunction(param1, param2) {
-                        return param1.dep_name.localeCompare(param2.dep_name,"zh");
+                        return param1.unit_name.localeCompare(param2.unit_name,"zh");
                     }
                 )
-                break;
+            break;
             case 'eddName':
                 newList.sort(
                     function compareFunction(param1, param2) {
-                        return param2.dep_name.localeCompare(param1.dep_name,"zh");
+                        return param2.unit_name.localeCompare(param1.unit_name,"zh");
                     }
                 )
-                break;
-            case 'addNum':
-                newList.sort((param1, param2) =>{
-                        return param1.emp_num - param2.emp_num
-                    }  
-                )
-                break;
-            case 'eddNum':
-                newList.sort((param1, param2) =>{
-                    return param2.emp_num - param1.emp_num
-                }  
-            )
             break;
         }
 
         this.setState({
-            departList: newList
+            unitList: newList
         })
     }
 
     // 修改部门状态
     changeStatus = async (row)=>{
-        const {departList} = this.state
+        const {unitList} = this.state
         let status
-        departList.map((item) =>{
-            if(item.dep_id === row.dep_id){
-                if(row.dep_status){
+        unitList.map((item) =>{
+            if(item.unit_id === row.unit_id){
+                if(row.unit_status){
                     status = 0
                 }else {
                     status = 1
@@ -136,7 +109,7 @@ export default class Department extends Component{
         })
         // console.log(row.dep_id,status);
         
-        const {data:res} = await axios.post('/department/isActiveDep',{dep_id:row.dep_id,dep_status:status})
+        const {data:res} = await axios.post('/unit/startstopunit',{dep_id:row.unit_id,unit_status:status})
         if(res.code !== 200) return message.error('修改状态失败!')
         message.success('修改状态成功')
         this.componentDidMount()
@@ -148,13 +121,13 @@ export default class Department extends Component{
         if(row !== undefined) {
             await this.setState({
                 rowInfo:row,
-                title:'编辑部门信息',
+                title:'编辑单位信息',
                 finishFun:this.onFinish,
                 ModalVisible: true,
             })
         }else {
             await this.setState({
-                title:'添加部门',
+                title:'添加单位',
                 finishFun:this.onAdd,
                 ModalVisible: true,
             })
@@ -164,11 +137,11 @@ export default class Department extends Component{
 
     // 表单提交
     onFinish = async (value,form) => {
-        value.dep_id = this.state.rowInfo.dep_id
+        value.unit_id = this.state.rowInfo.unit_id
 
-        if(value.dep_name !== this.state.rowInfo.dep_name || value.dep_describe !== this.state.rowInfo.dep_describe){
-            // console.log(value);
-            const {data:res} = await axios.post('/department/updDep',value)
+        if(value.unit_name !== this.state.rowInfo.unit_name || value.unit_type !== this.state.rowInfo.unit_type){
+            console.log(value);
+            const {data:res} = await axios.post('/unit/updateunit',value)
             // console.log(res,'res');
             if(res.code !== 200) return message.error('修改信息失败')
             message.success('修改信息成功')
@@ -190,9 +163,9 @@ export default class Department extends Component{
 
     onAdd = async (value,form) => {
         console.log(value);
-        const {data:res}  = await axios.post('/department/addDep',value)
-        if(res.code !== 200) return message.error('添加部门失败!')
-        message.success('添加部门成功')
+        const {data:res}  = await axios.post('/unit/addunit',value)
+        if(res.code !== 200) return message.error('添加单位失败!')
+        message.success('添加单位成功')
         this.componentDidMount()
         form.resetFields()
         this.setState({
@@ -215,7 +188,7 @@ export default class Department extends Component{
 
     // 删除
     confirm = async(id,e) => {
-        const {data:res} = await axios.post('/department/delDep',{dep_id:id})
+        const {data:res} = await axios.post('/unit/deleteunit',{unit_id:id})
         if(res.code !== 200) return message.error('删除失败!')
         message.success('删除成功!')
         this.componentDidMount()
@@ -240,7 +213,7 @@ export default class Department extends Component{
             <div className="stockOut">
                 <header>
                     <div className="stockout-top">
-                        <ConTitle titleName='部门管理' />
+                        <ConTitle titleName='计量单位管理' />
                     </div>
                 </header>
                 <div className='dynamic-dataList'>
@@ -256,20 +229,18 @@ export default class Department extends Component{
                             <Option value="20">20条/页</Option>
                         </Select>
                         <Select defaultValue="排序方式" className="seen" style={{ width: 150 }} onChange={this.sortChange}>
-                            <Option value="addName">部门名称升序</Option>
-                            <Option value="eddName">部门名称降序</Option>
-                            <Option value="addNum">员工数量升序</Option>
-                            <Option value="eddNum">员工数量降序</Option>
+                            <Option value="addName">计量单位名称升序</Option>
+                            <Option value="eddName">计量单位名称降序</Option>
                         </Select>
                     </div>
                 </div>
 
                 <div className="table">
                     <Table 
-                    dataSource={this.state.departList} 
+                    dataSource={this.state.unitList} 
                     columns={this.columns} 
                     bordered
-                    rowKey={this.state.departList.dep_id}
+                    rowKey={this.state.unitList.unit_id}
                     pagination={{
                         showQuickJumper:true,
                         showTotal:(total) => {
@@ -284,7 +255,7 @@ export default class Department extends Component{
                     />
                 </div>
 
-                <DepartModal
+                <UnitModal
                     {...this.state}
                     onCreate={this.state.finishFun}
                     onCancel={this.handleCancel}

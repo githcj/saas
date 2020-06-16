@@ -34,32 +34,32 @@ export default class Employee extends Component{
           title: '员工账号',
           dataIndex: 'emp_account',
           width:'120px',
-          key:'emp_account'
+        //   key:'emp_account'
         },{
           title: '姓名',
           dataIndex: 'emp_name',
           width:'150px',
-          key:'emp_name'
+        //   key:'emp_name'
         },{
           title: '手机号',
           dataIndex: 'emp_phone',
-          key:'emp_phone',
+        //   key:'emp_phone',
         },{
             title: '所属部门',
             dataIndex:'dep_name',
-            key:'dep_name',
+            // key:'dep_name',
         },{
             title: '职位',
             dataIndex:'position_name',
-            key:'position_name',
+            // key:'position_name',
         },{
             title: '最后登录',
             dataIndex:'emp_last_time',
-            key:'emp_last_time',
+            // key:'emp_last_time',
         },{
             title: '是否启用',
             dataIndex:'emp_status',
-            key:'emp_status',
+            // key:'emp_status',
             render: (text,row) => (<Switch checked={text ? true : false} onChange={()=>this.changeStatus(row)} />)
         },{
             title: '操作',
@@ -249,6 +249,41 @@ export default class Employee extends Component{
     cancel = () => {
         message.info('取消删除!');
     }
+
+    // 搜索状态
+    changeIsSearch = () => {
+        let isSearch = this.state.isSearch
+        this.setState({
+            isSearch: !isSearch
+        })
+    }
+
+    // 搜索
+    async toSearch(e) {
+        console.log(e.keyCode);
+        
+        if(e.keyCode == 13) {
+            console.log('?');
+            
+            if(e.target.value.trim()){
+                let searchInfo = this.state.searchInfo
+                searchInfo.ware_name = e.target.value.trim()
+                this.setState({
+                    searchInfo
+                })
+                console.log('请求');
+                
+                this.componentDidMount()
+            }
+        }
+    }
+
+    searching = () => {
+        this.componentDidMount()
+    }
+
+
+
 
     render(){
         return (

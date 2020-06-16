@@ -1,42 +1,34 @@
 import React, { Component } from 'react'
-import { Table, DatePicker, Select } from 'antd'
-import { SyncOutlined, SearchOutlined,  UpOutlined, UnorderedListOutlined } from '@ant-design/icons'
+import { Table, DatePicker, Select, message } from 'antd'
+import { SyncOutlined, SearchOutlined,  UpOutlined, UnorderedListOutlined, DownOutlined } from '@ant-design/icons'
+import ConTitle from '../../components/ConTitle'
+import moment from 'moment'
 import '../../assets/css/viewStock/stock.css'
+import axios from '../../plugins/axios'
 
 const columns = [
     {
         title: '编号',
-        dataIndex: 'id',
+        dataIndex: 'log_id',
     },
     {
         title: '操作者',
-        dataIndex: 'bulidDate',
+        dataIndex: 'emp_name',
     },
     {
         title: '操作日期',
-        dataIndex: 'store',
+        dataIndex: 'log_time',
     },
     {
         title:'ip地址',
-        dataIndex:'salesMan'
+        dataIndex:'log_ip'
     },
     {
         title:'操作记录',
-        dataIndex:'total'
+        dataIndex:'log_record'
     },
 ];
 
-const data = [];
-for (let i = 0; i < 46; i++) {
-    data.push({
-        key: i,
-        id: i,
-        bulidDate: 'admin',
-        store: '2020-06-06',
-        salesMan:'172.2.1.2',
-        total:'编辑会员账号',
-    });
-}
 const { Option } = Select;
 
 
@@ -44,12 +36,130 @@ export default class Operation extends Component {
     constructor(props) {
       super(props)
       this.state={
-        opeList:[]
+        distrList:[],
+        operaList:[],
+        isSearch:true,
+        searchInfo:{
+            emp_id:null,
+            log_time:null
+        },
+        log_time:'',
+        eachPage:5,
       }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const {data:operaData} = await axios.post('/log/gettingOperator')
+        const {data} = await axios.post('/log/querylogbycondition',this.state.searchInfo)
+        const {data:res} = data
+        console.log(operaData,res);
+
+        res.map(item => {
+            item.log_time = moment(item.log_time).format('YYYY-MM-DD HH:mm:ss')
+            return item
+        })
+
+        await this.setState({
+            distrList:res,
+            operaList:operaData.data,
+        })
+        console.log(this.state.operaList);
         
+    }
+
+    //操作人员改变
+    operaChange = (value)=>{
+        let searchInfo = this.state.searchInfo
+        searchInfo.emp_id = value
+        this.setState({
+            searchInfo
+        })
+        console.log(value,this.state.searchInfo);
+        
+    }
+
+    // 时间筛选改变
+    dateChange = (value)=>{
+        let time
+        let {log_time} = this.state
+        switch(value){
+            case '1':
+                time = moment().subtract('days', 7).format('YYYY-MM-DD HH:mm:ss');
+            break;
+            case '2':
+                time = moment().subtract('month', 1).format('YYYY-MM-DD HH:mm:ss');
+            break;
+            case '3':
+                time = moment().subtract('years', 1).format('YYYY-MM-DD HH:mm:ss');
+            break;
+        }
+        log_time = time
+        this.setState({
+            log_time
+        })
+        console.log(value,time,this.state.log_time);
+        
+    }
+
+    // 搜索状态
+    changeIsSearch = () => {
+        let isSearch = this.state.isSearch
+        this.setState({
+            isSearch: !isSearch
+        })
+    }
+
+    // 搜索
+    async toSearch(e) {
+        console.log(e.keyCode);
+        
+        if(e.keyCode == 13) {
+            console.log('?');
+            
+            if(e.target.value.trim()){
+                let searchInfo = this.state.searchInfo
+                searchInfo.ware_name = e.target.value.trim()
+                this.setState({
+                    searchInfo
+                })
+                console.log('请求');
+                
+                this.componentDidMount()
+            }
+        }
+    }
+
+    searching = () => {
+        this.componentDidMount()
+    }
+
+    disabledDate = (current) => {//日期范围
+        return current > moment().endOf('day');
+    }
+
+    searchDateChange= (date,dateString)=>{
+        const {searchInfo} = this.state
+        searchInfo.log_time = dateString
+        this.setState({
+            searchInfo
+        })
+    }
+
+     // 分页
+    pageNumChange = (value) => {
+        this.setState({
+            eachPage:value
+        })
+    }
+
+    delLogs = async() =>{
+        const {data:res} = await axios.post('/log/deletelogbycondition',this.state.log_time)
+        if(res.code !== 200 ) return message.error('删除日志失败!')
+        this.setState({
+            log_time:''
+        })
+        message.success('删除日志成功')
+        this.componentDidMount()
     }
 
 
@@ -57,15 +167,8 @@ export default class Operation extends Component {
         return (
             <div className="stockOut">
                 <header>
-                    <div className="stock-top">
-                        <div className='stock-top-left'>
-                            <div className='stock-top-left-mark'></div>
-                            <p className='stock-top-word'>出库管理</p>
-                        </div>
-                        <div className='stock-top-right'>
-                            <SyncOutlined />
-                            <p className='stock-top-word'>刷新</p>
-                        </div>
+                    <div className="stockout-top">
+                        <ConTitle titleName='日志管理' />
                     </div>
                 </header>
 
@@ -76,25 +179,25 @@ export default class Operation extends Component {
                             <span>筛选查询</span>
                         </div>
                         <div className="right">
-                            <div>
-                                {/* <DownOutlined /> */}
-                                <UpOutlined />
-                                <span>收起筛选</span>
+                            <div style={{cursor:'pointer'}} onClick={this.changeIsSearch}>
+                                {this.state.isSearch ? <UpOutlined /> : <DownOutlined />}
+                                {this.state.isSearch ? <span>收起筛选</span> : <span>展开筛选</span>}
                             </div>
-                            <div className="searchResult">查询结果</div>
+                            <div className="searchResult" onClick={this.searching} style={{cursor:'pointer'}}>查询结果</div>
                         </div>
                     </div>
-                    <div className="search">
-                    <div>
+                    <div className="search" style={this.state.isSearch ? {display:'flex'}:{display:'none'}}>
+                        <div style={{display:'flex',alignItems:'center'}}>
                             操作人员：
-                            <Select style={{ width: 160 }}>
-                                <Option value="jack">Jack</Option>
-                                <Option value="lucy">Lucy</Option>
+                            <Select style={{ width: 160 }} onChange={this.operaChange}>
+                                {this.state.operaList.map(item => {
+                                    return <Option value={item.emp_id}>{item.emp_name}</Option>
+                                })}
                             </Select>
                         </div>
                         <div>
                             操作日期：
-                            <DatePicker style={{ width: 160 }}/>
+                            <DatePicker disabledDate={this.disabledDate} onChange={this.searchDateChange} style={{ width: 160 }}/>
                         </div>
                     </div>
                 </section>
@@ -108,30 +211,42 @@ export default class Operation extends Component {
                         <div className="right">
                           <div>
                             清除日志：
-                        <Select
+                            <Select
                                 defaultValue="选择清除的日期"
                                 style={{ width: 100 }}
-                                className="select">
+                                className="select"
+                                onChange={this.dateChange}>
                                 <Option value="1">一周前</Option>
                                 <Option value="2">一月前</Option>
                                 <Option value="3">一年前</Option>
                             </Select>
                             </div>
-                            <button type="button">确定</button>
+                            <div className="searchResult" style={{padding:'4px 0'}} onclick={this.delLogs}>确认</div>
                             <Select
                                 defaultValue="显示条数"
                                 style={{ width: 100 }}
-                                className="select">
-                                <Option value="5">5</Option>
-                                <Option value="10">10</Option>
-                                <Option value="20">20</Option>
+                                className="select" onChange={this.pageNumChange}>
+                                <Option value="5">5条/页</Option>
+                                <Option value="10">10条/页</Option>
+                                <Option value="15">15条/页</Option>
                             </Select>
                         </div>
                     </div>
                     <Table
                         rowSelection={{ type: 'Checkbox' }}
-                        dataSource={data}
+                        dataSource={this.state.distrList}
                         columns={columns}
+                        pagination={{
+                        showQuickJumper:true,
+                        showTotal:(total) => {
+                            return (
+                                <p>共有{
+                                    Math.ceil(total / this.state.eachPage)
+                                }页/{total}条数据</p>
+                            )
+                            },
+                            pageSize:this.state.eachPage
+                        }}
                         bordered />
                 </div>
             </div>

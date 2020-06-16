@@ -16,12 +16,8 @@ const DepartForm = (props) => {
     form.setFieldsValue(rowInfo)
     return (
         <Form
-<<<<<<< HEAD
-        style={{width:'25vw'}}
-=======
             {...layout}
             style={{width:'33vw'}}
->>>>>>> depart
             form={form}
             name="form_in_modal"
             initialValues={rowInfo}
