@@ -12,7 +12,8 @@ export default class StockIn extends Component{
             indata:[],
             pagesize:10,
             visible:false,
-            approveIdea:''
+            approveIdea:'',
+            index:''
         }
     }
     pagesizeChange = (value) => {
@@ -90,12 +91,13 @@ export default class StockIn extends Component{
             }
         })
         .then(res => {
+            console.log(this.state.indata)
             console.log(res.data.code)
-            const newData = [...this.state.outData]
+            const newData = [...this.state.indata]
             const i = this.state.index
             newData[i].out_status = '已通过'
             this.setState({
-                outData:newData,
+                indata:newData,
                 visible:false
             })
         })

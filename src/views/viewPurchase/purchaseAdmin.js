@@ -88,6 +88,11 @@ class purchaseAdmin extends React.Component {
             params: record
         })
     }
+    toApply = () => {
+        this.props.msg.push({
+            pathname:'/home/Caigou/purchaseApply'
+        })
+    }
     showModal = (i, index) => {
         console.log('我触发了', i, this.state)
         this.setState({
@@ -336,7 +341,7 @@ class purchaseAdmin extends React.Component {
                             <p className="purchase-middle-se1-p">数据列表</p>
                         </div>
                         <div className="purchase-table-se2">
-                            <span className="sp an">添加</span>
+                            <span className="sp an" onClick={this.toApply} style={{cursor:'pointer'}}>添加</span>
                             <span className="sp">导出</span>
                             <Select defaultValue="显示条数" style={{ width: 120 }} onChange={this.pageNumChange}>
                                 <Option value="ten">每页10条</Option>
