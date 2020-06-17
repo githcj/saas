@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import '../../assets/css/sales/newOrder.css'
-import { Table, Radio, Select } from 'antd';
+import { Table, Radio, Select, Input } from 'antd';
 const { Option } = Select
 
 export default class newOrder extends Component {
@@ -423,7 +423,7 @@ render() {
                         </Select>
                     </div>
                     <div className="bianju">
-                        <label >发货日期：</label><input style={{ width: '120px' }} value={this.neworderDate} onChange={this.setDate} type="date"></input>
+                        <label >发货日期：</label><Input style={{ width: '120px' }} value={this.neworderDate} onChange={this.setDate} type="date"></Input>
                     </div>
                     <div className="bianju">
                         <label >销售类型：</label>
@@ -468,7 +468,7 @@ render() {
                     </div>
                     <div className="bianju ">
                         <label >商品标题：</label>
-                        <input ></input>
+                        <Input style={{width:'150px'}}></Input>
                     </div>
                     <Radio.Button style={{ marginLeft: '12px' }} type="button" value="large">搜索</Radio.Button>
                 </div>

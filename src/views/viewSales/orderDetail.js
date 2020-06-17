@@ -37,13 +37,13 @@ const orderDetail = (props)=> {
                         <div>编号 ：123</div>
                     </div>
                    <div className="condition2 flex-row">
-                       <div className="bianju3">编号类型：{location.params.bianhao}</div>
-                       <div className="bianju3">客户名称：{location.params.username}</div>
-                       <div className="bianju3">业务员：{location.params.person}</div>
-                       <div className="bianju3">出货仓库：{location.params.ckck}</div>
-                       <div className="bianju3">发货日期：{location.params.cjrq}</div>
-                       <div className="bianju3">销售类型：{location.params.sales}</div>
-                       <div className="bianju3">配送车辆：{location.params.bianhao}</div>
+                       <div className="bianju3">编号类型：{location.params.sales_id}</div>
+                       <div className="bianju3">客户名称：{location.params.customer_name}</div>
+                       <div className="bianju3">业务员：{location.params.salesman}</div>
+                       <div className="bianju3">出货仓库：{location.params.ware_name}</div>
+                       <div className="bianju3">发货日期：{location.params.create_time}</div>
+                       <div className="bianju3">销售类型：{location.params.sales_method_name}</div>
+                       <div className="bianju3">配送车辆：{location.params.vehicle_id}</div>
                   </div>    
                 
 

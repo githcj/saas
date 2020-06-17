@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import axios from 'axios'
 import '../../assets/css/sales/order.css'
-import { Table, Button,Select,Modal } from 'antd';
+import { Table, Button,Select,Modal ,input, Input} from 'antd';
 import { Route, NavLink } from 'react-router-dom'
 
 import {
@@ -20,10 +20,16 @@ export default class Order extends Component {
             selectedRowKeys: [], // Check here to configure the default column
             loading: false,
             orderDate: '',
+            orderxiaoshou:'',
+            orderkehu:'',
+            orderdingdan:'',
             orderList: [],
             eachPage:10,
             visible:false,
-            car:[]
+            car:[],
+            xiaoshoutype:[],
+            kehutype:[],
+            bianji:[]
         };
     }
     editval = (value,index) => {
@@ -41,16 +47,34 @@ export default class Order extends Component {
         
     }
 
-    showModal = () => {
+    showModal = (record) => {
 		this.setState({
+            bianji:record,
 		  	visible: true,
-		});
+        });
+        
 	}
 	handleOk = e => {
-		console.log(e);
+        console.log(e);
+        axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/customer/update',
+            data:{
+                
+            }
+        })
+        .then(res => {
+            console.log(this,'this')
+            this.componentDidMount() 
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
 		this.setState({
 		  	visible: false,
-		});
+        });
+        
 	}
 	handleCancel = e => {
 		console.log(e);
@@ -59,19 +83,56 @@ export default class Order extends Component {
 		});
 	}
 
-    componentDidMount() {
-        axios({
-            method: 'GET',
-            url: 'http://119.23.228.238:3031/mock/47/order',
+  async  componentDidMount() {
+       await axios({
+            method: 'POST',
+            url: 'http://172.16.6.29:8080/sales/querySalesList',
         })
             .then(res => {
+                console.log(res,'orderlist');
+                
                 this.setState({
                     orderList: res.data
                 })
+
+                console.log(this.state.orderList,'orderlist222');
+                
+                for (let i = 0; i < this.state.orderList.length; i++) {
+                    this.state.orderList[i].key = i
+                }
             })
             .catch(err => {
                 console.log(err);
             })
+
+     await  axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/combobox/customer', 
+        })    
+           .then(res =>{
+
+               this.setState({
+                     kehutype:res.data.data
+               })
+           })
+           .catch(err =>{
+                 console.log(err,err);  
+           })
+
+      await axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/combobox/sales_method', 
+        })    
+           .then(res =>{
+               
+               this.setState({
+                     xiaoshoutype:res.data.data
+               })
+
+           })
+           .catch(err =>{
+                 console.log(err,err);  
+           })
     }
     yulan =(record)=>{
          this.props.his.push({
@@ -80,16 +141,89 @@ export default class Order extends Component {
             })
     }
 
+     //处理 查询数据
     setDate = (e) => {
         this.setState({
             orderDate: e.target.value
         })
     }
+    orderxiaoshou =(value)=>{
+        console.log(value,'xiaoshouvalue');
+        
+        this.setState({
+            orderxiaoshou:value
+        })
+    }
+    orderkehu=(value)=>{
+        this.setState({
+            orderkehu:value
+        })
+    }
+    orderdingdan =(value)=>{
+        this.setState({
+            orderdingdan:value
+        })
+    }
+
+    // 查询请求
+    Cusinfoquery =()=>{
+        console.log(this.state.sousuo); 
+         axios({
+             method: 'POST',
+             url: 'http://172.16.6.29:8080/sales/querySalesList',
+             data:{
+                 token:'1213545',
+                 start_time:this.state.orderDate,
+                 sales_method_name:this.state.orderxiaoshou,
+                 sales_type_name :this.state.orderdingdan,
+                 customer_type_name:this.state.orderkehu ,
+             }
+         })
+             .then(res => {
+                  console.log(res,'res');
+                  console.log(this.state.orderdingdan,'dingdan');
+                  
+                 this.setState({
+                     orderList: res.data
+                 })
+                 console.log(this.state.orderList);
+             })
+             .catch(err => {
+                 console.log(err);
+             })    
+     }
+
+     //删除
+     orderdellist =(row)=>{
+         const id= row.sales_id
+         console.log(id);
+         
+        axios({
+            method: 'POST',
+            url: 'http://172.16.6.29:8080/sales/deleteSales',
+            data:{
+                token:'1213545',
+                sales_id:id
+            }
+        })
+            .then(res => {
+                 console.log(res,'res');
+                 console.log(this.state.orderdingdan,'dingdan');
+                 
+                this.componentDidMount()
+            })
+            .catch(err => {
+                console.log(err);
+            })  
+     }
+
 
     onSelectChange = selectedRowKeys => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
+    
+
      //每页条数改变
      pageNumChange = (value) => {
         if(value === 'ten') {
@@ -126,7 +260,7 @@ export default class Order extends Component {
         })
     }
     render() {
-        const { orderList, selectedRowKeys,eachPage } = this.state;
+        const { bianji,orderList, selectedRowKeys,eachPage ,xiaoshoutype,kehutype} = this.state;
         const {msg} =this.props
        
         const rowSelection = {
@@ -134,65 +268,75 @@ export default class Order extends Component {
             onChange: this.onSelectChange,
         };
         // const hasSelected = selectedRowKeys.length > 0;
+         const xiaoshou =xiaoshoutype.map((item,index)=>(
+             <Option value={item.brand_id}>
+                 {item.brand_name}
+            </Option>
+         ))
 
-        for (let i = 0; i < orderList.length; i++) {
-            orderList[i].key = i
-        }
+         const kehu=kehutype.map((item,index)=>(
+            <Option value={item.customer_type_id}>
+                {item.customer_type_name}
+           </Option>
+        ))
+
+
+       
         const columns = [
             {
                 title: '编号',
                 align:'center',
-                dataIndex: 'bianhao',
+                dataIndex: 'sales_id',
             },
             {
                 title: '销售类型',
                 align:'center',
-                dataIndex: 'sales',
+                dataIndex: 'sales_method_name',
             },
             {
                 title: '金额合计',
                 align:'center',
-                dataIndex: 'jine',
+                dataIndex: 'sum_price',
             },
             {
                 title: '创建日期',
                 align:'center',
-                dataIndex: 'cjrq',
+                dataIndex: 'create_time',
+                render:(text,row,index)=> (
+                    <span>
+                        {new Date(text).toLocaleString()}
+                    </span>
+                )
             },
             {
                 title: '订单类型',
                 align:'center',
-                dataIndex: 'order',
+                dataIndex: 'sales_type_name',
             },
             {
                 title: '客户类型',
                 align:'center',
-                dataIndex: 'userlx',
+                dataIndex: 'customer_type_name',
             },
             {
                 title: '客户名称',
                 align:'center',
-                dataIndex: 'username',
+                dataIndex: 'customer_name',
             },
             {
                 title: '业务员',
                 align:'center',
-                dataIndex: 'person',
+                dataIndex: 'salesman',
             },
             {
                 title: '出库仓库',
                 align:'center',
-                dataIndex: 'ckck',
+                dataIndex: 'ware_name',
             },
             {
                 title: '配送车辆',
                 align:'center',
-                dataIndex: 'car',
-            },
-            {
-                title: 'Adress',
-                align:'center',
-                dataIndex: 'address',
+                dataIndex: 'vehicle_id',
             },
             {
                 title: 'Axios',
@@ -201,12 +345,12 @@ export default class Order extends Component {
                     if(record.order !== '普通订单'){
                        return    <span className="order-axios">
                                     <a onClick={()=>this.showModal(record)}>编辑</a>
-                                    <a>删除</a>
+                                    <a onClick={()=>this.orderdellist(record)}>删除</a>
                                     <a onClick={()=> this.yulan(record)}>预览</a>
                          </span>
                     }else{
                       return  <span >
-                       <a>删除</a>
+                       <a  onClick={()=>this.orderdellist(record)}>删除</a>
                        <a onClick={()=> this.yulan(record)}>预览</a>
                      </span>
                     }
@@ -216,6 +360,8 @@ export default class Order extends Component {
         
         ];
 
+
+
         return (
             <div>
                 <div className="top">
@@ -223,34 +369,30 @@ export default class Order extends Component {
                 </div>
                 <div className="quire">
                     <div className="quire-title">
-                        <p>筛选查询</p>
+                        <div>筛选查询</div>
+                        <div className="chaxun" onClick={this.Cusinfoquery}>查询结果</div>
                     </div>
                     <div className="condition flex-row">
                         <div>
-                            <label >创建日期：</label><input value={this.orderDate} onChange={this.setDate} type="date"></input>
+                            <label >创建日期：</label><Input style={{width:'150px'}} value={this.orderDate} onChange={this.setDate} type="date"></Input>
                         </div>
                         <div>
                             <label >销售类型：</label>
-                            <Select className="xiaoshou">
-                                <Option value="全部">全部</Option>
-                                <Option value="车销">车销</Option>
-                                <Option value="仿销">仿销</Option>
+                            <Select className="xiaoshou" onChange={(value)=> this.orderxiaoshou(value)}>
+                                 {xiaoshou}
                             </Select>
                         </div>
                         <div>
                             <label >订单类型：</label>
-                            <Select className="xiaoshou">
-                                <Option value="全部">全部</Option>
+                            <Select className="xiaoshou" onChange={(value)=> this.orderdingdan(value)}>
                                 <Option value="普通订单">普通订单</Option>
                                 <Option value="退货订单">退货订单</Option>
                             </Select>
                         </div>
                         <div>
                             <label >客户类型：</label>
-                            <Select className="xiaoshou">
-                                <Option value="全部">全部</Option>
-                                <Option value="客户A型">客户A型</Option>
-                                <Option value="客户B型">客户B型</Option>
+                            <Select className="xiaoshou" onChange={(value)=> this.orderkehu(value)}>
+                                {kehu}
                             </Select>
 
                         </div>
@@ -293,7 +435,6 @@ export default class Order extends Component {
 
                     </div>
                     <Table 
-                    className="order-table"
                     rowSelection={rowSelection} 
                     columns={columns} 
                     align="center"
@@ -324,23 +465,19 @@ export default class Order extends Component {
 						>
 						<div className='modal-item'>
 							<p>编号：</p>
-							<Select defaultValue="请选择商品分类" style={{ width: '60%' }}>
-								<Option value="jack">Jack</Option>
-								<Option value="lucy">Lucy</Option>
-								<Option value="Yim">yim</Option>
-							</Select>
+							<Input defaultValue={bianji.bianhao} style={{width:'170px'}} disabled></Input>
 						</div>
 						<div className='modal-item'>
 							<p>订单类型：</p>
-							<Select defaultValue="请选择厂商" style={{ width: '60%' }}>
-								<Option value="jack">Jack</Option>
-								<Option value="lucy">Lucy</Option>
-								<Option value="Yim">yim</Option>
+							<Select defaultValue="普通订单" style={{ width: '60%' }}>
+                                  
+								<Option value='1'>普通订单</Option>
+								<Option value='2'>退货订单</Option>
 							</Select>
 						</div>
 						<div className='modal-item'>
 							<p>配送车辆：</p>
-							<Select defaultValue="全部" style={{ width: '60%' }}>
+							<Select defaultValue="车" style={{ width: '60%' }}>
 								<Option value="shelve">上架</Option>
 								<Option value="xiajia">下架</Option>
 							</Select>
