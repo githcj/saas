@@ -85,9 +85,7 @@ const System = (props) => {
 					<div>
 						<Route path={match.url} exact component={Gongsi} />
 						<Route path={match.url + "/Department"} component={Department} />
-						<Route path={match.url + "/Position"} component={Position}>
-							<Position msg={match.url} />
-						</Route>
+						<Route path={match.url + "/Position"} component={Position} />
 						<Route path={match.url + "/Quanxian"} component={Quanxian} />
                         <Route path={match.url + "/Unit"} component={Unit} />
 						<Route path={match.url + "/Employee"} component={Employee} />

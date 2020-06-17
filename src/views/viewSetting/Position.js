@@ -4,7 +4,7 @@ import ConTitle from '../../components/ConTitle'
 import { UnorderedListOutlined } from '@ant-design/icons'
 import '../../assets/css/viewSetting/Department.css'
 import axios from '../../plugins/axios'
-import DepartModal from '../../components/DepartModal'
+import PositionModal from '../../components/PositionModal'
 import DepartDelPop from '../../components/DepartDel'
 import moment from 'moment'
 
@@ -45,10 +45,12 @@ export default class Department extends Component{
             render: (text,row) => (<Switch checked={text ? true : false} onChange={()=>this.changeStatus(row)} />)
         },{
             title: '操作',
-            width:'150px',
             key:'toDo',
             render: (text,row) => (<div className='toDo'>
-            <a onClick={ () => this.toPower(row.position_id)}></a>
+            <a onClick={ () => this.props.history.push({
+                pathname:'/home/system/Quanxian',
+                params:row
+            })}>权限设置</a>
             <a onClick={()=>this.showModel(row)}>编辑</a>
             <DepartDelPop confirm={(e)=>this.confirm(row.position_id,e)} cancel={this.cancel} /></div>)
         }
@@ -56,12 +58,13 @@ export default class Department extends Component{
     
     // 组件加载完毕请求数据
     async componentDidMount() {
-        const {data} = await axios.post('/position/showposition')
-        const {data:res} = data
-        res.map (item =>{
-            item.position_addtime = moment(item.position_addtime).format('YYYY-MM-DD HH:mm:ss')
-            return item
-        })
+        // const {data} = await axios.post('/position/showposition')
+        // const {data:res} = data
+        // res.map (item =>{
+        //     item.position_addtime = moment(item.position_addtime).format('YYYY-MM-DD HH:mm:ss')
+        //     return item
+        // })
+        let res = [{position_id:1,position_name:'总经理',position_describe:'无',position_addtime:'2020-5-30 12:03:02',position_status:1}]
         this.setState({
             positionList:res
         })
@@ -101,7 +104,7 @@ export default class Department extends Component{
         })
     }
 
-    // 修改部门状态
+    // 修改职位状态
     changeStatus = async (row)=>{
         const {positionList} = this.state
         let status
@@ -129,13 +132,13 @@ export default class Department extends Component{
         if(row !== undefined) {
             await this.setState({
                 rowInfo:row,
-                title:'编辑部门信息',
+                title:'编辑职位信息',
                 finishFun:this.onFinish,
                 ModalVisible: true,
             })
         }else {
             await this.setState({
-                title:'添加部门',
+                title:'添加职位',
                 finishFun:this.onAdd,
                 ModalVisible: true,
             })
@@ -172,8 +175,8 @@ export default class Department extends Component{
     onAdd = async (value,form) => {
         console.log(value);
         const {data:res}  = await axios.post('/position/addposition',value)
-        if(res.code !== 200) return message.error('添加部门失败!')
-        message.success('添加部门成功')
+        if(res.code !== 200) return message.error('添加职位失败!')
+        message.success('添加职位成功')
         this.componentDidMount()
         form.resetFields()
         this.setState({
@@ -205,6 +208,12 @@ export default class Department extends Component{
     cancel = () => {
         message.info('取消删除!');
     }
+
+    // toPower = (row) =>{
+    //     console.log(this.props);
+        
+
+    // }
 
     render(){
         return (
@@ -252,6 +261,12 @@ export default class Department extends Component{
                     }}
                     />
                 </div>
+
+                <PositionModal
+                    {...this.state}
+                    onCreate={this.state.finishFun}
+                    onCancel={this.handleCancel}
+                />
             </div>
         )
     }

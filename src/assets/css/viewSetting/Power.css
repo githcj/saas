@@ -1,0 +1,58 @@
+/* #border-section {
+    border: 1px solid rgb(211, 204, 204);
+} */
+
+.power-title-box {
+    width: 85%;
+    margin: 20px auto;
+    border: 1px solid rgb(200, 191, 191);
+    padding: 0 2px;
+}
+
+
+.power-title {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.power-checkbox-box {
+    width: 100%;
+    background-color: #fff;
+    padding-top: 40px;
+}
+
+.power-check-box {
+    width: 94%;
+    margin: 0 auto;
+    margin-bottom: 40px;
+    border: 1px solid rgb(226, 222, 222);
+
+}
+
+.power-check-title {
+    width: 100%;
+    height: 40px;
+    border: 1px solid rgb(226, 222, 222);
+    background-color: rgb(247, 246, 246);
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
+
+.power-check-body {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.power-check-item-box {
+    width: 20%;
+    border: 1px solid rgb(226, 222, 222);
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 20px;
+}

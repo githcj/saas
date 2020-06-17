@@ -10,22 +10,27 @@ const columns = [
     {
         title: '编号',
         dataIndex: 'log_id',
+        key:1
     },
     {
         title: '操作者',
         dataIndex: 'emp_name',
+        key:2
     },
     {
         title: '操作日期',
         dataIndex: 'log_time',
+        key:3
     },
     {
         title:'ip地址',
-        dataIndex:'log_ip'
+        dataIndex:'log_ip',
+        key:4
     },
     {
         title:'操作记录',
-        dataIndex:'log_record'
+        dataIndex:'log_record',
+        key:5
     },
 ];
 
@@ -161,6 +166,18 @@ export default class Operation extends Component {
         message.success('删除日志成功')
         this.componentDidMount()
     }
+    
+
+    rowSelection = {
+        // onChange: (selectedRowKeys, selectedRows) => {
+        //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        // },
+        getCheckboxProps: record => ({
+          disabled: record.name === 'Disabled User',
+          // Column configuration not to be checked
+          name: record.name,
+        }),
+      };
 
 
     render() {
@@ -233,7 +250,7 @@ export default class Operation extends Component {
                         </div>
                     </div>
                     <Table
-                        rowSelection={{ type: 'Checkbox' }}
+                        rowSelection={{ type: 'Checkbox',...this.rowSelection }}
                         dataSource={this.state.distrList}
                         columns={columns}
                         pagination={{
