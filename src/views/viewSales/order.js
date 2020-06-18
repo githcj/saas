@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import axios from 'axios'
 import '../../assets/css/sales/order.css'
 import { Table, Button,Select,Modal ,input, Input} from 'antd';
-import { Route, NavLink } from 'react-router-dom'
+import { Route, NavLink } from 'react-router-dom';
+// import {yulanAction} from '../../store/order/orderActions'
 
 import {
     SearchOutlined,
@@ -29,7 +30,9 @@ export default class Order extends Component {
             car:[],
             xiaoshoutype:[],
             kehutype:[],
-            bianji:[]
+            bianji:[],
+            z:'',
+            ordercar:[]
         };
     }
     editval = (value,index) => {
@@ -46,8 +49,26 @@ export default class Order extends Component {
         console.log(this.state.car,);
         
     }
+    editorder =(e)=> {
+        const bianji=this.state.bianji
+        bianji.sales_type_name=e
+        this.setState({
+            bianji:bianji
+        })
+    }
+    editordercar =(e)=>{
+        const bianji=this.state.bianji
+        bianji.vehicle_id=e
+        this.setState({
+            bianji:bianji
+        })
+        console.log(this.state.bianji,'bianji200');
+        
+    }
 
     showModal = (record) => {
+        console.log(record,'recordorder');
+        
 		this.setState({
             bianji:record,
 		  	visible: true,
@@ -55,15 +76,21 @@ export default class Order extends Component {
         
 	}
 	handleOk = e => {
+        const bianji=this.state.bianji
         console.log(e);
         axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/customer/update',
             data:{
-                
+                token:'123',
+                sales_id:bianji.sales_id,
+                sales_method_name:bianji.sales_method_name,
+                vehicle_id:bianji.vehicle_id
             }
         })
         .then(res => {
+            console.log(res,'bianjiorder');
+            
             console.log(this,'this')
             this.componentDidMount() 
         })
@@ -87,6 +114,9 @@ export default class Order extends Component {
        await axios({
             method: 'POST',
             url: 'http://172.16.6.29:8080/sales/querySalesList',
+            data:{
+                token:'123'
+            }
         })
             .then(res => {
                 console.log(res,'orderlist');
@@ -133,12 +163,34 @@ export default class Order extends Component {
            .catch(err =>{
                  console.log(err,err);  
            })
+
+           await axios({
+            method: 'POST',
+            url: 'http://172.16.6.29:8080/driver/queryVehicleList', 
+        })    
+           .then(res =>{
+               
+               this.setState({
+                     ordercar:res.data
+               })
+               console.log(this.state.ordercar);
+               
+
+           })
+           .catch(err =>{
+                 console.log(err,err);  
+           })
+
+
     }
-    yulan =(record)=>{
-         this.props.his.push({
-             pathname:'/home/xiaoshou/orderDetail',
-             params:record
-            })
+    yulan =(record)=>{ 
+         
+
+             console.log(record.sales_id,'salesid');
+             this.props.his.push({
+                pathname:'/home/xiaoshou/orderDetail',
+                params: record.sales_id
+               })
     }
 
      //处理 查询数据
@@ -207,10 +259,8 @@ export default class Order extends Component {
             }
         })
             .then(res => {
-                 console.log(res,'res');
-                 console.log(this.state.orderdingdan,'dingdan');
                  
-                this.componentDidMount()
+               this.componentDidMount()
             })
             .catch(err => {
                 console.log(err);
@@ -260,7 +310,7 @@ export default class Order extends Component {
         })
     }
     render() {
-        const { bianji,orderList, selectedRowKeys,eachPage ,xiaoshoutype,kehutype} = this.state;
+        const { bianji,orderList, selectedRowKeys,eachPage ,xiaoshoutype,kehutype,ordercar} = this.state;
         const {msg} =this.props
        
         const rowSelection = {
@@ -277,6 +327,11 @@ export default class Order extends Component {
          const kehu=kehutype.map((item,index)=>(
             <Option value={item.customer_type_id}>
                 {item.customer_type_name}
+           </Option>
+        ))
+        const ordercar2=ordercar.map((item,index)=>(
+            <Option value={item}>
+                {item}
            </Option>
         ))
 
@@ -342,14 +397,14 @@ export default class Order extends Component {
                 title: 'Axios',
                 align:'center',
                 render: (text,record,index) => {
-                    if(record.order !== '普通订单'){
+                    if(record.sales_type_name == '普通订单'){
                        return    <span className="order-axios">
                                     <a onClick={()=>this.showModal(record)}>编辑</a>
                                     <a onClick={()=>this.orderdellist(record)}>删除</a>
                                     <a onClick={()=> this.yulan(record)}>预览</a>
                          </span>
                     }else{
-                      return  <span >
+                      return  <span className="order-axios">
                        <a  onClick={()=>this.orderdellist(record)}>删除</a>
                        <a onClick={()=> this.yulan(record)}>预览</a>
                      </span>
@@ -465,21 +520,19 @@ export default class Order extends Component {
 						>
 						<div className='modal-item'>
 							<p>编号：</p>
-							<Input defaultValue={bianji.bianhao} style={{width:'170px'}} disabled></Input>
+							<Input defaultValue={bianji.sales_id} style={{width:'170px'}} disabled></Input>
 						</div>
 						<div className='modal-item'>
 							<p>订单类型：</p>
-							<Select defaultValue="普通订单" style={{ width: '60%' }}>
-                                  
-								<Option value='1'>普通订单</Option>
-								<Option value='2'>退货订单</Option>
+							<Select defaultValue={bianji.sales_type_name} onChange={(value) => this.editorder(value)}  style={{ width: '60%' }}>
+								<Option value='普通订单'>普通订单</Option>
+								<Option value='退货订单'>退货订单</Option>
 							</Select>
 						</div>
 						<div className='modal-item'>
 							<p>配送车辆：</p>
-							<Select defaultValue="车" style={{ width: '60%' }}>
-								<Option value="shelve">上架</Option>
-								<Option value="xiajia">下架</Option>
+							<Select defaultValue={bianji.vehicle_id} onChange={(value) => this.editordercar(value)} style={{ width: '60%' }}>
+						       	{ordercar2}
 							</Select>
 						</div>
 					</Modal>
@@ -493,7 +546,7 @@ export default class Order extends Component {
 
 //  function mapDispatchToProps(dispath){
 //     return{
-//       yulan:(record)=>dispath(yulanAction(record)),
+//       yulan:(record)=>dispath(yulanAction(record,history)),
 //      }
 //   }
 

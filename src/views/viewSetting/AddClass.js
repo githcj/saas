@@ -47,6 +47,10 @@ class AddClass extends React.Component {
             console.log(err)
         })
     }
+
+    
+
+
 	render() {
 		return (
 			<div className="cominfo">
