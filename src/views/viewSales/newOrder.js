@@ -16,8 +16,58 @@ export default class newOrder extends Component {
             big: 1,
             small: 1,
             sum: 0,
-            car: []
+            car: [],
+            kehutype:[],
+            xiaoshoutype:[],
+            persontype:[],
+            cartype:[],
+            orderdata:'',
+            username:'',
+            yewu:'',
+            xiaoshou:'',
+            cehngliang:'',
+            goods:[],
+            pingpai:[],
+            fenlei2:[],
+            soupingpai:'',
+            soufenlei:''
         };
+    }
+
+
+    soupinpai= (value)=>{
+         this.setState({
+             soupingpai:value
+         })
+    }
+
+    soufenlei =(value)=>{
+        this.setState({
+            soufenlei:value
+        })
+    }
+    sousuo =()=>{
+        console.log(1111111111);
+        
+        axios({
+            method: 'POST',
+            url: 'http://172.16.6.29:8080/goods/queryGoodsList',
+            data:{
+                token:'123',
+                brand_name:this.state.soupingpai,
+            }
+        })
+            .then(res => {
+
+                console.log(res.data,'query');
+                
+                this.setState({
+                    queryorder: res.data,
+                })
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     add = (record) => {
@@ -51,7 +101,7 @@ export default class newOrder extends Component {
             }
         }
         for (var i = 0; i < newData.length; i++) {
-            suma += newData[i].smcount * newData[i].smallUntPrice + newData[i].bgcount * newData[i].bigUntPrice
+            suma += newData[i].smcount * newData[i].single_price + newData[i].bgcount * newData[i].whole_price
         }
 
         this.setState({
@@ -59,35 +109,207 @@ export default class newOrder extends Component {
             adddata: newData
         })
     }
+    setDate =(e)=>{
+          this.setState({
+              orderdata:e.target.value
+          })
+    }
 
-    componentDidMount() {
+  async  componentDidMount() {
         const adddata = this.state.adddata
-
-
-        axios({
-            method: 'GET',
-            url: 'http://119.23.228.238:3031/mock/47/addorder',
+        const good=this.state.goods 
+       await axios({
+            method: 'POST',
+            url: 'http://172.16.6.29:8080/goods/queryGoodsList',
+            data:{
+                token:'123'
+            }
         })
             .then(res => {
+                console.log(res.data,'query');
+                
                 this.setState({
                     queryorder: res.data,
-
                 })
             })
             .catch(err => {
                 console.log(err);
             })
 
+    await  axios({
+        method: 'POST',
+        url: 'http://172.16.6.27:8080/combobox/customer',
+    })
+        .then(res => {
+            this.setState({
+                kehutype: res.data.data,
+            })
+            console.log(this.state.kehutype,'111');
+            
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
+        await  axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/combobox/sales_method',
+        })
+            .then(res => {
+                this.setState({
+                    xiaoshoutype: res.data.data,
+                })
+                console.log(this.state.xiaoshoutype,'111');
+                
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        await  axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/person/in_charge',
+        })
+            .then(res => {
+                this.setState({
+                    persontype: res.data.data,
+                })
+                console.log(this.state.persontype,'111');
+                
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+            await  axios({
+                method: 'POST',
+                url: 'http://172.16.6.29:8080/driver/queryVehicleList',
+            })
+                .then(res => {
+                    this.setState({
+                        cartype: res.data,
+                    })
+                    console.log(this.state.cartype,'111');
+                    
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
+                await  axios({
+                    method: 'POST',
+                    url: 'http://172.16.6.27:8080/combobox/brand',
+                })
+                    .then(res => {
+                        console.log(res.data.data ,'平拍');
+                        
+                        this.setState({
+                            pingpai: res.data.data,
+                        })
+                        console.log(this.state.persontype,'111');
+                        
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+
+                    await  axios({
+                        method: 'POST',
+                        url: 'http://172.16.6.27:8080/combobox/commodity_level',
+                    })
+                        .then(res => {
+                            console.log(res.data.data ,'分类');
+                            
+                            this.setState({
+                                fenlei2: res.data.data,
+                            })
+                            console.log(this.state.persontype,'111');
+                            
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+
+
         var suma = 0;
         for (var i = 0; i < adddata.length; i++) {
-            suma += adddata[i].smcount * adddata[i].smallUntPrice + adddata[i].bgcount * adddata[i].bigUntPrice
+            suma += adddata[i].smcount * adddata[i].single_price + adddata[i].bgcount * adddata[i].whole_price
         }
+
+        
+        
         this.setState({
-            sum: suma
+            sum: suma,
+            goods:good
         })
+        console.log(this.state.goods,'goods');
+        
+        console.log(this.state.order,'order');
+        
+
+
     }
     setvalue = (value) => {
         console.log(value)
+        this.setState({
+            username:value
+        })
+    }
+    yewu =(value)=>{
+        this.setState({
+            yewu:value
+        })
+    }
+    xiaoshou =(value)=>{
+        this.setState({
+            xiaoshou:value
+        })
+    }
+    cheliang =(value)=>{
+        this.setState({
+            cheliang:value
+        })
+    }
+
+    tijaio =()=>{
+        console.log(this.state.adddata,'add');
+        
+        const list=this.state.adddata.map(item => {
+            let elem = {} // 格式化后的item
+            elem.goods_name = item.goodsname
+            elem.whole_num = item.bgcount
+            elem.single_num = item.smcount
+            elem.total_price =item.total_price
+            elem.single_price =item.single_price
+            elem.whole_price =item.whole_price
+            return elem
+        })
+        // console.log(list,'格式化后的adddata')
+        axios({
+            method: 'POST',
+            url: 'http://172.16.6.27:8080/sales/addSales',
+            data:{
+                sales_type_name:'普通订单',
+                customer_name:this.state.username,
+                salesman:this.state.yewu,
+                ware_name:'主仓库',
+                delivery_time:this.state.orderdata,
+                sales_method_name:this.state.xiaoshou,
+                vehicle_id:this.state.cehngliang,
+                sales_payable:this.state.sum,
+                pay_type_name:'支付宝',
+                salesDetailList:list
+            }
+        })
+            .then(res => {
+                this.setState({
+                    kehutype: res.data,
+                })
+                
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
     addbigcount = (i, n) => {
         var suma = 0;
@@ -100,7 +322,7 @@ export default class newOrder extends Component {
             })
 
             for (var i = 0; i < addcount.length; i++) {
-                suma += addcount[i].smcount * addcount[i].smallUntPrice + addcount[i].bgcount * addcount[i].bigUntPrice
+                suma += addcount[i].smcount * addcount[i].single_price + addcount[i].bgcount * addcount[i].whole_price
             }
             this.setState({
                 sum: suma,
@@ -122,7 +344,7 @@ export default class newOrder extends Component {
                 }
             })
             for (var i = 0; i < addcount.length; i++) {
-                suma += addcount[i].smcount * addcount[i].smallUntPrice + addcount[i].bgcount * addcount[i].bigUntPrice
+                suma += addcount[i].smcount * addcount[i].single_price + addcount[i].bgcount * addcount[i].whole_price
             }
             this.setState({
                 sum: suma,
@@ -149,7 +371,7 @@ export default class newOrder extends Component {
                 }
             })
             for (var i = 0; i < addcount.length; i++) {
-                suma += addcount[i].smcount * addcount[i].smallUntPrice + addcount[i].bgcount * addcount[i].bigUntPrice
+                suma += addcount[i].smcount * addcount[i].single_price + addcount[i].bgcount * addcount[i].whole_price
             }
             this.setState({
                 sum: suma,
@@ -179,7 +401,7 @@ export default class newOrder extends Component {
                 }
             })
             for (var i = 0; i < addcount.length; i++) {
-                suma += addcount[i].smcount * addcount[i].smallUntPrice + addcount[i].bgcount * addcount[i].bigUntPrice
+                suma += addcount[i].smcount * addcount[i].single_price + addcount[i].bgcount * addcount[i].whole_price
             }
             this.setState({
                 sum: suma,
@@ -204,7 +426,7 @@ export default class newOrder extends Component {
                 }
             })
             for (var i = 0; i < addcount.length; i++) {
-                suma += addcount[i].smcount * addcount[i].smallUntPrice + addcount[i].bgcount * addcount[i].bigUntPrice
+                suma += addcount[i].smcount * addcount[i].single_price + addcount[i].bgcount * addcount[i].whole_price
             }
             this.setState({
                 sum: suma,
@@ -228,44 +450,22 @@ export default class newOrder extends Component {
         
          var suma =0 ;
          for(var i=0 ; i<tests.length ; i++){
-            suma += tests[i].smcount *tests[i].smallUntPrice + tests[i].bgcount * tests[i].bigUntPrice
+            suma += tests[i].smcount *tests[i].single_price + tests[i].bgcount * tests[i].whole_price
+
           }
             this.setState({
                 sum:suma,
                 adddata:tests
-            })                  
+            }) 
+                             
     }
-
-
-
-
-//     render() {
-
-//         const { adddata, queryorder, sum } = this.state
-
-//         for (let i = 0; i < queryorder.length; i++) {
-//             queryorder[i].key = i
-//         }
-//         this.setState({
-//             sum: suma,
-//             adddata: addcount
-//         }
-//         )
-//     }
-//         else {
-//     alert('不能在减了')
-// }
-
-//     }
-
-
-
 
 
 render() {
 
-    const { adddata, queryorder, sum } = this.state
+    const { adddata, queryorder, sum ,kehutype,xiaoshoutype,persontype ,cartype,pingpai,fenlei2} = this.state
 
+    
     for (let i = 0; i < queryorder.length; i++) {
         queryorder[i].key = i
     }
@@ -275,32 +475,32 @@ render() {
         {
             title: '商品名称',
             align:'center',
-            dataIndex: 'goodsname',
+            dataIndex: 'goods_name',
         },
         {
             title: '大单位',
             align:'center',
-            dataIndex: 'bigUnt',
+            dataIndex: 'whole_unit',
         },
         {
             title: '大单位单价',
             align:'center',
-            dataIndex: 'bigUntPrice',
+            dataIndex: 'whole_price',
         },
         {
             title: '小单位',
             align:'center',
-            dataIndex: 'smallUnt',
+            dataIndex: 'single_unit',
         },
         {
             title: '小单位单价',
             align:'center',
-            dataIndex: 'smallUntPrice',
+            dataIndex: 'single_price',
         },
         {
             title: '现有库存',
             align:'center',
-            dataIndex: 'stock',
+            dataIndex: 'goods_sum',
         },
 
         {
@@ -319,13 +519,13 @@ render() {
         {
             title: '商品名称',
             align:'center',
-            dataIndex: 'goodsname',
+            dataIndex: 'goods_name',
         },
         {
             title: '单价/大单位',
             align:'center',
             // dataIndex: 'goodsname',
-            render: (text, record, index) => <span>{record.bigUntPrice}</span>
+            render: (text, record, index) => <span>{record.whole_price + '/' + record.whole_unit}</span>
         },
         {
             title: '数量',
@@ -344,7 +544,7 @@ render() {
             align:'center',
             render: (text, record, index) =>
                 <span>
-                    {record.smallUntPrice + '/' + record.bigUnt}
+                    {record.single_price+ '/' + record.single_unit}
                 </span>
 
         },
@@ -364,13 +564,13 @@ render() {
             title: '金额',
             align:'center',
             render: (text, record, index) => {
-                return <span>{Math.abs(record.smcount * record.smallUntPrice + record.bgcount * record.bigUntPrice).toString()}</span>
+                return <span>{Math.abs(record.smcount * record.single_price + record.bgcount * record.whole_price).toString()}</span>
             }
         },
         {
             title: '现有库存',
             align:'center',
-            dataIndex: 'stock',
+            dataIndex: 'goods_sum',
         },
         {
             title: '操作',
@@ -382,6 +582,39 @@ render() {
             )
         },
     ];
+
+    const kehu =kehutype.map((item,index)=>{
+        return <Option value={item.customer_type_id}>
+                     {item.customer_type_name}
+               </Option>
+    })
+    const xiaoshou =xiaoshoutype.map((item,index)=>{
+        return <Option value={item.brand_id}>
+                     {item.brand_name}
+               </Option>
+    })
+    const person =persontype.map((item,index)=>{
+        return <Option value={item.emp_id}>
+                     {item.emp_name}
+               </Option>
+    })
+    const car =cartype.map((item,index)=>{
+        return <Option value={item}>
+                     {item}
+               </Option>
+    })
+
+    const pp =pingpai.map((item,index)=>{
+        return <Option value={item.brand_name}>
+                     {item.brand_name}
+               </Option>
+    })
+
+    const fenlei =fenlei2.map((item,index)=>{
+        return <Option value={item.commodity_level_name}>
+                     {item.commodity_level_name}
+               </Option>
+    })
 
     return (
         <div>
@@ -401,44 +634,32 @@ render() {
                     <div className="bianju2" >
                         <label >客户名称：</label>
                         <Select className="xiaoshou" defaultValue='客户名称' onChange={(value) => this.setvalue(value)}>
-                            <Option value="全部">客户1</Option>
-                            <Option value="客户1">客户2</Option>
-                            <Option value="客户2">客户3</Option>
+                            {kehu}
                         </Select>
-                    </div>
+                    </div> 
                     <div className="bianju">
                         <label >业务员：</label>
-                        <Select className="xiaoshou">
-                            <Option value="全部">全部</Option>
-                            <Option value="业务员1">业务员2</Option>
-                            <Option value="业务员2">业务员3</Option>
+                        <Select className="xiaoshou" onChange={(value)=>this.yewu(value)}>
+                            {person}xiaoshou
                         </Select>
                     </div>
                     <div className="bianju">
                         <label >出货仓库：</label>
-                        <Select className="xiaoshou" style={{ width: '180px' }}>
-                            <Option value="全部">全部</Option>
-                            <Option value="仓库1">仓库1</Option>
-                            <Option value="仓库1">仓库2</Option>
-                        </Select>
+                        <span>主仓库</span>
                     </div>
-                    <div className="bianju">
+                    <div className="bianju" >
                         <label >发货日期：</label><Input style={{ width: '120px' }} value={this.neworderDate} onChange={this.setDate} type="date"></Input>
                     </div>
                     <div className="bianju">
                         <label >销售类型：</label>
-                        <Select className="xiaoshou">
-                            <Option value="全部">全部</Option>
-                            <Option value="销售类型1">销售类型1</Option>
-                            <Option value="销售类型2">销售类型2</Option>
+                        <Select className="xiaoshou"  onChange={(value)=>this.xiaoshou(value)}>
+                            {xiaoshou}
                         </Select>
                     </div>
                     <div className="bianju">
                         <label >配送车辆：</label>
-                        <Select className="xiaoshou">
-                            <Option value="全部">请选择</Option>
-                            <Option value="车1">车1</Option>
-                            <Option value="车2">车2</Option>
+                        <Select className="xiaoshou"  onChange={(value)=>this.cheliang(value)}>
+                                {car}
                         </Select>
                     </div>
                 </div>
@@ -452,25 +673,21 @@ render() {
                 <div className="condition3 flex-row">
                     <div className="bianju ">
                         <label >选择品牌：</label>
-                        <Select className="xiaoshou">
-                            <Option value="全部">请选择</Option>
-                            <Option value="品牌1">品牌11</Option>
-                            <Option value="品牌2">品牌2</Option>
+                        <Select className="xiaoshou" onChange={(value)=>this.soupinpai(value)}>
+                            {pp}
                         </Select>
                     </div>
                     <div className="bianju ">
                         <label >选择分类：</label>
-                        <Select className="xiaoshou">
-                            <Option value="全部">请选择</Option>
-                            <Option value="分类1">分类1</Option>
-                            <Option value="分类2">分类2</Option>
+                        <Select className="xiaoshou" onChange={(value)=>this.soufenlei(value)}>
+                           {fenlei}
                         </Select>
                     </div>
                     <div className="bianju ">
                         <label >商品标题：</label>
                         <Input style={{width:'150px'}}></Input>
                     </div>
-                    <Radio.Button style={{ marginLeft: '12px' }} type="button" value="large">搜索</Radio.Button>
+                    <Radio.Button style={{ marginLeft: '12px' }} onClick={this.sousuo} type="button" value="large">搜索</Radio.Button>
                 </div>
 
 
@@ -478,7 +695,7 @@ render() {
 
                 <div className="quire2">
                     <div className="quire-title">
-                        <p>搜索结果</p>
+                        <div >搜索结果</div>
                     </div>
                     <Table columns={columns} dataSource={queryorder} />
                 </div>
@@ -506,7 +723,13 @@ render() {
                         <span className="span-two">{sum}</span>
                     </div>
                     <div>
-                        <button type="button">提交</button>
+                        <span className="span-one">支付方式：</span>
+                         <Select>
+                            
+                        </Select>
+                    </div>
+                    <div>
+                        <button type="button" onClick={this.tijaio}>提交</button>
                     </div>
                 </div>
             </footer>
