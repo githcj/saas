@@ -6,6 +6,7 @@ import { Table, Button ,Select,Modal,message} from 'antd';
 
 import { NavLink, Route, Redirect } from 'react-router-dom'
 import addCus from '../viewSetting/addCus'
+import locale from 'antd/lib/date-picker/locale/en_US';
 const {Option} = Select
 
 
@@ -94,12 +95,14 @@ export default class Cusinfo extends Component {
         });
 	}
 	handleOk = e => {
-        
+         const  id = localStorage.getItem('username')
+         const tokens= localStorage.getItem('token')
+         
         axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/customer/update',
             data:{
-                token:'13245',
+                token:tokens,
                 customer_id:this.state.bianji.customer_id,
                 customer_name:this.state.bianji.customer_name,
                 customer_address:this.state.bianji.customer_address,
@@ -107,7 +110,7 @@ export default class Cusinfo extends Component {
                 customer_contacts:this.state.bianji.customer_contacts,
                 customer_phone:this.state.bianji.customer_phone,
                 emp_id:this.state.value,
-                customer_create_time:this.state.bianji.customer_create_time
+                customer_create_time:id
             }
         })
         .then(res => {
@@ -200,13 +203,13 @@ export default class Cusinfo extends Component {
         })
       }
         Cusinfoquery =()=>{
-             
+            const tokens= localStorage.getItem('token')
            console.log(this.state.sousuo); 
             axios({
                 method: 'POST',
                 url: 'http://172.16.6.27:8080/customer/wherequery',
                 data:{
-                    token:'1213545',
+                    token:tokens,
                     customer_name:this.state.sousuo,
                     customer_phone:this.state.phone,
                     customer_create_time:this.state.dates 
@@ -258,12 +261,12 @@ export default class Cusinfo extends Component {
             
              const ids=id[0].customer_id
              console.log(ids,'ids');
-            
+             const tokens= localStorage.getItem('token')
             axios({
                 method: 'POST',
                 url: 'http://172.16.6.27:8080/customer/delete',
                 data:{
-                    token:'123',
+                    token:tokens,
                     customer_id:ids
                 }
             })

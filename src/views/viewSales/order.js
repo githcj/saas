@@ -76,13 +76,16 @@ export default class Order extends Component {
         
 	}
 	handleOk = e => {
+        const tokens=localStorage.getItem('token')
+        console.log(tokens,'tokens');
+        
         const bianji=this.state.bianji
         console.log(e);
         axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/customer/update',
             data:{
-                token:'123',
+                token:tokens,
                 sales_id:bianji.sales_id,
                 sales_method_name:bianji.sales_method_name,
                 vehicle_id:bianji.vehicle_id
@@ -111,15 +114,16 @@ export default class Order extends Component {
 	}
 
   async  componentDidMount() {
+       const tokens=localStorage.getItem('token')
        await axios({
             method: 'POST',
             url: 'http://172.16.6.29:8080/sales/querySalesList',
             data:{
-                token:'123'
+                token:tokens
             }
         })
             .then(res => {
-                console.log(res,'orderlist');
+                console.log(res.data,'orderlist');
                 
                 this.setState({
                     orderList: res.data
@@ -219,12 +223,13 @@ export default class Order extends Component {
 
     // 查询请求
     Cusinfoquery =()=>{
+        const tokens=localStorage.getItem('token')
         console.log(this.state.sousuo); 
          axios({
              method: 'POST',
              url: 'http://172.16.6.29:8080/sales/querySalesList',
              data:{
-                 token:'1213545',
+                 token:tokens,
                  start_time:this.state.orderDate,
                  sales_method_name:this.state.orderxiaoshou,
                  sales_type_name :this.state.orderdingdan,
@@ -249,12 +254,12 @@ export default class Order extends Component {
      orderdellist =(row)=>{
          const id= row.sales_id
          console.log(id);
-         
+         const tokens=localStorage.getItem('token')
         axios({
             method: 'POST',
             url: 'http://172.16.6.29:8080/sales/deleteSales',
             data:{
-                token:'1213545',
+                token:tokens,
                 sales_id:id
             }
         })
@@ -351,7 +356,7 @@ export default class Order extends Component {
             {
                 title: '金额合计',
                 align:'center',
-                dataIndex: 'sum_price',
+                dataIndex: 'sales_payable',
             },
             {
                 title: '创建日期',

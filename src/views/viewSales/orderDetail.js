@@ -32,16 +32,19 @@ export default class OrderDetail extends Component {
           
        
         componentDidMount(){
+            const tokens=localStorage.getItem('token')
             const {location} =this.props
              axios({
                 method: 'POST',
                 url: 'http://172.16.6.29:8080/sales/querySales', 
                 data:{
-                    token:'123',
+                    token:tokens,
                     sales_id: location.params
                 }
             })    
            .then(res =>{
+               console.log(res.data,'详情');
+               
                 this.setState({
                     z:res.data,
                     goods:res.data.salesDetailList
@@ -58,10 +61,6 @@ export default class OrderDetail extends Component {
            .catch(err =>{
                  console.log('err',err);  
                 })
-
-               
-                
-        
 
         }
 
@@ -173,11 +172,9 @@ export default class OrderDetail extends Component {
      
                          <div>
                              <span className="span-one">应付款金额：</span>
-                             <span className="span-two">{sum}</span>
+                             <span className="span-two">${sum}.00</span>
                          </div>
-                         <div>
-                             <button type="button">提交</button>
-                         </div>
+                   
                      </div>
                  </footer>
                       

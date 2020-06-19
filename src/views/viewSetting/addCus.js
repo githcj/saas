@@ -25,11 +25,12 @@ const AddCus = (props) => {
       
     const onFinish =  values => {
         console.log('Success:', values.customer_name);
+        const tokens= localStorage.getItem('token')
         axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/customer/add',
             data:{
-                token:'123',
+                token:tokens,
                 customer_name:values.customer_name,
                 customer_address:values.customer_address,
                 customer_type_id:values.customer_type_id,
