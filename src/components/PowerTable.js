@@ -11,7 +11,7 @@ const PowerTable = (props) => {
             <div className="power-check-title">
                 <Checkbox
                     indeterminate={props.checkList[index].indeterminate}
-                    onChange={(e)=>props.onCheckOneAllChange(e,item.power_id)}
+                    onChange={(e)=>props.onCheckOneAllChange(e,item.power_id,index)}
                     checked={props.checkList[index].checked}
                 >
                     {item.power_name}

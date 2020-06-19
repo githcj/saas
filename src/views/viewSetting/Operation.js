@@ -19,6 +19,7 @@ const columns = [
     },
     {
         title: '操作日期',
+        width:'500px',
         dataIndex: 'log_time',
         key:3
     },
@@ -33,6 +34,17 @@ const columns = [
         key:5
     },
 ];
+
+const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    getCheckboxProps: record => ({
+      disabled: record.name === 'Disabled User',
+      // Column configuration not to be checked
+      name: record.name,
+    }),
+};
 
 const { Option } = Select;
 
@@ -54,19 +66,20 @@ export default class Operation extends Component {
     }
 
     async componentDidMount() {
-        const {data:operaData} = await axios.post('/log/gettingOperator')
+        // const {data:operaData} = await axios.post('/log/gettingOperator')
         const {data} = await axios.post('/log/querylogbycondition',this.state.searchInfo)
         const {data:res} = data
-        console.log(operaData,res);
+        console.log(res);
 
-        res.map(item => {
+        res.map((item,index) => {
+            item.key = item.log_id
             item.log_time = moment(item.log_time).format('YYYY-MM-DD HH:mm:ss')
             return item
         })
 
         await this.setState({
             distrList:res,
-            operaList:operaData.data,
+            // operaList:operaData.data,
         })
         console.log(this.state.operaList);
         
@@ -158,6 +171,8 @@ export default class Operation extends Component {
     }
 
     delLogs = async() =>{
+        console.log(this.state.log_time);
+        
         const {data:res} = await axios.post('/log/deletelogbycondition',this.state.log_time)
         if(res.code !== 200 ) return message.error('删除日志失败!')
         this.setState({
@@ -168,16 +183,7 @@ export default class Operation extends Component {
     }
     
 
-    rowSelection = {
-        // onChange: (selectedRowKeys, selectedRows) => {
-        //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        // },
-        getCheckboxProps: record => ({
-          disabled: record.name === 'Disabled User',
-          // Column configuration not to be checked
-          name: record.name,
-        }),
-      };
+    
 
 
     render() {
@@ -249,22 +255,24 @@ export default class Operation extends Component {
                             </Select>
                         </div>
                     </div>
-                    <Table
-                        rowSelection={{ type: 'Checkbox',...this.rowSelection }}
-                        dataSource={this.state.distrList}
-                        columns={columns}
-                        pagination={{
-                        showQuickJumper:true,
-                        showTotal:(total) => {
-                            return (
-                                <p>共有{
-                                    Math.ceil(total / this.state.eachPage)
-                                }页/{total}条数据</p>
-                            )
-                            },
-                            pageSize:this.state.eachPage
-                        }}
-                        bordered />
+                        <Table
+                            rowSelection={{
+                                type: 'checkbox',
+                                ...rowSelection,
+                            }}
+                            columns={columns}
+                            dataSource={this.state.distrList}
+                            pagination={{
+                            showTotal:(total) => {
+                                return (
+                                    <p>共有{
+                                        Math.ceil(total / this.state.eachPage)
+                                    }页/{total}条数据</p>
+                                )
+                                },
+                                pageSize:this.state.eachPage
+                            }} 
+                        />
                 </div>
             </div>
         )

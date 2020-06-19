@@ -1,18 +1,22 @@
 import React, { Component } from 'react'
 import ConTitle from '../../components/ConTitle'
 import '../../assets/css/viewSetting/Power.css'
-import { Checkbox,Row,Col } from 'antd'
+import { Checkbox,Button, message } from 'antd'
 import PowerTable from '../../components/PowerTable'
+import {connect} from 'react-redux'
+import {getSecondChildrenList} from '../../store/user/selector'
+import axios from '../../plugins/axios'
 
-const {CheckboxGroup} = Checkbox
+let index = 0
 
-export default class Quanxian extends Component{
+class Quanxian extends Component{
     constructor(props) {
         super(props)
         this.state = {
             rowInfo:{},
             powerList:[{
                 power_id:1,
+                parent_id:0,
                 power_name:'商品管理',
                 power_path:'/home/system',
                 children:[
@@ -37,6 +41,7 @@ export default class Quanxian extends Component{
                 ]
             },{
                 power_id:8,
+                parent_id:0,
                 power_name:'职位管理',
                 power_path:'/home/system',
                 children:[
@@ -59,56 +64,47 @@ export default class Quanxian extends Component{
                     power_name:'职位管理的撒看见',
                     power_path:'/home/system',},
                 ]
-            }],
-            checkedList:[{
-                power_id:1,
-                power_name:'商品管理',
-                power_path:'/home/system',
-                children:[
-                    {power_id:2,
-                    power_name:'商品管理添加',
-                    power_path:'/home/system',},
-                    {power_id:5,
-                    power_name:'商品管理查询',
-                    power_path:'/home/system',},
-                    {power_id:6,
-                    power_name:'商品管理查看',
-                    power_path:'/home/system',},
-                    {power_id:7,
-                    power_name:'商品管理的撒看见',
-                    power_path:'/home/system',},
-                ]
             },{
-                power_id:8,
-                power_name:'职位管理',
+                power_id:14,
+                parent_id:13,
+                power_name:'权限管理',
                 power_path:'/home/system',
                 children:[
-                    {power_id:9,
-                    power_name:'职位管理添加',
+                    {power_id:16,
+                    power_name:'权限管理添加',
                     power_path:'/home/system',},
-                    {power_id:10,
-                    power_name:'职位管理删除',
+                    {power_id:17,
+                    power_name:'权限管理删除',
                     power_path:'/home/system',},
-                    {power_id:11,
-                    power_name:'职位管理编辑',
+                    {power_id:18,
+                    power_name:'权限管理编辑',
                     power_path:'/home/system',},
-                    {power_id:12,
-                    power_name:'职位管理查询',
+                    {power_id:19,
+                    power_name:'权限管理查询',
                     power_path:'/home/system',},
-                ]
-            }
-        ],
-            indeterminate:false,
-            checkAll:true,
-            checked:true,
-            checkList:[]
+                    {power_id:20,
+                    power_name:'权限管理查看',
+                    power_path:'/home/system',},
+                    {power_id:21,
+                    power_name:'权限管理的撒看见',
+                    power_path:'/home/system',},
+                ] 
+            }],
+            
+            indeterminate:true,
+            checkAll:false,
+            checkList:[],
         }
     }
     
-    
-
-    componentWillMount () {
-        this.proData()
+    async componentWillMount () {
+        // const {data:res} = await axios.post('/position/getpermission')
+        // res.data = getSecondChildrenList(res.data)
+        // this.setState({
+        //     powerList:res.data
+        // })
+        console.log(this.props.checkedList,'props')
+        this.proData(this.props.checkedList)
     }
 
     componentDidMount() {
@@ -118,11 +114,13 @@ export default class Quanxian extends Component{
         })
     }
 
-    proData = (listData)=>{
-        const checkList = this.state.checkList
-        this.state.checkedList.map(item => {
+    proData = (listData)=>{//生成checkList函数
+        const checkList = []
+        
+        listData.map(item => {
             let Obj = {}
             Obj.power_id = item.power_id
+            Obj.parent_id = item.parent_id
             // 子元数组
             Obj.children = item.children.map(items =>{
                 return items.power_id
@@ -131,66 +129,94 @@ export default class Quanxian extends Component{
             let ObjLength = this.state.powerList.filter(oItem =>{
                 return item.power_id === oItem.power_id
             })
-            
+            console.log(ObjLength[0],'error')
             let length = ObjLength[0].children.length
             if(length === item.children.length){
                 Obj.indeterminate = false
                 Obj.checked = true
-            }else {
+            }else if(length === 0){
+                Obj.indeterminate = false
+                Obj.checked = false
+            }else{
                 Obj.indeterminate = true
                 Obj.checked = false
             }
 
             checkList.push(Obj)
-
         })
         this.setState({
             checkList
         })
-        console.log(this.state.checkList,'Obj');
+        console.log(checkList,'Obj');
+    }
+
+
+    noCheckAll = () => {
+        const checkList = []
+        
+        this.state.powerList.map(item => {
+            let Obj = {}
+            Obj.power_id = item.power_id
+            // 子元数组
+            Obj.children = []
+            Obj.indeterminate = false
+            Obj.checked = false
+
+            checkList.push(Obj)
+        })
+        this.setState({
+            checkList
+        })
     }
 
     // 选择全部
     onCheckAllChange = (e) =>{
-        console.log(e);
-        this.setState({
-            // checkedList: e.target.checked ? plainOptions : [],
-            indeterminate: false,
-            checkAll: e.target.checked,
-        });
+        console.log(e.target.checked);
+        if(e.target.checked) {
+            this.proData(this.state.powerList)
+            this.setState({
+                indeterminate:false,
+                checkAll:true
+            })
+        }else {
+            this.noCheckAll()
+            this.setState({
+                indeterminate:false,
+                checkAll:false
+            })
+        }
     }
     // 选择一个表的
-    onCheckOneAllChange = (e,id)=>{
+    onCheckOneAllChange = (e,id,listIndex)=>{
         let isChecked = e.target.checked
-        console.log(e.target.checked,id);
+        console.log(e.target.checked,id,index);
         
         const {checkList,powerList} = this.state
+        console.log(checkList,powerList,'list');
 
-        for(let i=0; i<checkList.length; i++){
+        for(let i=0; i<checkList.length; i++){//查出每个表格对应的全部选项值
             if(checkList[i].power_id === id && isChecked){
                 let poList = powerList.filter(item => {
-                    return item.power_id = id
+                    return item.power_id === id
                 })
-                poList = poList[0].children.map(item =>{
-                    return item.power_id
+                poList = poList[0].children.map(pItem =>{
+                    return pItem.power_id
                 })
-                console.log(poList);
                 checkList[i].children = poList
                 checkList[i].indeterminate = false
                 checkList[i].checked = true
             }
             if(checkList[i].power_id === id && !isChecked){
                 checkList[i].children = []
-                checkList[i].indeterminate = true
+                checkList[i].indeterminate = false
                 checkList[i].checked = false
             }
         }
         this.setState({
-            checkList
+            checkList,
         })
-        console.log(this.state.checkList);
+        index = listIndex
         
-        // let 
     }
     // 选择一个
     onChange = (checkedValues,id) =>{
@@ -207,8 +233,11 @@ export default class Quanxian extends Component{
                 if(length === checkedValues.length) {
                     checkList[i].indeterminate = false
                     checkList[i].checked = true
-                }else {
+                }else if(checkedValues.length === 0){
                     checkList[i].indeterminate = false
+                    checkList[i].checked = false
+                }else {
+                    checkList[i].indeterminate = true
                     checkList[i].checked = false
                 }
             }
@@ -217,10 +246,65 @@ export default class Quanxian extends Component{
             checkList
         })
         console.log(this.state.checkList,'checkList');
+    }
+
+    //权限修改
+    editPower = async() =>{
+        console.log('???');
+        let params = {}
+        params.powerArr = []
+        let {checkList} = this.state
+        checkList.map(item => {
+            if(item.children.length !== 0 ) {
+                params.powerArr.push(item.parent_id,item.power_id)
+                item.children.map( cItem =>{
+                    params.powerArr.push(cItem)
+                })
+            }
+        })
+        params.position_id = this.state.rowInfo.position_id
+        console.log(params,'1params');
+        params.powerArr = this.eddRepeatNum(params.powerArr)
+        console.log(params,'2params');
         
+        // const {data:res} = await axios.post('/',params)
+        // if(res.code !== 200) return message.error('保存失败')
+        // message.success('保存成功!')
+        // this.props.history.push({
+        //     pathname:'/home/system/Quanxian'
+        // })
+
+    }
+
+    //数组查重函数
+    eddRepeatNum = (arr) =>{
+        let newArr = arr.filter((item,index) =>{
+            return arr.lastIndexOf(item) === index
+        })
+        return newArr
     }
 
     render () {
+        const ppList = this.state.powerList
+        console.log(this.state.powerList,'渲染时的powerList')
+        const listDOM = ppList.map((item) => {
+            if(!this.state.index) {
+                console.log(this.state.checkedList,'renderList');
+                
+                for(let i=0; i<this.state.checkList.length; i++){
+                    if(this.state.checkList[i].power_id === item.power_id){
+                       index=i
+                    }
+                }
+            }
+            console.log(index,'index');
+            
+            
+            {/* 选出后渲染DOM */}
+            return <PowerTable checkList={this.state.checkList} index={index} item={item} 
+            key={index} onCheckOneAllChange={this.onCheckOneAllChange} onChange={this.onChange} />
+        })
+
         return (
             <div className="stockOut">
                 <header>
@@ -237,50 +321,22 @@ export default class Quanxian extends Component{
                     {/* 多选框 */}
                     <div className='power-checkbox-box'>
                         {/* 复用结构 */}
-                        {this.state.powerList.map((item) => {
-                            let index
-                            for(let i=0; i<this.state.checkList.length; i++){
-                                if(this.state.checkList[i].power_id === item.power_id){
-                                    index=i
-                                }
-                            }
-                            
-                            {/* 选出后渲染DOM */}
-                            return <PowerTable {...this.state} index={index} item={item} key={index} onCheckOneAllChange={this.onCheckOneAllChange}
-                            onChange={this.onChange} />
-
-                            {/* <div className='power-check-box' key={item.power_id}>
-                                    <div className="power-check-title">
-                                        <Checkbox
-                                            indeterminate={this.state.checkList[index].indeterminate}
-                                            onChange={(e)=>this.onCheckOneAllChange(e,item.power_id)}
-                                            checked={this.state.checkList[index].checked}
-                                        >
-                                            {item.power_name}
-                                        </Checkbox>
-                                    </div>
-                                    <div className="power-check-body">
-                                        <Checkbox.Group style={{ width: '100%' }} value={this.state.checkList[index].children} id={index} onChange={(value)=>{this.onChange(value,item.power_id)}}>
-                                            <Row className="power-check-body">
-                                            {item.children.map(childItem =>{
-                                                return  <Col span={8} className="power-check-item-box" key={childItem.power_id}>
-                                                            <Checkbox value={childItem.power_id}>{childItem.power_name}</Checkbox>
-                                                        </Col>
-                                            })}
-                                            </Row>
-                                        </Checkbox.Group>
-                                    </div>
-                            </div> */}
-                        })}
+                        {listDOM}
                     </div>
-                    <div className="power-check-title">
+                    <div className="power-check-bottom">
                         <Checkbox
                             indeterminate={this.state.indeterminate}
                             onChange={this.onCheckAllChange}
-                            checked={this.state.checked}
+                            checked={this.state.checkAll}
+                            border
                         >
                             选择全部
                         </Checkbox>
+                    </div>
+                    <div className="power-bottom-button-box">
+                        <Button type="primary" onClick={this.editPower} size="large">
+                            保存
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -288,4 +344,5 @@ export default class Quanxian extends Component{
     }
 }
 
-// export default Quanxian
+
+export default connect(state => ({checkedList:getSecondChildrenList(state)}))(Quanxian);

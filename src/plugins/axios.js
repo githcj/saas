@@ -1,10 +1,11 @@
 "use strict";
 import axios from "axios";
-
+import {Modal} from 'antd'
 
 let config = {
-    // baseURL: "http://119.23.228.238:3031/mock/47",
-    baseURL:'http://172.16.6.30:8080',
+    baseURL: "http://119.23.228.238:3031/mock/47",
+    // baseURL:'http://172.16.6.30:8080',//黄文璟
+    // baseURL:'http://172.16.6.27:8080',//侯山川
     timeout: 60*1000, // Timeout
 };
 
@@ -52,9 +53,18 @@ _axios.interceptors.response.use(
             window.localStorage.removeItem('token');
             console.log(error.response.data.error.message,'token过期');
             window.history.go('http://localhost:3000/login')
-        }else if(error.response.status === 500) {
+        }else if(error.response.status === 403){//表示用户没有权限进行该操作
+            Modal.warning({
+                title: '警告',
+                content: '你没有权限进行该操作',
+            });
+        }
+        else if(error.response.status === 500) {
             // 服务器错误
-            alert('服务器错误,请稍后再试')
+            Modal.error({
+                title: '错误',
+                content: '服务器错误：'+ error.response.data
+            })
             return Promise.reject('服务器出错：',error.response.data);
         }
         // Do something with response error
