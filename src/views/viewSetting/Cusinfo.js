@@ -18,7 +18,7 @@ export default class Cusinfo extends Component {
             loading: false,
             orderDate: '',
             orderList: [],
-            sousuo:'123',
+            sousuo:'',
             phone:'',
             dates:'',
             eachPage:10,
@@ -28,20 +28,70 @@ export default class Cusinfo extends Component {
             kehutype:[],
             fuzeperson:[],
             value:0,
-            usertype:0
+            usertype:0,
+            date:''
         };
     }
 
-    modelkehumingc =() =>{
+    modelkehumingc =(e) =>{
+          const bianji=this.state.bianji
+          bianji.customer_name=e.target.value
 
+          this.setState({
+              bianji:bianji
+          })
     }
 
+    modellianxi =(e)=>{
+        const bianji=this.state.bianji
+        bianji.customer_contacts=e.target.value
+        this.setState({
+            bianji:bianji
+        })
+    }
+    modelphone =(e)=>{
+        const bianji=this.state.bianji
+        bianji.customer_phone=e.target.value
+        this.setState({
+            bianji:bianji
+        }) 
+    }
+
+    modeladdres =(e)=>{
+        const bianji=this.state.bianji
+        bianji.customer_address=e.target.value
+        this.setState({
+            bianji:bianji
+        }) 
+    }
+    modelchuangjian =(e)=>{
+        const bianji=this.state.bianji
+        bianji.customer_creater=e.target.value
+        this.setState({
+            bianji:bianji
+        })   
+    }
+
+    modeldata =(e)=>{
+        console.log(e.target.value,'value');
+        
+        const bianji=this.state.bianji
+        bianji.customer_create_time=e.target.value
+        this.setState({
+            bianji:bianji
+        }) 
+        console.log(this.state.bianji,'bianji');
+        
+    }
+
+
     showModal = async(row) => {
+    
 	  await	this.setState({
               visible: true,
-              bianji:row
+              bianji:row,
+           
         });
-        console.log(this.state.bianji,'123123123');
 	}
 	handleOk = e => {
         
@@ -56,10 +106,12 @@ export default class Cusinfo extends Component {
                 customer_type_id:this.state.usertype,
                 customer_contacts:this.state.bianji.customer_contacts,
                 customer_phone:this.state.bianji.customer_phone,
-                emp_id:this.state.value
+                emp_id:this.state.value,
+                customer_create_time:this.state.bianji.customer_create_time
             }
         })
         .then(res => {
+            console.log(this,'this')
             this.componentDidMount() 
         })
         .catch(err => {
@@ -76,7 +128,9 @@ export default class Cusinfo extends Component {
 		this.setState({
 		  	visible: false,
 		});
-	}
+    }
+    
+    
 
    async  componentDidMount() {
          await  axios({
@@ -130,7 +184,7 @@ export default class Cusinfo extends Component {
 
     setphone = (e) => {
         this.setState({
-            phone:e.targrt.value,
+            phone:e.target.value,
         })
     }
 
@@ -142,7 +196,7 @@ export default class Cusinfo extends Component {
 
   setdates = (e) => {
         this.setState({
-            dates:e.targrt.value,
+            dates:e.target.value,
         })
       }
         Cusinfoquery =()=>{
@@ -215,6 +269,7 @@ export default class Cusinfo extends Component {
             })
                 .then(res => {
                     console.log(res.message ,'成功');
+                    console.log(this,'this')
                     this.componentDidMount() 
                 })
                 .catch(err => {
@@ -256,20 +311,25 @@ export default class Cusinfo extends Component {
             },
             {
               title: '创建时间',
+              align:'center',
               dataIndex: 'customer_create_time',
+              render:(text,row,index)=> (
+                  <span>
+                      {new Date(text).toLocaleString()}
+                  </span>
+              )
             },
             {
                 title: 'Axios',
+                align:'center',
                 render: (text,row,index) => (
-                  <span>
+                  <span className="order-axios">
                        <a onClick={()=> this.showModal(row)}>编辑</a>
                        <a onClick={()=> this.delkehu(row)}>删除</a>
                   </span>
                 )
             },
-        
         ];
-
         const kehu=kehutype.map((item,index) =>(
              <Option value={item.customer_type_name}>
                  {item.customer_type_name}
@@ -319,7 +379,7 @@ export default class Cusinfo extends Component {
                     </div>
                     <div className="quire-title ">
                         <div>数据列表</div>
-                        <NavLink  to={msg + '/addCus'} className="chaxun"  >添加</NavLink>
+                        <NavLink  to={msg + '/addCus'} className="chaxun">添加</NavLink>
                     </div>
                     <Table 
                     // rowSelection={rowSelection} 
@@ -364,19 +424,19 @@ export default class Cusinfo extends Component {
 						</div>
 						<div className='modal-item'>
 							<p>联系人：</p>
-							<input value={bianji.customer_contacts}></input>
+							<input value={bianji.customer_contacts} onChange={this.modellianxi}></input>
 						</div>
                         <div className='modal-item'>
 							<p>手机号：</p>
-                            <input value={bianji.customer_phone}></input>
+                            <input value={bianji.customer_phone} onChange={this.modelphone}></input>
 						</div>
                         <div className='modal-item'>
 							<p>地址：</p>
-                            <input value={bianji.customer_address}></input>
+                            <input value={bianji.customer_address} onChange={this.modeladdres}></input>
 						</div>
                         <div className='modal-item'>
 							<p>创建人：</p>
-                            <input value={bianji.customer_creater}  ></input>
+                            <input value={bianji.customer_creater}  onChange={this.modelchuangjian}></input>
 						</div>
                         <div className='modal-item'>
 							<p>负责人：</p>
@@ -386,7 +446,7 @@ export default class Cusinfo extends Component {
 						</div>
                         <div className='modal-item'>
 							<p>创建日期：</p> 
-                            <input value={bianji.customer_create_time}></input>
+                            <input  value={new Date(bianji.customer_create_time).toLocaleString()} disabled onChange={this.modeldata}></input>
 						</div>
 					</Modal>
             </div>

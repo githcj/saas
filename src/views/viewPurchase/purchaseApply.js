@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../../assets/css/wang/apply.css'
-import { Select, Table } from 'antd'
+import { Select, Table, message } from 'antd'
 import axios from '../../plugins/axios'
 const { Option } = Select;
 
@@ -76,9 +76,14 @@ export default class purchaseApply extends Component {
         })
         .then(res=>{
             console.log(res.data.code)
+            this.props.msg.push({
+                pathname:'/home/Caigou'
+            })
+            message.success('采购单添加成功')
         })
         .catch(err=>{
             console.log(err)
+            message.success('采购单添加失败')
         })
     }
     addbigcount = (i, n) => {

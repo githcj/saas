@@ -12,7 +12,9 @@ export default class StockIn extends Component{
             indata:[],
             pagesize:10,
             visible:false,
-            approveIdea:''
+            approveIdea:'',
+            index:'',
+            supplierList:''
         }
     }
     pagesizeChange = (value) => {
@@ -34,7 +36,8 @@ export default class StockIn extends Component{
     componentDidMount(){
         axios({
             method:'POST',
-            url:'/enterwareManagement'
+            // url:'/enterwareManagement'
+            url:'http://172.16.6.27:8080/entry/queryEntryList'
         })
         .then(res => {
             console.log(res.data)
@@ -45,6 +48,20 @@ export default class StockIn extends Component{
             })
             this.setState({
                 indata:data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+
+        axios({
+            method:"POST",
+            url:'http://172.16.6.27:8080/combobox/supplier'
+        })
+        .then(res => {
+            console.log(res.data.data)
+            this.setState({
+                supplierList:res.data.data
             })
         })
         .catch(err => {
@@ -80,24 +97,43 @@ export default class StockIn extends Component{
         })
     }
     //审批
-    agree = () => {
+    agree = (id) => {
         axios({
             method:'POST',
-            url:'/checkEnterWare',
+            url:'http://172.16.6.27:8080/entry/eckEnterWare',
             data:{
                 approval_opinion:this.state.approveIdea,
-                isOk:true
+                isOk:true,
+                godown_id:id
             }
         })
         .then(res => {
+            console.log(this.state.indata)
             console.log(res.data.code)
-            const newData = [...this.state.outData]
+            const newData = [...this.state.indata]
             const i = this.state.index
-            newData[i].out_status = '已通过'
+            newData[i].out_status = 1
             this.setState({
-                outData:newData,
+                indata:newData,
                 visible:false
             })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    //删除
+    del = (id) => {
+        console.log(id)
+        axios({
+            method:"POST",
+            url:'http://172.16.6.27:8080/entry/delEnterWare',
+            data:{
+                godown_id:id
+            }
+        })
+        .then(res => {
+            console.log(res)
         })
         .catch(err => {
             console.log(err)
@@ -140,12 +176,12 @@ export default class StockIn extends Component{
             {
                 title:'状态',
                 dataIndex:'out_status',
-                render:(text) => {
-                    if(text === '已通过'){
+                render:(text,record) => {
+                    if(record.out_status === 1){
                         return <span
                         style={{
                             color:'rgb(51, 153, 255)'
-                        }}>{text}</span>
+                        }}>已通过</span>
                     }
                     return <span>{text}</span>
                 }
@@ -154,11 +190,11 @@ export default class StockIn extends Component{
                 title:'审批操作',
                 dataIndex:'approveState', 
                 render: (text, record, index)=> {
-                    if(record.out_status === '待审批') {
+                    if(record.out_status === 0) {
                         return <span 
                         style={{color:'rgb(26, 188, 156)',cursor:'pointer'}}
-                        onClick={() => this.approve(record.key)}>审批</span>
-                    } else if(record.out_status === '已入库') {
+                        onClick={() => this.approve(record.godown_id)}>审批</span>
+                    } else if(record.out_status === 1) {
                         return null
                     }
                 }
@@ -166,26 +202,26 @@ export default class StockIn extends Component{
                 title:'操作',
                 dataIndex:'handle',
                 render:(text,record,index) => {
-                    if(record.out_status === '待审批'){
+                    if(record.out_status === 0){
                         return (
                             <p className="tableHandle">
                                 {/* <span>编辑</span> */}
                                 <span onClick={() => this.todetail(record)}>预览</span>
-                                <span>删除</span>
+                                <span onClick={() => this.del(record.godown_id)}>删除</span>
                             </p>
                         )
-                    }else if(record.out_status === '已通过'){
+                    }else if(record.out_status === 1){
                         return (
                             <p className="tableHandle">
                                 <span onClick={() => this.todetail(record)}>预览</span>
-                                <span>删除</span>
+                                <span onClick={() => this.del(record.godown_id)}>删除</span>
                             </p>
                         )
                     }
                 }
             }
         ]
-        const { indata,pagesize,visible,approveIdea } = this.state
+        const { indata,pagesize,visible,approveIdea,supplierList } = this.state
         return (
             <div className="stockIn">
                 <header>
@@ -217,8 +253,13 @@ export default class StockIn extends Component{
                             <Select 
                             defaultValue="供货厂商"
                             style={{ width: 160 }}>
-                                <Option value="jack">Jack</Option>
-                                <Option value="lucy">Lucy</Option>
+                                {/* {supplierList.map((item,index) => {
+                                    return(
+                                        <div>
+                                            <option value={item.supplier_name}></option>
+                                        </div>
+                                    )
+                                })} */}
                             </Select>
                         </div>
                         <div>

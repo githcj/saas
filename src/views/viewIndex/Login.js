@@ -38,7 +38,7 @@ class Login extends React.Component {
       }
     })
       .then(res => {
-        console.log(res.data)
+        console.log(res)
         this.setState({
           token: res.data.token,
           username:res.data.data.emp_name

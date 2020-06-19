@@ -1,7 +1,7 @@
 import React from "react"
 import { Route, NavLink, Redirect } from "react-router-dom"
 import PurchaseAdmin from '../viewPurchase/purchaseAdmin'
-import purchaseApply from '../viewPurchase/purchaseApply'
+import PurchaseApply from '../viewPurchase/purchaseApply'
 import purchaseDetail from '../viewPurchase/purchaseDetail'
 import '../../assets/css/wang/purchase.css'
 import { Menu, Row, Col } from 'antd'
@@ -31,7 +31,8 @@ const Caigou = (props) => {
 						<Route path={match.url} exact>
 							<PurchaseAdmin msg={history} />
 						</Route>
-						<Route path={match.url + "/purchaseApply"} component={purchaseApply}>
+						<Route path={match.url + "/purchaseApply"}>
+							<PurchaseApply msg={history}/>
 						</Route>
 						<Route path={match.url + "/purchaseDetail"} component={purchaseDetail}>
 						</Route>
