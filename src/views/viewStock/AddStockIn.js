@@ -13,13 +13,17 @@ export default class AddStockIn extends Component{
             allSum:0
         }
     }
-    //入库管理
     componentDidMount(){
+        //存货
         axios({
             method:'POST',
-            url:'/inventory'
+            url:'/entry/good_select',
+            data:{
+                code:200
+            }
         })
         .then(res => {
+            console.log(res)
             const data = res.data.data
             data.map((item,index) => {
                 item.key = index
@@ -94,14 +98,14 @@ export default class AddStockIn extends Component{
         const detailData = [...this.state.detailData]
         if(detailData.length === 0){
             detailData.push({
-                goodsName:data.goodsName,
-                big:data.bigPrice,
-                bigUnit:data.bigUnit,
+                goodsName:data.goods_name,
+                big:data.gu_cost_price_big,
+                bigUnit:data.unit_name_big,
                 bigNum:1,
-                small:data.smallPrice,
-                smallUnit:data.smallUnit,
+                small:data.gu_cost_price_small,
+                smallUnit:data.unit_name_small,
                 smallNum:1,
-                sum:data.bigPrice + data.smallPrice
+                sum:data.gu_cost_price_big + data.gu_cost_price_small
             })
             
         }else{
@@ -111,19 +115,19 @@ export default class AddStockIn extends Component{
                     is = !is
                     detailData[i].bigNum += 1
                     detailData[i].smallNum += 1
-                    detailData[i].sum = data.bigPrice*detailData[i].bigNum + data.smallPrice*detailData[i].smallNum
+                    detailData[i].sum = data.gu_cost_price_big*detailData[i].bigNum + data.gu_cost_price_small*detailData[i].smallNum
                 }
             }
             if(is){
                 detailData.push({
-                    goodsName:data.goodsName,
-                    big:data.bigPrice,
-                    bigUnit:data.bigUnit,
+                    goodsName:data.goods_name,
+                    big:data.gu_cost_price_big,
+                    bigUnit:data.unit_name_big,
                     bigNum:1,
-                    small:data.smallPrice,
-                    smallUnit:data.smallUnit,
+                    small:data.gu_cost_price_small,
+                    smallUnit:data.unit_name_small,
                     smallNum:1,
-                    sum:data.bigPrice + data.smallPrice
+                    sum:data.gu_cost_price_big + data.gu_cost_price_small
                 })
             }
         }
@@ -229,27 +233,27 @@ export default class AddStockIn extends Component{
         const columns = [
             {
                 title: '商品名称',
-                dataIndex: 'goodsName',
+                dataIndex: 'goods_name',
             },
             {
                 title: '大单位',
-                dataIndex: 'bigUnit',
+                dataIndex: 'unit_name_big',
             },
             {
                 title: '大单位单价',
-                dataIndex: 'bigPrice',
+                dataIndex: 'gu_cost_price_big',
             },
             {
                 title:'小单位',
-                dataIndex:'smallUnit'
+                dataIndex:'unit_name_small'
             },
             {
                 title:'小单位价格',
-                dataIndex:'smallPrice'
+                dataIndex:'gu_cost_price_small'
             },
             {
                 title:'现有库存',
-                dataIndex:'storage'
+                dataIndex:'goods_sum'
             },{
                 title:'操作',
                 dataIndex:'addHandle',
@@ -312,7 +316,6 @@ export default class AddStockIn extends Component{
                             <div>
                                 选择分类：
                                 <Select style={{ width: 160 }}>
-                                    <Option value="1">全部</Option>
                                     <Option value="2">预付款</Option>
                                     <Option value="3">货到付款</Option>
                                 </Select>
@@ -395,10 +398,6 @@ export default class AddStockIn extends Component{
                             </div>
                             <div>
                                 实付金额：
-                                <input type="text"></input>
-                            </div>
-                            <div>
-                                优惠金额：
                                 <input type="text"></input>
                             </div>
                         </div>

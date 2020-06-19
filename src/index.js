@@ -8,7 +8,7 @@ import App from './views/App';
 import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
 import {
-	BrowserRouter as Router
+	HashRouter as Router
 } from 'react-router-dom'
 import {Provider} from 'react-redux'
 import store from './store'

@@ -193,6 +193,16 @@ export default class AddStockOut extends Component{
     }
     //添加出库单
     submit = () => {
+        let newData = [...this.state.detailData]
+        let data = []
+        for(let i=0;i<newData.length;i++){
+            data.push({
+                goods_name:newData[i].goodsName,
+                whole_num:newData[i].bigNum,
+                single_num:newData[i].smallNum,
+                total_price:newData[i].sum
+            })
+        }
         axios({
             method:'POST',
             url:'/addOutbound',
@@ -200,11 +210,11 @@ export default class AddStockOut extends Component{
                 customer_name:this.state.custom,
                 collect_method:this.state.collect,
                 salesman:this.state.salesman,
-                deliveryman:this.state.deliveryman,
+                driver_name:this.state.deliveryman,
                 ware_name:this.state.ware,
-                data:this.state.detailData,
-                pay_type:this.state.payType,
-                sales_payable:this.state.allSum
+                pay_type_name:this.state.payType,
+                out_payable:this.state.allSum,
+                data:data
             }
         })
         .then(res => {

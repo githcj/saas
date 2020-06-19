@@ -132,7 +132,7 @@ export default class StockOut extends Component {
         })
     }
     getDate = (e) => {
-        console.log(e)
+        console.log(e._d)
     }
     render() {
         const columns = [
@@ -240,10 +240,7 @@ export default class StockOut extends Component {
                     <div className="search">
                         <div>
                             出库日期：
-                            <RangePicker
-                            format='YYYY-MM-DD HH:mm'
-                            onChange={this.getDate}
-                            />
+                            <DatePicker style={{ width: 160 }} onChange={this.getDate}/>
                         </div>
                         <div>
                             出库仓库：
