@@ -30,6 +30,16 @@ export default class Home extends Component {
         pathname:  "/login",
       });
   };
+
+  //获取点击地址
+  getPathName = () => {
+      sessionStorage.setItem('activePath',this.props.location.pathname)
+      console.log(this.props.location.pathname,'homePathName')
+  }
+
+  clearActiveKey = () => {
+      sessionStorage.removeItem('activeKey')
+  }
   
   render() {
     const { match,history } = this.props;
@@ -56,7 +66,7 @@ export default class Home extends Component {
       <div className="home">
         <Row>
           <Col span={24}>
-            <div className="home-link">
+            <div className="home-link" onClick={this.clearActiveKey}>
               <span className="">saas平台</span>
               <NavLink to={match.url + "/system"}>系统</NavLink>
               <NavLink to={match.url + "/Caigou"}>采购</NavLink>
@@ -88,8 +98,8 @@ export default class Home extends Component {
           </Col>
         </Row>
         <Row>
-          <div>
-            <Redirect from={match.url} exact to={match.url + "/system"} />
+          <div onClick={this.getPathName}>
+            <Redirect from={match.url} exact to={ match.url + "/system"} />
             <Route path={match.url + "/system"} component={System}></Route>
             <Route path={match.url + "/Caigou"} component={Caigou} />
             <Route path={match.url + "/Xiaoshou"} component={Xiaoshou} />

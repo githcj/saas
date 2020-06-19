@@ -14,82 +14,82 @@ class Quanxian extends Component{
         super(props)
         this.state = {
             rowInfo:{},
-            powerList:[{
-                power_id:1,
-                parent_id:0,
-                power_name:'商品管理',
-                power_path:'/home/system',
-                children:[
-                    {power_id:2,
-                    power_name:'商品管理添加',
-                    power_path:'/home/system',},
-                    {power_id:3,
-                    power_name:'商品管理删除',
-                    power_path:'/home/system',},
-                    {power_id:4,
-                    power_name:'商品管理编辑',
-                    power_path:'/home/system',},
-                    {power_id:5,
-                    power_name:'商品管理查询',
-                    power_path:'/home/system',},
-                    {power_id:6,
-                    power_name:'商品管理查看',
-                    power_path:'/home/system',},
-                    {power_id:7,
-                    power_name:'商品管理的撒看见',
-                    power_path:'/home/system',},
-                ]
-            },{
-                power_id:8,
-                parent_id:0,
-                power_name:'职位管理',
-                power_path:'/home/system',
-                children:[
-                    {power_id:9,
-                    power_name:'职位管理添加',
-                    power_path:'/home/system',},
-                    {power_id:10,
-                    power_name:'职位管理删除',
-                    power_path:'/home/system',},
-                    {power_id:11,
-                    power_name:'职位管理编辑',
-                    power_path:'/home/system',},
-                    {power_id:12,
-                    power_name:'职位管理查询',
-                    power_path:'/home/system',},
-                    {power_id:13,
-                    power_name:'职位管理查看',
-                    power_path:'/home/system',},
-                    {power_id:14,
-                    power_name:'职位管理的撒看见',
-                    power_path:'/home/system',},
-                ]
-            },{
-                power_id:14,
-                parent_id:13,
-                power_name:'权限管理',
-                power_path:'/home/system',
-                children:[
-                    {power_id:16,
-                    power_name:'权限管理添加',
-                    power_path:'/home/system',},
-                    {power_id:17,
-                    power_name:'权限管理删除',
-                    power_path:'/home/system',},
-                    {power_id:18,
-                    power_name:'权限管理编辑',
-                    power_path:'/home/system',},
-                    {power_id:19,
-                    power_name:'权限管理查询',
-                    power_path:'/home/system',},
-                    {power_id:20,
-                    power_name:'权限管理查看',
-                    power_path:'/home/system',},
-                    {power_id:21,
-                    power_name:'权限管理的撒看见',
-                    power_path:'/home/system',},
-                ] 
-            }],
+            // powerList:[{
+            //     power_id:1,
+            //     parent_id:0,
+            //     power_name:'商品管理',
+            //     power_path:'/home/system',
+            //     children:[
+            //         {power_id:2,
+            //         power_name:'商品管理添加',
+            //         power_path:'/home/system',},
+            //         {power_id:3,
+            //         power_name:'商品管理删除',
+            //         power_path:'/home/system',},
+            //         {power_id:4,
+            //         power_name:'商品管理编辑',
+            //         power_path:'/home/system',},
+            //         {power_id:5,
+            //         power_name:'商品管理查询',
+            //         power_path:'/home/system',},
+            //         {power_id:6,
+            //         power_name:'商品管理查看',
+            //         power_path:'/home/system',},
+            //         {power_id:7,
+            //         power_name:'商品管理的撒看见',
+            //         power_path:'/home/system',},
+            //     ]
+            // },{
+            //     power_id:8,
+            //     parent_id:0,
+            //     power_name:'职位管理',
+            //     power_path:'/home/system',
+            //     children:[
+            //         {power_id:9,
+            //         power_name:'职位管理添加',
+            //         power_path:'/home/system',},
+            //         {power_id:10,
+            //         power_name:'职位管理删除',
+            //         power_path:'/home/system',},
+            //         {power_id:11,
+            //         power_name:'职位管理编辑',
+            //         power_path:'/home/system',},
+            //         {power_id:12,
+            //         power_name:'职位管理查询',
+            //         power_path:'/home/system',},
+            //         {power_id:13,
+            //         power_name:'职位管理查看',
+            //         power_path:'/home/system',},
+            //         {power_id:14,
+            //         power_name:'职位管理的撒看见',
+            //         power_path:'/home/system',},
+            //     ]
+            // },{
+            //     power_id:14,
+            //     parent_id:13,
+            //     power_name:'权限管理',
+            //     power_path:'/home/system',
+            //     children:[
+            //         {power_id:16,
+            //         power_name:'权限管理添加',
+            //         power_path:'/home/system',},
+            //         {power_id:17,
+            //         power_name:'权限管理删除',
+            //         power_path:'/home/system',},
+            //         {power_id:18,
+            //         power_name:'权限管理编辑',
+            //         power_path:'/home/system',},
+            //         {power_id:19,
+            //         power_name:'权限管理查询',
+            //         power_path:'/home/system',},
+            //         {power_id:20,
+            //         power_name:'权限管理查看',
+            //         power_path:'/home/system',},
+            //         {power_id:21,
+            //         power_name:'权限管理的撒看见',
+            //         power_path:'/home/system',},
+            //     ] 
+            // }],
             
             indeterminate:true,
             checkAll:false,
@@ -98,11 +98,12 @@ class Quanxian extends Component{
     }
     
     async componentWillMount () {
-        // const {data:res} = await axios.post('/position/getpermission')
-        // res.data = getSecondChildrenList(res.data)
-        // this.setState({
-        //     powerList:res.data
-        // })
+        const {data:res} = await axios.post('/position/getpermission')
+        res.data = getSecondChildrenList(res.data)
+        console.log(res.data,'powerList')
+        this.setState({
+            powerList:res.data
+        })
         console.log(this.props.checkedList,'props')
         this.proData(this.props.checkedList)
     }
@@ -267,12 +268,12 @@ class Quanxian extends Component{
         params.powerArr = this.eddRepeatNum(params.powerArr)
         console.log(params,'2params');
         
-        // const {data:res} = await axios.post('/',params)
-        // if(res.code !== 200) return message.error('保存失败')
-        // message.success('保存成功!')
-        // this.props.history.push({
-        //     pathname:'/home/system/Quanxian'
-        // })
+        const {data:res} = await axios.post('/',params)
+        if(res.code !== 200) return message.error('保存失败')
+        message.success('保存成功!')
+        this.props.history.push({
+            pathname:'/home/system/Quanxian'
+        })
 
     }
 

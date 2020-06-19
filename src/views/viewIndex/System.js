@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Route, NavLink } from "react-router-dom"
 import Gongsi from "../viewSetting/Gongsi"
 import Department from "../viewSetting/Department"
@@ -28,9 +28,15 @@ import {getLimitList} from '../../store/user/selector'
 import Item from "antd/lib/list/Item"
 
 const System = (props) => {
+    
+    const { match, history } = props;
+    
     const [activeKey,setactiveKey] = useState(['1'])
+    
+    useEffect(()=>{
+        setactiveKey([sessionStorage.getItem('activeKey')])
+    },[])
 
-	const { match, history } = props;
     console.log("system:", match.url);
     // console.log(props,'SystemProps')
     const {checkedList} = props.state.userReducer//获取列表
@@ -52,7 +58,8 @@ const System = (props) => {
 
     //当前点击
     const changeActiveKey = (e) => {
-        console.log(e.key)
+        sessionStorage.setItem('activeKey',e.key)
+        console.log(e,props.location.pathname,'点击的节点')
         setactiveKey([e.key])
     }
 

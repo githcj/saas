@@ -58,13 +58,14 @@ export default class Department extends Component{
     
     // 组件加载完毕请求数据
     async componentDidMount() {
-        // const {data} = await axios.post('/position/showposition')
-        // const {data:res} = data
-        // res.map (item =>{
-        //     item.position_addtime = moment(item.position_addtime).format('YYYY-MM-DD HH:mm:ss')
-        //     return item
-        // })
-        let res = [{position_id:1,position_name:'总经理',position_describe:'无',position_addtime:'2020-5-30 12:03:02',position_status:1}]
+        const {data} = await axios.post('/position/showposition')
+        const {data:res} = data
+        console.log(res,'职位返回数据')
+        res.map (item =>{
+            item.position_addtime = moment(item.position_addtime).format('YYYY-MM-DD HH:mm:ss')
+            return item
+        })
+        // let res = [{position_id:1,position_name:'总经理',position_describe:'无',position_addtime:'2020-5-30 12:03:02',position_status:1}]
         this.setState({
             positionList:res
         })
@@ -120,7 +121,7 @@ export default class Department extends Component{
         })
         // console.log(row.position_id,status);
         
-        const {data:res} = await axios.post('/position/updateposition',{position_id:row.position_id,position_status:status})
+        const {data:res} = await axios.post('/position/isActivePosition',{position_id:row.position_id,position_status:status})
         if(res.code !== 200) return message.error('修改状态失败!')
         message.success('修改状态成功')
         this.componentDidMount()

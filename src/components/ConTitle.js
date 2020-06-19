@@ -9,7 +9,9 @@ const ConTitle = (props)=> {
         
         switch(clickName){
             case undefined:
-                window.history.go(0);
+                // console.log(props,'刷新')
+                window.history.go(sessionStorage.getItem('activePath'))
+                // window.history.go(0);
             break;
             case '返回':
                 window.history.go(-1);

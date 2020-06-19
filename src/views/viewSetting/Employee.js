@@ -84,7 +84,7 @@ export default class Employee extends Component{
                 searchInfo
             })
         }
-        const {data} = await axios.post('/employee/queEmpbyCondition',this.state.searchInfo)
+        const {data} = await axios.post('/employee/queEmpByEmpid',this.state.searchInfo)
         console.log(data);
         
         const {data:res} = data
