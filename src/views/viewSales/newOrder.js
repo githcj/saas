@@ -47,13 +47,13 @@ export default class newOrder extends Component {
         })
     }
     sousuo =()=>{
-        console.log(1111111111);
+        const tokens=localStorage.getItem('token')
         
         axios({
             method: 'POST',
             url: 'http://172.16.6.29:8080/goods/queryGoodsList',
             data:{
-                token:'123',
+                token:tokens,
                 brand_name:this.state.soupingpai,
             }
         })
@@ -118,11 +118,12 @@ export default class newOrder extends Component {
   async  componentDidMount() {
         const adddata = this.state.adddata
         const good=this.state.goods 
+        const tokens=localStorage.getItem('token')
        await axios({
             method: 'POST',
             url: 'http://172.16.6.29:8080/goods/queryGoodsList',
             data:{
-                token:'123'
+                token:tokens
             }
         })
             .then(res => {
@@ -588,6 +589,7 @@ render() {
                      {item.customer_type_name}
                </Option>
     })
+    
     const xiaoshou =xiaoshoutype.map((item,index)=>{
         return <Option value={item.brand_id}>
                      {item.brand_name}

@@ -77,13 +77,13 @@ export default class Custype extends Component {
     
 	handlebianjiOk = e => {
         console.log(this.state.fuji,'zzzzzzzzzz');
-        
+        const tokens= localStorage.getItem('token')
         console.log(e);
         axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/customer_type/update',
             data:{
-                token:'123',
+                token:tokens,
                  customer_type_id:this.state.bianji.customer_type_id,
                  customer_type_father_id:this.state.fuji,
                  customer_type_name:this.state.bianji.customer_type_name,
@@ -112,13 +112,13 @@ export default class Custype extends Component {
     handlexinzenOk = e => {
         console.log(this.state.addfuji,'0000000');
         console.log(this.state.addusername,'0000000');
-        
+        const tokens= localStorage.getItem('token')
         console.log(e);
         axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/customer_type/add',
             data:{
-                token:'123',
+                token:tokens,
                 customer_type_father_id:this.state.addfuji,
                 customer_type_name:this.state.addusername
             }
@@ -154,11 +154,12 @@ export default class Custype extends Component {
 	}
 
    async componentDidMount() {
+    const tokens= localStorage.getItem('token')
       await  axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/customer_type/querysubclass',
             data:{
-                token:'123'
+                token:tokens
             }
         })
             .then(res => {
@@ -224,18 +225,16 @@ export default class Custype extends Component {
 }
 
      dellist =(row)=>{
-         console.log(row,'delrow');
-         
+
          const list = this.state.orderList.filter((v,i) => {
                return v.customer_type_id == row.customer_type_id
          })
 
          const id = list[0].customer_type_id
 
-         console.log(id,'iddddd');
-         
+         const tokens= localStorage.getItem('token')
          axios({
-            method: 'POST',
+            method: tokens,
             url: 'http://172.16.6.27:8080/customer_type/delete',
             data:{
                 token:'123',
