@@ -7,6 +7,8 @@ import axios from '../../plugins/axios'
 import { EnvironmentOutlined } from '@ant-design/icons';
 import '../../assets/css/viewSetting/Gongsi.css'
 
+const {Option} = Select
+
 const AddCus = (props) => {
     const [kehu,setKehu] = useState([])
     const [fuze,setfuze] = useState([])
@@ -22,12 +24,6 @@ const AddCus = (props) => {
 
       
     const onFinish =  values => {
-        
-        // const {data}  = await axios.post('/customer/add',values)
-        // const {data:res} = data
-        // if(res.code.msg !== 200) return message.error(res.message)
-        // message.success(res.message)
-
         console.log('Success:', values.customer_name);
         axios({
             method: 'POST',
@@ -49,7 +45,9 @@ const AddCus = (props) => {
         })
             .then(res => {
                 message.success(res.message)
-                console.log(this.state.orderList);
+                props.his.push({
+                    pathname:'/home/system/Cusinfo'
+                })
             })
             .catch(err => {
                 console.log(err);
@@ -58,8 +56,8 @@ const AddCus = (props) => {
 
          
 
-    useEffect( async()=>{
-       await axios({
+    useEffect( ()=>{//async函数会返回一个promise，并且Promise对象的状态值是resolved（成功的） 而effect不允许有返回值
+        axios({
         method: 'POST',
         url: 'http://172.16.6.27:8080/combobox/customer',
          })
@@ -70,7 +68,7 @@ const AddCus = (props) => {
             console.log(err);
         })
 
-     await axios({
+      axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/person/in_charge',
         })
@@ -81,7 +79,7 @@ const AddCus = (props) => {
             console.log(err);
         })
 
-      await  axios({
+        axios({
             method: 'POST',
             url: 'http://172.16.6.27:8080/combobox/price_system',
         })

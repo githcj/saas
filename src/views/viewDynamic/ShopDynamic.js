@@ -20,10 +20,12 @@ class ShopDynamic extends React.Component {
     componentWillMount() {
         axios({
             method:'POST',
-            url:'http://172.16.6.27:8080/sales_trends/store_queryall'
+            url:'/sales_trends/store_queryall',
+            data:{
+                token:'dsada'
+            }
         })
         .then(res => {
-            console.log(res)
             this.setState({
                 data:res.data.data
             })
@@ -55,22 +57,22 @@ class ShopDynamic extends React.Component {
         const newData = [...this.state.data]
         if(value === 'saleLowHight') {
             newData.sort((a, b) => {
-                return a.sales - b.sales
+                return a.store_sales - b.store_sales
             })
         }
         if(value === 'saleHightLow') {
             newData.sort((a, b) => {
-                return b.sales - a.sales
+                return b.store_sales - a.store_sales
             })
         }
         if(value === 'returnLowHight') {
             newData.sort((a, b) => {
-                return a.returnmoney - b.returnmoney
+                return a.store_return_amount - b.store_return_amount
             })
         }
         if(value === 'returnHightLow') {
             newData.sort((a, b) => {
-                return b.returnmoney - a.returnmoney
+                return b.store_return_amount - a.store_return_amount
             })
         }
         this.setState({

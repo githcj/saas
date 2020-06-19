@@ -4,8 +4,8 @@ import {Modal} from 'antd'
 
 let config = {
     // baseURL: "http://119.23.228.238:3031/mock/47",
-    baseURL:'http://172.16.6.30:8080',//黄文璟
-    // baseURL:'http://172.16.6.27:8080',//侯山川
+    baseURL:'http://172.16.6.30:8080',
+    // baseURL:'http://172.16.6.27:8080',
     timeout: 60*1000, // Timeout
 };
 
@@ -52,6 +52,10 @@ _axios.interceptors.response.use(
             // 可以直接跳转到登录页面，重新登录获取 token
             window.localStorage.removeItem('token');
             console.log(error.response.data.error.message,'token过期');
+            Modal.warning({
+                title:"警告",
+                content:'登录过期,请重新登录!'
+            })
             window.history.go('http://localhost:3000/login')
         }else if(error.response.status === 403){//表示用户没有权限进行该操作
             Modal.warning({

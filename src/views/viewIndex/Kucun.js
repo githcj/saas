@@ -56,7 +56,7 @@ const Stock = (props) => {
                         <Menu style={{ background: '#f3f3f3' }} selectedKeys={activeKey} onClick={changeActiveKey} >
                             <Menu.ItemGroup key="g1" title="出库">
                                 <Menu.Item key="1">
-                                    <Link to={match.url + '/stockout'}>出库管理</Link>
+                                    <Link to={match.url}>出库管理</Link>
                                 </Menu.Item>
                                 <Menu.Item key="2">
                                     <Link to={match.url + '/addstockout'}>添加出库单</Link>
@@ -75,7 +75,7 @@ const Stock = (props) => {
                 </Col>
                 <Col span={20}>
                     <div className="stockContent">
-                        <Route path={match.url + '/stockout'}><StockOut msg={props.history} /></Route>
+                        <Route path={match.url} exact><StockOut msg={props.history} /></Route>
                         <Route path={match.url + '/stockin'}><StockIn msg={props.history} /></Route>
 
                         <Route path={match.url + '/addstockout'}><AddStockOut msg={props.history} /></Route>
@@ -84,7 +84,7 @@ const Stock = (props) => {
                         <Route path={match.url + '/stockindetail'}><StockInDetail msg={props.location} /></Route>
                         <Route path={match.url + '/stockoutdetail'}><StockOutDetail msg={props.location} /></Route>
 
-                        <Redirect exact to={match.url + '/stockout'} />
+                        {/* <Redirect exact to={match.url + '/stockout'} /> */}
                     </div>
                 </Col>
             </Row>

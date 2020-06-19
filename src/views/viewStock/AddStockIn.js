@@ -13,6 +13,7 @@ export default class AddStockIn extends Component{
             allSum:0
         }
     }
+    //入库管理
     componentDidMount(){
         axios({
             method:'POST',

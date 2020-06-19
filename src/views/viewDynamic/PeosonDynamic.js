@@ -19,12 +19,15 @@ class PersonDynamic extends React.Component {
     //组件挂载完毕加载
     componentWillMount() {
         axios({
-            method:'GET',
-            url:'/personDynamic'
+            method:'POST',
+            url:'/sales_trends/emp_queryall',
+            data:{
+                token:'dsadas'
+            }
         })
         .then(res => {
             this.setState({
-                data:res.data
+                data:res.data.data
             })
         })
         .catch(err => {
@@ -54,22 +57,22 @@ class PersonDynamic extends React.Component {
         const newData = [...this.state.data]
         if(value === 'saleLowHight') {
             newData.sort((a, b) => {
-                return a.sales - b.sales
+                return a.total_price - b.total_price
             })
         }
         if(value === 'saleHightLow') {
             newData.sort((a, b) => {
-                return b.sales - a.sales
+                return b.total_price - a.total_price
             })
         }
         if(value === 'disLowHight') {
             newData.sort((a, b) => {
-                return a.distribution - b.distribution
+                return a.distribution_amount - b.distribution_amount
             })
         }
         if(value === 'disHightLow') {
             newData.sort((a, b) => {
-                return b.distribution - a.distribution
+                return b.distribution_amount - a.distribution_amount
             })
         }
         this.setState({
@@ -82,29 +85,25 @@ class PersonDynamic extends React.Component {
         let columns = [
             {
                 title: '序号',
-                dataIndex: 'serialNum',
-                key: 'serialNum',
+                dataIndex: 'emp_id',
+                key: 'emp_id',
             },
             {
                 title: '人员名称',
-                dataIndex: 'name',
-                key: 'name',
+                dataIndex: 'emp_name',
+                key: 'emp_name',
             },
             {
                 title: '销售额',
-                dataIndex: 'sales',
-                key: 'sales',
+                dataIndex: 'total_price',
+                key: 'total_price',
             },
             {
                 title: '配送额',
-                dataIndex: 'distribution',
-                key: 'distribution',
+                dataIndex: 'distribution_amount',
+                key: 'distribution_amount',
             },
         ];
-        //给表格数据添加 key 值
-        for(let i = 0; i < data.length; i++){
-            data[i].key = i
-        }
 
         return (
             <div className='person-dynamic'>

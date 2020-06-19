@@ -15,6 +15,7 @@
    width:80%;
    margin:auto;
    margin-top:12px;
+   border: 1px solid #eee;
 }
 .quire-title{
     height:38px;
@@ -117,5 +118,12 @@ a{
 }
 .order-table{
     width:80%;;
-
+}
+.order-axios{
+    margin:auto;
+     width:80px;
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     justify-content: space-evenly;
 }

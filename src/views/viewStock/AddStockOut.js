@@ -210,7 +210,7 @@ export default class AddStockOut extends Component{
         .then(res => {
             console.log(res.data.code)
             this.props.msg.push({
-                pathname:'/home/kucun/stockout'
+                pathname:'/home/Kucun'
             })
             message.success('出库单添加成功')
         })

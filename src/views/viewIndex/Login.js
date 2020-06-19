@@ -2,7 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { loginActionSync, powerAction } from "../../store/user/userActions";
 import '../../assets/css/huang/login.css'
-import axios from '../../plugins/axios'
+// import axios from '../../plugins/axios'
+import axios from 'axios'
 
 const checkedList = [{
     power_id:0,
@@ -77,8 +78,8 @@ class Login extends React.Component {
     super(props);
     this.state = {
       username: "",
-	  password: "",
-	  token:""
+      password: "",
+      token: ""
     }
   }
 
@@ -127,8 +128,7 @@ class Login extends React.Component {
 		  console.log('err',err)
     })
     this.setState({
-      username:'',
-      password:''
+      password: ''
     })
   };
 
@@ -137,10 +137,10 @@ class Login extends React.Component {
     return (
       <div className="login">
         <div className='login-form'>
-			<div className='login-biaoti'>
-				<h1>Saas经销商业务管理系统</h1>
-				<p>Saas Dealer Management System</p>
-			</div>
+          <div className='login-biaoti'>
+            <h1>Saas经销商业务管理系统</h1>
+            <p>Saas Dealer Management System</p>
+          </div>
           <input
             type="text"
             placeholder="请输入账号"
@@ -149,8 +149,8 @@ class Login extends React.Component {
           />
           <input
             type="password"
-			placeholder="请输入密码"
-			value={password}
+            placeholder="请输入密码"
+            value={password}
             onChange={this.setPassword}
           />
 

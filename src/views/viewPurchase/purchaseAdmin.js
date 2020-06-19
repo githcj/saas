@@ -7,7 +7,8 @@ import {
     UpOutlined,
     UnorderedListOutlined,
 } from '@ant-design/icons';
-import axios from '../../plugins/axios'
+// import axios from '../../plugins/axios'
+import axios from 'axios'
 
 
 
@@ -36,23 +37,20 @@ class purchaseAdmin extends React.Component {
         }
     }
     componentWillMount() {
+        console.log('初始化')
         axios({
             method: 'POST',
-            url: '/purchase/showpurchas'
+            url: 'http://172.16.6.126:8080/purchase/queryPurchaseList',
         })
-            .then(res => {
-                const newData = res.data
-                newData.map((item,index) => {
-                    newData[index].key = index
-                    return newData
-                })
-                this.setState({
-                    data: newData
-                })
+        .then(res => {
+            console.log(res)
+            this.setState({
+                data: res.data.data
             })
-            .catch(err => {
-                console.log(err)
-            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
     pageNumChange = (value) => {
         if (value === 'ten') {
@@ -88,19 +86,24 @@ class purchaseAdmin extends React.Component {
             params: record
         })
     }
-    showModal = (i,index) => {
+    toApply = () => {
+        this.props.msg.push({
+            pathname:'/home/Caigou/purchaseApply'
+        })
+    }
+    showModal = (i, index) => {
         console.log('我触发了', i, this.state)
         this.setState({
             visible: true,
             id: i,
-            i:index
+            i: index
         })
     };
-    showModelR = (i,index) => {
+    showModelR = (i, index) => {
         this.setState({
             visible: true,
             id: i,
-            i:index
+            i: index
         })
     }
     handleOk = () => {
@@ -110,18 +113,18 @@ class purchaseAdmin extends React.Component {
         var year = dt.getFullYear()
         var mounth = dt.getMonth() + 1
         var day = dt.getDate()
-        if(mounth<10){
+        if (mounth < 10) {
             mounth = "0" + mounth
         }
-        if(day<10){
+        if (day < 10) {
             day = "0" + day
         }
-        var timing = year +"-" + mounth + "-" + day
+        var timing = year + "-" + mounth + "-" + day
         data2.filter(item => {
             if (id === item.purchase_id && item.purchase_status === 3) {
                 item.purchase_status = 4
                 item.rktiming = timing
-            }else if (id === item.purchase_id) {
+            } else if (id === item.purchase_id) {
                 console.log(item.purchase_id + '我今天吃的水饺' + id)
                 item.purchase_status = 3
                 item.yijian = shenpiyijian
@@ -140,10 +143,10 @@ class purchaseAdmin extends React.Component {
         const newData = [...this.state.data]
         const i = this.state.i
         newData[i].purchase_status = 2
-        this.setState({ 
+        this.setState({
             visible: false,
-            data:newData
-         })
+            data: newData
+        })
     }
     yijianChange = (e) => {
         this.setState({
@@ -168,8 +171,8 @@ class purchaseAdmin extends React.Component {
             },
             {
                 title: '供货厂商',
-                dataIndex: 'supplier_id',
-                key: 'supplier_id',
+                dataIndex: 'supplier_name',
+                key: 'supplier_name',
                 align: 'center'
             },
             {
@@ -186,14 +189,14 @@ class purchaseAdmin extends React.Component {
             },
             {
                 title: '创建人',
-                dataIndex: 'founder_id',
-                key: 'founder_id',
+                dataIndex: 'founder',
+                key: 'founder',
                 align: 'center'
             },
             {
                 title: '审批人',
-                dataIndex: 'approver_id',
-                key: 'approver_id',
+                dataIndex: 'approver',
+                key: 'approver',
                 align: 'center'
             },
             {
@@ -224,21 +227,21 @@ class purchaseAdmin extends React.Component {
                         return <div>
                             <span type="primary"
                                 style={{ cursor: 'pointer' }}
-                                onClick={() => this.showModal(record.purchase_id,record.key)}>
+                                onClick={() => this.showModal(record.purchase_id, record.key)}>
                                 审批</span>
                         </div>
                     } else if (record.purchase_status === 2) {
                         return <div>
                             <span type="primary"
                                 style={{ cursor: 'pointer' }}
-                                onClick={() => this.showModal(record.purchase_id,record.key)}>
+                                onClick={() => this.showModal(record.purchase_id, record.key)}>
                                 审批</span>
                         </div>
                     } else if (record.purchase_status === 3) {
                         return <div>
                             <span
                                 style={{ cursor: 'pointer' }}
-                                onClick={() => this.showModelR(record.purchase_id,record.key)}>
+                                onClick={() => this.showModelR(record.purchase_id, record.key)}>
                                 入库</span>
                         </div>
                     } else if (record.purchase_status === 4) {
@@ -336,7 +339,7 @@ class purchaseAdmin extends React.Component {
                             <p className="purchase-middle-se1-p">数据列表</p>
                         </div>
                         <div className="purchase-table-se2">
-                            <span className="sp an">添加</span>
+                            <span className="sp an" onClick={this.toApply} style={{cursor:'pointer'}}>添加</span>
                             <span className="sp">导出</span>
                             <Select defaultValue="显示条数" style={{ width: 120 }} onChange={this.pageNumChange}>
                                 <Option value="ten">每页10条</Option>
