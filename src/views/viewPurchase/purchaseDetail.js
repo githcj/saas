@@ -10,44 +10,48 @@ import axios from 'axios';
 const columns = [
     {
         title: '序号',
-        dataIndex: 'serialNum',
-        key: 'serialNum',
+        dataIndex: 'goods_id',
+        key: 'goods_id',
         align: 'center'
     },
     {
         title: '商品名称',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'goods_name',
+        key: 'goods_name',
         align: 'center'
     },
     {
         title: '单位/大单位',
-        dataIndex: 'bigDan',
-        key: 'bigDan',
+        dataIndex: 'whole_unit',
+        render:(text,record)=>{
+            return record.whole_price + '/' + record.whole_unit
+        },
         align: 'center'
     },
     {
         title: '数量',
-        dataIndex: 'Num1',
-        key: 'Num1',
+        dataIndex: 'whole_num',
+        key: 'whole_num',
         align: 'center'
     },
     {
         title: '小单位/价格',
         dataIndex: 'smallPrice',
-        key: 'smallPrice',
+        render:(text,record)=>{
+            return record.single_price + '/' +record.single_unit
+        },
         align: 'center'
     },
     {
         title: '数量',
-        dataIndex: 'Num2',
-        key: 'Num2',
+        dataIndex: 'single_num',
+        key: 'single_num',
         align: 'center'
     },
     {
         title: '金额',
-        dataIndex: 'SumPrice',
-        key: 'SumPrice',
+        dataIndex: 'total_price',
+        key: 'total_price',
         align: 'center'
     }
 ];
@@ -71,26 +75,60 @@ class purchaseDetail extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            detail:[],
+            goods:[],
+            sum:0
         }
     }
     componentWillMount() {
+        const {location} = this.props
+        console.log(location.params,'loca');
+        
         axios({
             method: 'POST',
             url: '/purchase/showpurchas'
         })
             .then(res => {
                 this.setState({
-                    data: res.data
+                    data: res.data.data
                 })
             })
             .catch(err => {
                 console.log(err)
             })
+
+            axios({
+                method:'POST',
+                url:'http://172.16.6.126:8080/purchase/queryPurchase',
+                data:{
+                    token:'23',
+                    purchase_id:location.params.purchase_id
+                }
+            })
+            .then(res=>{
+                console.log(res,'res')
+                console.log(res.data.data,'query')
+                this.setState({
+                    detail:res.data,
+                    goods:res.data.data
+                })
+                console.log(this.state.goods,'goods')
+                var suma = 0
+                for(var i=0;i<this.state.goods.length;i++){
+                    suma+= this.state.goods[i].whole_price
+                }
+                this.setState({
+                    sum:suma
+                })
+            })
+            .catch(err=>{
+                console.log(err,'err')
+            })
     }
     render() {
         let newDom
         const { location } = this.props
+        const {detail,goods,sum} = this.state
         console.log(location.params)
         const difficult = location.params.purchase_status
         if (difficult === 4) {
@@ -172,7 +210,7 @@ class purchaseDetail extends React.Component {
                         <Table
                             rowSelection={{ type: 'Checkbox' }}
                             columns={columns}
-                            dataSource={data}
+                            dataSource={detail.data}
                             bordered>
                         </Table>
                         <div className="totals">

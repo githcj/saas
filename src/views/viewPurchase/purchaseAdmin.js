@@ -10,8 +10,6 @@ import {
 // import axios from '../../plugins/axios'
 import axios from 'axios'
 
-
-
 function onChange(value, dateString) {
     console.log('Selected Time: ', value);
     console.log('Formatted Selected Time: ', dateString);
@@ -33,12 +31,14 @@ class purchaseAdmin extends React.Component {
             shenpi: [],
             yijian: '',
             id: '',
-            shenpiyijian: ''
+            shenpiyijian: '',
+            gonghuoShang:[],
+        
+
         }
     }
-    componentWillMount() {
-        console.log('初始化')
-        axios({
+   async componentWillMount() {
+     await axios({
             method: 'POST',
             url: 'http://172.16.6.126:8080/purchase/queryPurchaseList',
         })
@@ -50,6 +50,27 @@ class purchaseAdmin extends React.Component {
         })
         .catch(err => {
             console.log(err)
+        })
+
+     await axios({
+            method:'POST',
+            url:'http://172.16.6.126:8080/purchase/querySupplier',
+        })
+        .then(res=>{
+            console.log(res.data.data,'query')
+            this.setState({
+                gonghuoShang:res.data.data
+            })
+            console.log(this.state.gonghuoShang,'供货商')
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+    setvalue = (value) =>{
+        console.log(value)
+        this.setState({
+
         })
     }
     pageNumChange = (value) => {
@@ -142,7 +163,6 @@ class purchaseAdmin extends React.Component {
     handleCancel = () => {
         const newData = [...this.state.data]
         const i = this.state.i
-        newData[i].purchase_status = 2
         this.setState({
             visible: false,
             data: newData
@@ -155,7 +175,12 @@ class purchaseAdmin extends React.Component {
     }
     render() {
         const { props } = this.props
-        const { visible, loading } = this.state;
+        const { visible, loading ,gonghuoShang} = this.state;
+        const gonghuo = gonghuoShang.map((item,index)=>{
+            return <Option value={item.supplier_id}>
+                        {item.supplier_name}
+                    </Option>
+        })
         const columns = [
             {
                 title: '编号',
@@ -166,7 +191,11 @@ class purchaseAdmin extends React.Component {
             {
                 title: '创建日期',
                 dataIndex: 'create_time',
-                key: 'create_time',
+                render:(text,row,index)=>(
+                    <span>
+                        {new Date(text).toLocaleString()}
+                    </span>
+                ),
                 align: 'center'
             },
             {
@@ -179,12 +208,6 @@ class purchaseAdmin extends React.Component {
                 title: '总金额',
                 dataIndex: 'total_price',
                 key: 'total_price',
-                align: 'center'
-            },
-            {
-                title: '需用日期',
-                dataIndex: 'require_time',
-                key: 'require_time',
                 align: 'center'
             },
             {
@@ -315,10 +338,9 @@ class purchaseAdmin extends React.Component {
                         </div>
                         <div className="purchase-middle-se2">
                             <p className="purchase-middle-se1-p">供货厂商：</p>
-                            <Select defaultValue="lucy" style={{ width: 130 }} >
-                                <Option value="jack">Jack</Option>
-                                <Option value="lucy">Lucy</Option>
-                                <Option value="Yim">yim</Option>
+                            <Select defaultValue="供货厂商" style={{ width: 130 }}
+                            onChange={(value)=>this.setvalue(value)}>
+                                {gonghuo}
                             </Select>
                         </div>
                         <div className="purchase-middle-se2">

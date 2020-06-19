@@ -120,7 +120,6 @@ export default class Order extends Component {
         })
             .then(res => {
                 console.log(res,'orderlist');
-                
                 this.setState({
                     orderList: res.data
                 })
@@ -154,11 +153,9 @@ export default class Order extends Component {
             url: 'http://172.16.6.27:8080/combobox/sales_method', 
         })    
            .then(res =>{
-               
                this.setState({
                      xiaoshoutype:res.data.data
                })
-
            })
            .catch(err =>{
                  console.log(err,err);  
@@ -184,8 +181,6 @@ export default class Order extends Component {
 
     }
     yulan =(record)=>{ 
-         
-
              console.log(record.sales_id,'salesid');
              this.props.his.push({
                 pathname:'/home/xiaoshou/orderDetail',
