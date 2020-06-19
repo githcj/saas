@@ -7,7 +7,8 @@ import {
     UpOutlined,
     UnorderedListOutlined,
 } from '@ant-design/icons';
-import axios from '../../plugins/axios'
+// import axios from '../../plugins/axios'
+import axios from 'axios'
 
 
 
@@ -36,23 +37,20 @@ class purchaseAdmin extends React.Component {
         }
     }
     componentWillMount() {
+        console.log('初始化')
         axios({
             method: 'POST',
-            url: '/purchase/showpurchas'
+            url: 'http://172.16.6.126:8080/purchase/queryPurchaseList',
         })
-            .then(res => {
-                const newData = res.data
-                newData.map((item, index) => {
-                    newData[index].key = index
-                    return newData
-                })
-                this.setState({
-                    data: newData
-                })
+        .then(res => {
+            console.log(res)
+            this.setState({
+                data: res.data.data
             })
-            .catch(err => {
-                console.log(err)
-            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
     pageNumChange = (value) => {
         if (value === 'ten') {
@@ -168,8 +166,8 @@ class purchaseAdmin extends React.Component {
             },
             {
                 title: '供货厂商',
-                dataIndex: 'supplier_id',
-                key: 'supplier_id',
+                dataIndex: 'supplier_name',
+                key: 'supplier_name',
                 align: 'center'
             },
             {
@@ -186,14 +184,14 @@ class purchaseAdmin extends React.Component {
             },
             {
                 title: '创建人',
-                dataIndex: 'founder_id',
-                key: 'founder_id',
+                dataIndex: 'founder',
+                key: 'founder',
                 align: 'center'
             },
             {
                 title: '审批人',
-                dataIndex: 'approver_id',
-                key: 'approver_id',
+                dataIndex: 'approver',
+                key: 'approver',
                 align: 'center'
             },
             {
