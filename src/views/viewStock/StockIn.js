@@ -14,7 +14,8 @@ export default class StockIn extends Component{
             visible:false,
             approveIdea:'',
             index:'',
-            supplierList:''
+            supplierList:'',
+            check:''
         }
     }
     pagesizeChange = (value) => {
@@ -32,12 +33,12 @@ export default class StockIn extends Component{
             })
         }
     }
-    //入库管理
     componentDidMount(){
+        //入库管理
         axios({
             method:'POST',
             // url:'/enterwareManagement'
-            url:'http://172.16.6.27:8080/entry/queryEntryList'
+            url:'/entry/queryEntryList'
         })
         .then(res => {
             console.log(res.data)
@@ -53,7 +54,7 @@ export default class StockIn extends Component{
         .catch(err => {
             console.log(err)
         })
-
+        //供货厂商
         axios({
             method:"POST",
             url:'http://172.16.6.27:8080/combobox/supplier'
@@ -63,6 +64,17 @@ export default class StockIn extends Component{
             this.setState({
                 supplierList:res.data.data
             })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        //进货仓库
+        axios({
+            method:'POST',
+            url:'http://172.16.6.27:8080/combobox/warehouse'
+        })
+        .then(res => {
+            console.log(res)
         })
         .catch(err => {
             console.log(err)
@@ -89,7 +101,6 @@ export default class StockIn extends Component{
         this.setState({
             approveIdea:e.target.value
         })
-        console.log(e.target.value)
     }
     hideModal = () => {
         this.setState({
@@ -103,13 +114,10 @@ export default class StockIn extends Component{
             url:'http://172.16.6.27:8080/entry/eckEnterWare',
             data:{
                 approval_opinion:this.state.approveIdea,
-                isOk:true,
                 godown_id:id
             }
         })
         .then(res => {
-            console.log(this.state.indata)
-            console.log(res.data.code)
             const newData = [...this.state.indata]
             const i = this.state.index
             newData[i].out_status = 1
@@ -137,6 +145,24 @@ export default class StockIn extends Component{
         })
         .catch(err => {
             console.log(err)
+        })
+
+    }
+    getCheck = (e) => {
+        this.setState({
+            check:e
+        })
+    }
+    //查询
+    search = () => {
+        axios({
+            method:'POST',
+            url:'http://172.16.6.27:8080/entry/queryEntryList',
+            data:{
+                ware_name:'',
+                supplier_name:'',
+                check_status:this.state.check
+            }
         })
     }
     render(){
@@ -221,7 +247,7 @@ export default class StockIn extends Component{
                 }
             }
         ]
-        const { indata,pagesize,visible,approveIdea,supplierList } = this.state
+        const { indata,pagesize,visible,approveIdea,supplierList,check } = this.state
         return (
             <div className="stockIn">
                 <header>
@@ -240,7 +266,7 @@ export default class StockIn extends Component{
                                 <UpOutlined />
                                 <span>收起筛选</span>
                             </div>
-                            <div className="searchResult">查询结果</div>
+                            <div className="searchResult" onClick={this.search}>查询结果</div>
                         </div>
                     </div>
                     <div className="search">
@@ -255,9 +281,7 @@ export default class StockIn extends Component{
                             style={{ width: 160 }}>
                                 {/* {supplierList.map((item,index) => {
                                     return(
-                                        <div>
-                                            <option value={item.supplier_name}></option>
-                                        </div>
+                                            <option value={item.supplier_name}>{item.supplier_name}</option>
                                     )
                                 })} */}
                             </Select>
@@ -267,18 +291,18 @@ export default class StockIn extends Component{
                             <Select 
                             defaultValue="全部"
                             style={{ width: 160 }}>
-                                <Option value="jack">Jack</Option>
-                                <Option value="lucy">Lucy</Option>
+                                <Option></Option>
                             </Select>
                         </div>
                         <div>
                             审核状态：
                             <Select
                                 defaultValue="全部"
-                                style={{ width: 160 }}>
-                                <Option value="1">全部</Option>
-                                <Option value="2">待审批</Option>
-                                <Option value="3">已通过</Option>
+                                style={{ width: 160 }}
+                                value={check}
+                                onChange={this.getCheck}>
+                                <Option value="0">待审批</Option>
+                                <Option value="1">已通过</Option>
                             </Select>
                         </div>
                     </div>
