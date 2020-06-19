@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import '../../assets/css/wang/apply.css'
 import { Select, Table, message } from 'antd'
-import axios from '../../plugins/axios'
+import axios from 'axios'
 const { Option } = Select;
 
 
@@ -12,23 +12,82 @@ export default class purchaseApply extends Component {
             data: [],
             detailData: [],
             sum: 0,
-            changShang:'',
-            fuKuan:'',
-            shenPiren:'',
-            caiGouDate:''
+            changShang: '',
+            fuKuan: '',
+            shenPiren: '',
+            caiGouDate: '',
+            gonghuoShang: [],
+            fukuanList: [],
+            shenpiList: [],
+            queryorder: [],
+            searchVal: '', // 搜索框
         }
     }
 
-    componentDidMount() {
-        const detailData = this.state.detailData
-
+    // 获取所有数据
+    getAllData = () => {
         axios({
-            method: 'GET',
-            url: '/purchaseApply'
+            method: 'POST',
+            url: 'http://172.16.6.126:8080/purchase/queryProductionByCondition',
+            data: {
+                token: 'bchjhxzz',
+            }
         })
             .then(res => {
+                console.log(res)
                 this.setState({
-                    data: res.data
+                    data: res.data.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+    // 初始化
+    componentWillMount() {
+        console.log('初始化')
+        this.getAllData()
+
+    }
+
+    async componentDidMount() {
+        const detailData = this.state.detailData
+
+
+        await axios({
+            method: 'POST',
+            url: 'http://172.16.6.126:8080/purchase/querySupplier',
+        })
+            .then(res => {
+                console.log(res.data.data, 'query')
+                this.setState({
+                    gonghuoShang: res.data.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        await axios({
+            method: 'POST',
+            url: 'http://172.16.6.126:8080/purchase/queryPayType',
+        })
+            .then(res => {
+                console.log(res.data.data, '支付')
+                this.setState({
+                    fukuanList: res.data.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        await axios({
+            method: 'POST',
+            url: 'http://172.16.6.126:8080/purchase/queryCheckPerson',
+        })
+            .then(res => {
+                console.log(res.data.data, '审批')
+                this.setState({
+                    shenpiList: res.data.data
                 })
             })
             .catch(err => {
@@ -36,55 +95,60 @@ export default class purchaseApply extends Component {
             })
         var suma = 0
         for (var i = 0; i < detailData.length; i++) {
-            suma += detailData[i].smcount * detailData[i].smallPrice + detailData[i].bgcount * detailData[i].bigPrice
+            suma += detailData[i].single_num * detailData[i].single_price + detailData[i].whole_num * detailData[i].whole_price
         }
         this.setState({
             sum: suma
         })
     }
-    getchangShang = (e) =>{
+    getchangShang = (e) => {
         console.log(e)
         this.setState({
-            changShang:e
+            changShang: e
         })
     }
-    getfuKuan = (e) =>{
+    getfuKuan = (e) => {
         this.setState({
-            fuKuan:e
+            fuKuan: e
         })
+
     }
-    getshenPi = (e) =>{
+    getvalue = (e) => {
         this.setState({
-            shenPiren:e
+            shenPiren: e
+
         })
+        console.log(this.state.shenPiren)
     }
-    getcaiGouD = (e) =>{
+    getcaiGouD = (e) => {
         this.setState({
-            caiGouDate:e
+            caiGouDate: e
         })
     }
-    submit = () =>{
+    submit = () => {
         axios({
-            method:'POST',
-            url:'/purchase/querypurchasebyid',
-            data:{
-                supplier_name:this.state.changShang,
-                pay_type_name:this.state.fuKuan,
-                approver:this.state.shenPiren,
-                create_time:this.state.caiGouDate,
+            method: 'POST',
+            url: 'http://172.16.6.126:8080/purchase/addPurchase',
+            data: {
+                supplier_id: this.state.changShang,
+                pay_type_id: this.state.fuKuan,
+                founder_id: 0,
+                approver_id: this.state.shenPiren,
+                sum_price: this.state.sum,
+                data: this.state.detailData,
             }
         })
-        .then(res=>{
-            console.log(res.data.code)
-            this.props.msg.push({
-                pathname:'/home/Caigou'
+            .then(res => {
+                console.log(res.data.code)
+                this.props.msg.push({
+                    pathname: '/home/Caigou'
+                })
+                message.success('采购单添加成功')
             })
-            message.success('采购单添加成功')
-        })
-        .catch(err=>{
-            console.log(err)
-            message.success('采购单添加失败')
-        })
+            .catch(err => {
+                console.log(err)
+                message.success('采购单添加失败')
+            })
     }
     addbigcount = (i, n) => {
         var suma = 0
@@ -95,15 +159,18 @@ export default class purchaseApply extends Component {
             this.state.detailData.filter((v, x) => {
                 console.log(x, 'x')
                 if (x === i) {
-                    addcount[i].bgcount = n + 1
+                    addcount[i].whole_num = n + 1
                 }
             })
+            for (let i = 0; i < addcount.length; i++) {
+                addcount[i].total_price =addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
+                }
             for (var i = 0; i < addcount.length; i++) {
-                suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
+                suma += addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
             }
             this.setState({
                 sum: suma,
-                data: addcount
+                detailData: addcount
             })
         }
     }
@@ -113,15 +180,15 @@ export default class purchaseApply extends Component {
         if (n > 0) {
             this.state.detailData.filter((v, x) => {
                 if (x === i) {
-                    addcount[i].smcount = n + 1
+                    addcount[i].single_num = n + 1
                 }
             })
             for (var i = 0; i < addcount.length; i++) {
-                suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
+                suma += addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
             }
             this.setState({
                 sum: suma,
-                data: addcount
+                detailData: addcount
             })
         }
     }
@@ -131,15 +198,15 @@ export default class purchaseApply extends Component {
         if (n > 1) {
             this.state.detailData.filter((v, x) => {
                 if (x === i) {
-                    addcount[i].bgcount = n - 1
+                    addcount[i].whole_num = n - 1
                 }
             })
             for (var i = 0; i < addcount.length; i++) {
-                suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
+                suma += addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
             }
             this.setState({
                 sum: suma,
-                data: addcount
+                detailData: addcount
             })
         }
     }
@@ -149,15 +216,15 @@ export default class purchaseApply extends Component {
         if (n > 1) {
             this.state.detailData.filter((v, x) => {
                 if (x === i) {
-                    addcount[i].smcount = n - 1
+                    addcount[i].single_num = n - 1
                 }
             })
             for (var i = 0; i < addcount.length; i++) {
-                suma += addcount[i].smcount * addcount[i].smallPrice + addcount[i].bgcount * addcount[i].bigPrice
+                suma += addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
             }
             this.setState({
                 sum: suma,
-                data: addcount
+                detailData: addcount
             })
         }
     }
@@ -172,6 +239,28 @@ export default class purchaseApply extends Component {
     handleData = () => {
 
     }
+
+    sousuo = () => {
+        console.log('搜索')
+        axios({
+            method: 'POST',
+            url: 'http://172.16.6.126:8080/purchase/queryProductionByCondition',
+            data: {
+                token: 'bchjhxzz',
+                goods_name: this.state.searchVal
+            }
+        })
+            .then(res => {
+                console.log(res)
+                this.setState({
+                    data: res.data.data
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
     add = (record) => {
         var suma = 0
         let newData = [...this.state.detailData]
@@ -179,29 +268,29 @@ export default class purchaseApply extends Component {
             newData.push(record)
             for (let i = 0; i < newData.length; i++) {
                 newData[newData.length - 1].key = i;
-                newData[newData.length - 1].smcount = 1;
-                newData[newData.length - 1].bgcount = 1;
+                newData[newData.length - 1].single_num = 1;
+                newData[newData.length - 1].whole_num = 1;
             }
         }
         else {
             let is = true
             for (let i = 0; i < newData.length; i++) {
-                if (record.goodsName === newData[i].goodsName) {
+                if (record.goods_name === newData[i].goods_name) {
                     is = !is
-                    newData[i].bgcount = newData[i].bgcount + 1
+                    newData[i].whole_num = newData[i].whole_num + 1
                 }
             }
             if (is) {
                 newData.push(record)
                 for (let i = 0; i < newData.length; i++) {
                     newData[newData.length - 1].key = i;
-                    newData[newData.length - 1].smcount = 1;
-                    newData[newData.length - 1].bgcount = 1;
+                    newData[newData.length - 1].single_num = 1;
+                    newData[newData.length - 1].whole_num = 1;
                 }
             }
         }
         for (var i = 0; i < newData.length; i++) {
-            suma += newData[i].smcount * newData[i].smallPrice + newData[i].bgcount * newData[i].bigPrice
+            suma += newData[i].single_num * newData[i].single_price + newData[i].whole_num * newData[i].whole_price
         }
         console.log(newData)
         this.setState({
@@ -209,29 +298,51 @@ export default class purchaseApply extends Component {
             detailData: newData
         })
     }
+    // 标题双向绑定
+    changeSearch = e => {
+        this.setState({
+            searchVal: e.target.value
+        })
+    }
     render() {
-        const { data, detailData, sum,changShang,fuKuan,shenPiren,caiGouDate } = this.state
+        const { data, detailData, sum, changShang, fuKuan, shenPiren, caiGouDate, gonghuoShang, fukuanList, shenpiList, queryorder, searchVal } = this.state
+        const gonghuo = gonghuoShang.map((item, index) => {
+            return <Option value={item.supplier_id}>
+                {item.supplier_name}
+            </Option>
+        })
+        const fukuanA = fukuanList.map((item, index) => {
+            return <Option value={item.pay_type_id}>
+                {item.pay_type_name}
+            </Option>
+        })
+        const shenpiA = shenpiList.map((item, index) => {
+            return <Option value={item.emp_id}>
+                {item.emp_name}
+            </Option>
+        })
+
         for (let i = 0; i < detailData.length; i++) {
             detailData[i].key = i
         }
         const detail = [
             {
                 title: '商品名称',
-                dataIndex: 'goodsName',
+                dataIndex: 'goods_name',
                 align: 'center'
             }, {
                 title: '单价/大单位',
                 dataIndex: 'big',
                 align: 'center',
                 render: (text, record) => {
-                    return record.bigPrice + '/' + record.bigUnit
+                    return record.whole_price + '/' + record.whole_unit
                 }
             }, {
                 title: '数量',
-                dataIndex: 'bgcount',
+                dataIndex: 'whole_num',
                 align: 'center',
                 render: (text, record, index) => {
-                    console.log('我就是', record.bgcount)
+                    console.log('我就是', record.whole_num)
                     return <div className="number">
                         <span onClick={() => this.redbigcount(index, text)} className="count">-</span>
                         <span>{text}</span>
@@ -243,11 +354,11 @@ export default class purchaseApply extends Component {
                 dataIndex: 'small',
                 align: 'center',
                 render: (text, record) => {
-                    return record.smallPrice + '/' + record.smallUnit
+                    return record.single_price + '/' + record.single_unit
                 }
             }, {
                 title: '数量',
-                dataIndex: 'smcount',
+                dataIndex: 'single_num',
                 align: 'center',
                 render: (text, record, index) => {
                     return <div className="number">
@@ -259,13 +370,13 @@ export default class purchaseApply extends Component {
             },
             {
                 title: '金额',
-                dataIndex: 'sum',
+                dataIndex: 'total_price',
                 align: 'center',
-                render: (text, record) => {
-                    return (
-                        <div>{record.smcount * record.smallPrice + record.bgcount * record.bigPrice}</div>
-                    )
-                }
+                // render: (text, record) => {
+                //     return (
+                //         <div>{record.single_num * record.single_price + record.whole_num * record.whole_price}</div>
+                //     )
+                // }
             },
             {
                 title: '操作',
@@ -278,32 +389,32 @@ export default class purchaseApply extends Component {
         const columns = [
             {
                 title: '商品名称',
-                dataIndex: 'goodsName',
+                dataIndex: 'goods_name',
                 align: 'center'
             },
             {
                 title: '大单位',
-                dataIndex: 'bigUnit',
+                dataIndex: 'whole_unit',
                 align: 'center'
             },
             {
                 title: '大单位单价',
-                dataIndex: 'bigPrice',
+                dataIndex: 'whole_price',
                 align: 'center'
             },
             {
                 title: '小单位',
-                dataIndex: 'smallUnit',
+                dataIndex: 'single_unit',
                 align: 'center'
             },
             {
                 title: '小单位价格',
-                dataIndex: 'smallPrice',
+                dataIndex: 'single_price',
                 align: 'center'
             },
             {
                 title: '现有库存',
-                dataIndex: 'storage',
+                dataIndex: 'total_num',
                 align: 'center'
             }, {
                 title: '操作',
@@ -335,48 +446,31 @@ export default class purchaseApply extends Component {
                         <div>
                             <span style={{ color: 'red' }}>*</span>
                             供货厂商：
-                            <Select 
-                            style={{ width: 160 }}
-                            value={changShang}
-                            onChange={this.getchangShang}>
-                                <Option value="jack">Jack</Option>
-                                <Option value="lucy">Lucy</Option>
+                            <Select
+                                style={{ width: 160 }}
+                                defaultValue='供货厂商'
+                                onChange={(value) => this.getchangShang(value)}>
+                                {gonghuo}
                             </Select>
                         </div>
                         <div>
                             <span style={{ color: 'red' }}>*</span>
                             付款类型：
-                            <Select 
-                            style={{ width: 160 }}
-                            value={fuKuan}
-                            onChange={this.getfuKuan}>
-                                <Option value="1">全部</Option>
-                                <Option value="2">预付款</Option>
-                                <Option value="3">货到付款</Option>
+                            <Select
+                                style={{ width: 160 }}
+                                defaultValue='付款类型'
+                                onChange={(value) => this.getfuKuan(value)}>
+                                {fukuanA}
                             </Select>
                         </div>
                         <div>
                             <span style={{ color: 'red' }}>*</span>
                             审批人：
-                            <Select 
-                            style={{ width: 160 }}
-                            value={shenPiren}
-                            onChange={this.getshenPi}>
-                                <Option value="1">A</Option>
-                                <Option value="2">B</Option>
-                                <Option value="3">C</Option>
-                            </Select>
-                        </div>
-                        <div>
-                            <span style={{ color: 'red' }}>*</span>
-                            采购日期：
-                            <Select 
-                            style={{ width: 160 }}
-                            value={caiGouDate}
-                            onChange={this.getcaiGouD}>
-                                <Option value="1">2017</Option>
-                                <Option value="2">预付款</Option>
-                                <Option value="3">货到付款</Option>
+                            <Select
+                                style={{ width: 160 }}
+                                defaultValue='审批人'
+                                onChange={(value) => this.getvalue(value)}>
+                                {shenpiA}
                             </Select>
                         </div>
                     </div>
@@ -398,9 +492,13 @@ export default class purchaseApply extends Component {
                             </div>
                             <div>
                                 商品标题：
-                                <input type="text" className="goodsTitle"></input>
+                                <input
+                                    type="text"
+                                    className="goodsTitle"
+                                    value={searchVal}
+                                    onChange={(e) => this.changeSearch(e)}></input>
                             </div>
-                            <div className="goodsSearch">搜索</div>
+                            <div className="goodsSearch" onClick={this.sousuo}>搜索</div>
                         </div>
 
                         <div className="search-result">
