@@ -20,27 +20,29 @@ const Caigou = (props) => {
     console.log("system:", match.url);
     // console.log(props,'SystemProps')
     const {checkedList} = props.state.userReducer//获取列表
-    let sysList = getLimitList(checkedList,-1,14)//该页权限列表
+    let CaigouList = getLimitList(checkedList,6,8)//该页权限列表
 
-    console.log(sysList,'SysList')
+    console.log(CaigouList,'CaigouList')
 
-    const menuDOM = sysList.map(item => {//节点生成
-        return (<Menu.ItemGroup title={item.power_name}>
-            {item.children.map(cItem => {
+    const menuDOM = CaigouList.map((item,index) => {//节点生成
+        // console.log(item,'item')
+        return (<Menu.ItemGroup title={item.power_name} key={index}>
+            { !item.children ? '':
+                item.children.map(cItem => {
                 return (
-                    <Menu.Item key={cItem.power_id}>
+                    <Menu.Item key={cItem.power_path} key={cItem.power_path}>
                         <NavLink to={cItem.power_path}>{cItem.power_name}</NavLink>
                     </Menu.Item>
                 )
-            })}
+                })}
         </Menu.ItemGroup>)
     })
 
     //当前点击
     const changeActiveKey = (e) => {
-        sessionStorage.setItem('activeKey',e.key)
-        console.log(e,props.location.pathname,'点击的节点')
-        setactiveKey([e.key])
+        // sessionStorage.setItem('activeKey',e.key)
+        // console.log(e,props.location.pathname,'点击的节点')
+        // setactiveKey([e.key])
     }
 
 
@@ -51,14 +53,17 @@ const Caigou = (props) => {
 				<Col span={4}>
 					<div className="links">
 						<Menu style={{ background: '#f3f3f3' }} selectedKeys={activeKey} onClick={changeActiveKey}>
-							<Menu.ItemGroup key="g1" title="基本资料">
+							{/* <Menu.ItemGroup key="g1" title="基本资料">
 								<Menu.Item key="1">
 									<NavLink to={match.url}>采购管理</NavLink>
 								</Menu.Item>
 								<Menu.Item key="2">
 									<NavLink to={match.url + "/purchaseApply"}>采购申请</NavLink>
 								</Menu.Item>
-							</Menu.ItemGroup>
+							</Menu.ItemGroup> */}
+
+                            
+                            {menuDOM}
 						</Menu>
 
 					</div>

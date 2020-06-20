@@ -23,27 +23,30 @@ const Stock = (props) => {
     console.log("system:", match.url);
     // console.log(props,'SystemProps')
     const {checkedList} = props.state.userReducer//获取列表
-    let sysList = getLimitList(checkedList,-1,14)//该页权限列表
+    let sysList = getLimitList(checkedList,5,7)//该页权限列表
 
     console.log(sysList,'SysList')
 
-    const menuDOM = sysList.map(item => {//节点生成
-        return (<Menu.ItemGroup title={item.power_name}>
-            {item.children.map(cItem => {
+    const menuDOM = sysList.map((item,index) => {//节点生成
+        // console.log(item,'item')
+        return (<Menu.ItemGroup title={item.power_name} key={index}>
+            { !item.children ? '':
+                item.children.map(cItem => {
                 return (
-                    <Menu.Item key={cItem.power_id}>
+                    <Menu.Item key={cItem.power_path} key={cItem.power_path}>
                         <Link to={cItem.power_path}>{cItem.power_name}</Link>
                     </Menu.Item>
                 )
-            })}
+                })}
         </Menu.ItemGroup>)
     })
 
+
     //当前点击
     const changeActiveKey = (e) => {
-        // sessionStorage.setItem('activeKey',e.key)
-        // console.log(e,props.location.pathname,'点击的节点')
-        // setactiveKey([e.key])
+        sessionStorage.setItem('activeKey',e.key)
+        console.log(e,props.location.pathname,'点击的节点')
+        setactiveKey([e.key])
     }
 
 
@@ -54,7 +57,7 @@ const Stock = (props) => {
                 <Col span={4}>
                     <div className="stockTitle">
                         <Menu style={{ background: '#f3f3f3' }} selectedKeys={activeKey} onClick={changeActiveKey} >
-                            <Menu.ItemGroup key="g1" title="出库">
+                            {/* <Menu.ItemGroup key="g1" title="出库">
                                 <Menu.Item key="1">
                                     <Link to={match.url}>出库管理</Link>
                                 </Menu.Item>
@@ -69,7 +72,9 @@ const Stock = (props) => {
                                 <Menu.Item key="4">
                                     <Link to={match.url + '/addstockin'}>添加入库单</Link>
                                 </Menu.Item>
-                            </Menu.ItemGroup>
+                            </Menu.ItemGroup> */}
+
+                            {menuDOM}
                         </Menu>
                     </div>
                 </Col>

@@ -25,15 +25,11 @@ export default class Home extends Component {
   
   logout = () => {
     localStorage.removeItem("token");
+    sessionStorage.removeItem('activeKey')
     this.props.history.push({
         pathname:  "/login",
       });
   };
-
-  //清除地址
-    clearActiveKey = () => {
-        sessionStorage.removeItem('activeKey')
-    }
   
   render() {
     const { match,history } = this.props;
@@ -60,7 +56,7 @@ export default class Home extends Component {
       <div className="home">
         <Row>
           <Col span={24}>
-            <div className="home-link" onClick={this.clearActiveKey}>
+            <div className="home-link" >
               <span className="">saas平台</span>
               <NavLink to={match.url + "/system"}>系统</NavLink>
               <NavLink to={match.url + "/Caigou"}>采购</NavLink>

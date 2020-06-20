@@ -39,10 +39,13 @@ const System = (props) => {
 
     // console.log("system:", match.url);
     // console.log(props,'SystemProps')
-    const {checkedList} = props.state.userReducer//获取列表
+    const checkedList = JSON.parse(sessionStorage.getItem('checkedList'))//获取列表
+
+    console.log(checkedList,'checkedList')
+
     let sysList = getLimitList(checkedList,-1,4)//该页权限列表
 
-    // console.log(sysList,'SysList')
+    console.log(sysList,'SysList')
 
     const menuDOM = sysList.map((item,index) => {//节点生成
         // console.log(item,'item')
@@ -50,7 +53,7 @@ const System = (props) => {
             { !item.children ? '':
                 item.children.map(cItem => {
                 return (
-                    <Menu.Item key={cItem.power_id} key={cItem.power_path}>
+                    <Menu.Item key={cItem.power_path} key={cItem.power_path}>
                         <NavLink to={cItem.power_path}>{cItem.power_name}</NavLink>
                     </Menu.Item>
                 )
@@ -60,10 +63,10 @@ const System = (props) => {
 
     //当前点击
     const changeActiveKey = (e) => {
-        // console.log(props.location)
-        // sessionStorage.setItem('activeKey',e.key)
-        // // console.log(e,props.location.pathname,'点击的节点')
-        // setactiveKey([e.key])
+        console.log(props.location)
+        sessionStorage.setItem('activeKey',e.key)
+        // console.log(e,props.location.pathname,'点击的节点')
+        setactiveKey([e.key])
     }
 
 	return (

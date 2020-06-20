@@ -160,7 +160,7 @@ export default class Custype extends Component {
     const tokens= localStorage.getItem('token')
       await  axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/customer_type/querysubclass',
+            url: 'http://172.16.6.30:8080/customer_type/querysubclass',
             data:{
                 token:tokens
             }

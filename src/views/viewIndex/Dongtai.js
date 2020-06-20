@@ -20,21 +20,24 @@ const Dongtai = (props) => {
     console.log("system:", match.url);
     // console.log(props,'SystemProps')
     const {checkedList} = props.state.userReducer//获取列表
-    let sysList = getLimitList(checkedList,-1,14)//该页权限列表
+    let sysList = getLimitList(checkedList,4,6)//该页权限列表
 
     console.log(sysList,'SysList')
 
-    const menuDOM = sysList.map(item => {//节点生成
-        return (<Menu.ItemGroup title={item.power_name}>
-            {item.children.map(cItem => {
+    const menuDOM = sysList.map((item,index) => {//节点生成
+        // console.log(item,'item')
+        return (<Menu.ItemGroup title={item.power_name} key={index}>
+            { !item.children ? '':
+                item.children.map(cItem => {
                 return (
-                    <Menu.Item key={cItem.power_id}>
+                    <Menu.Item key={cItem.power_path} key={cItem.power_path}>
                         <NavLink to={cItem.power_path}>{cItem.power_name}</NavLink>
                     </Menu.Item>
                 )
-            })}
+                })}
         </Menu.ItemGroup>)
     })
+
 
     //当前点击
     const changeActiveKey = (e) => {
@@ -54,18 +57,20 @@ const Dongtai = (props) => {
       <Col span={4}>
 			<div className='dongtai-leftmenu'>
 			<Menu style={{background: '#f3f3f3'}} selectedKeys={activeKey} onClick={changeActiveKey}>
-                    <Menu.ItemGroup key="g1" title="基本资料">
-                        <Menu.Item key="1">
-				<NavLink to={ match.url + '/persondynamic'}>人员销售动态</NavLink>
-				</Menu.Item>
-				<Menu.Item key="2">
-				<NavLink to={ match.url + '/goodsdynamic'}>商品销售动态</NavLink>
-				</Menu.Item>
-				<Menu.Item key="3">
-				<NavLink to={ match.url + '/shopdynamic'}>门店销售动态</NavLink>
-				</Menu.Item>
-				</Menu.ItemGroup>
-				</Menu>
+                {/* <Menu.ItemGroup key="g1" title="基本资料">
+                    <Menu.Item key="1">
+                    <NavLink to={ match.url + '/persondynamic'}>人员销售动态</NavLink>
+                    </Menu.Item>
+                    <Menu.Item key="2">
+                    <NavLink to={ match.url + '/goodsdynamic'}>商品销售动态</NavLink>
+                    </Menu.Item>
+                    <Menu.Item key="3">
+                    <NavLink to={ match.url + '/shopdynamic'}>门店销售动态</NavLink>
+                    </Menu.Item>
+				</Menu.ItemGroup> */}
+
+                {menuDOM}
+            </Menu>
 			</div>
 			</Col>
 			<Col span={20}>

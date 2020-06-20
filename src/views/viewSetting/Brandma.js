@@ -24,7 +24,6 @@ class Brandma extends React.Component {
         }
     }
     getAllData = () => {
-        
         axios({
             method:'POST',
             url:'/brand/queryall',
