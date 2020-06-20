@@ -32,7 +32,7 @@ class Login extends React.Component {
   getLogin = async () => {
 	  await axios({
 		  method:'POST',
-		  url:'/login/login',
+		  url:'http://172.16.6.27:8080/login/login',
 		  data:{
 			  emp_account:this.state.username,
         emp_password:this.state.password,

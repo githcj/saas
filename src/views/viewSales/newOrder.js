@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import '../../assets/css/sales/newOrder.css'
-import { Table, Radio, Select, Input } from 'antd';
+import { Table, Radio, Select, Input,Modal } from 'antd';
 const { Option } = Select
 
 export default class newOrder extends Component {
@@ -30,7 +30,11 @@ export default class newOrder extends Component {
             pingpai:[],
             fenlei2:[],
             soupingpai:'',
-            soufenlei:''
+            soufenlei:'',
+            delvis: false,
+            confirmLoading: false,
+            delid:'',
+            souname:''
         };
     }
 
@@ -46,8 +50,17 @@ export default class newOrder extends Component {
             soufenlei:value
         })
     }
+
+
+    souname =(e)=>{
+        this.setState({
+            souname:e.target.value
+        })
+    }
     sousuo =()=>{
         const tokens=localStorage.getItem('token')
+        console.log(this.state.soufenlei,'新增分类');
+        console.log(this.state.souname,'搜索name');
         
         axios({
             method: 'POST',
@@ -55,6 +68,8 @@ export default class newOrder extends Component {
             data:{
                 token:tokens,
                 brand_name:this.state.soupingpai,
+                commodity_level_name:this.state.soufenlei,
+                goods_name:this.state.souname
             }
         })
             .then(res => {
@@ -86,7 +101,7 @@ export default class newOrder extends Component {
         else {
             let is = true
             for (let i = 0; i < newData.length; i++) {
-                if (record.goodsname === newData[i].goodsname) {
+                if (record.goods_name === newData[i].goods_name) {
                     is = !is
                     newData[i].bgcount = newData[i].bgcount + 1
                 }
@@ -157,6 +172,8 @@ export default class newOrder extends Component {
             url: 'http://172.16.6.27:8080/combobox/sales_method',
         })
             .then(res => {
+                console.log(res.data.data,'销售类型');
+                
                 this.setState({
                     xiaoshoutype: res.data.data,
                 })
@@ -257,9 +274,11 @@ export default class newOrder extends Component {
         })
     }
     yewu =(value)=>{
+        
         this.setState({
             yewu:value
         })
+        
     }
     xiaoshou =(value)=>{
         this.setState({
@@ -274,22 +293,28 @@ export default class newOrder extends Component {
 
     tijaio =()=>{
         console.log(this.state.adddata,'add');
+        console.log(this.state.adddata[0].total_price,'totalprice');
+        console.log(this.state.yewu,'业务');
         
+        const tokens=localStorage.getItem('token')
         const list=this.state.adddata.map(item => {
             let elem = {} // 格式化后的item
-            elem.goods_name = item.goodsname
+            elem.goods_name = item.goods_name
             elem.whole_num = item.bgcount
             elem.single_num = item.smcount
-            elem.total_price =item.total_price
+            elem.total_price =item.bgcount * item.whole_price + item.smcount * item.single_price
             elem.single_price =item.single_price
             elem.whole_price =item.whole_price
             return elem
         })
-        // console.log(list,'格式化后的adddata')
+        console.log(list,'格式化后的adddata')
+        console.log(this.state.username,'addusername');
+        
         axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/sales/addSales',
+            url: 'http://172.16.6.29:8080/sales/addSales',
             data:{
+                token:tokens,
                 sales_type_name:'普通订单',
                 customer_name:this.state.username,
                 salesman:this.state.yewu,
@@ -303,9 +328,12 @@ export default class newOrder extends Component {
             }
         })
             .then(res => {
-                this.setState({
-                    kehutype: res.data,
-                })
+                console.log(res.data.data,'新增');
+                
+                // this.setState({
+                //     kehutype: res.data,
+                // })
+                this.componentDidMount()
                 
             })
             .catch(err => {
@@ -442,9 +470,19 @@ export default class newOrder extends Component {
     }
 
     deldata = (i) => {
-       
+        this.setState({
+            delid:i,
+            delvis: true,
+        })
+
+                             
+    }
+
+
+    delhandok =()=>{
+
         const tests=this.state.adddata.filter(item => {
-            return item.key !== i
+            return item.key !== this.state.delid
         })
         
         console.log(tests);
@@ -455,10 +493,19 @@ export default class newOrder extends Component {
 
           }
             this.setState({
+                confirmLoading: true,
                 sum:suma,
                 adddata:tests
             }) 
-                             
+            setTimeout(() => {
+                this.setState({
+                  delvis: false,
+                  confirmLoading: false,
+                });
+              }, 1000);
+            
+
+
     }
 
 
@@ -509,7 +556,6 @@ render() {
             align:'center',
             render: (record, index) => (
                 <span>
-                    <a >删除</a>
                     <a onClick={this.add.bind(this, record)}>添加</a>
                 </span>
             )
@@ -563,6 +609,7 @@ render() {
         },
         {
             title: '金额',
+            dataIndex: 'total_price',
             align:'center',
             render: (text, record, index) => {
                 return <span>{Math.abs(record.smcount * record.single_price + record.bgcount * record.whole_price).toString()}</span>
@@ -585,18 +632,18 @@ render() {
     ];
 
     const kehu =kehutype.map((item,index)=>{
-        return <Option value={item.customer_type_id}>
+        return <Option value={item.customer_type_name}>
                      {item.customer_type_name}
                </Option>
     })
     
     const xiaoshou =xiaoshoutype.map((item,index)=>{
-        return <Option value={item.brand_id}>
-                     {item.brand_name}
+        return <Option value={item.sales_method_name}>
+                     {item.sales_method_name}
                </Option>
     })
     const person =persontype.map((item,index)=>{
-        return <Option value={item.emp_id}>
+        return <Option value={item.emp_name}>
                      {item.emp_name}
                </Option>
     })
@@ -687,7 +734,7 @@ render() {
                     </div>
                     <div className="bianju ">
                         <label >商品标题：</label>
-                        <Input style={{width:'150px'}}></Input>
+                        <Input style={{width:'150px'}} onChange={this.souname}></Input>
                     </div>
                     <Radio.Button style={{ marginLeft: '12px' }} onClick={this.sousuo} type="button" value="large">搜索</Radio.Button>
                 </div>
@@ -724,17 +771,25 @@ render() {
                         <span className="span-one">应付款金额：</span>
                         <span className="span-two">{sum}</span>
                     </div>
-                    <div>
-                        <span className="span-one">支付方式：</span>
-                         <Select>
-                            
-                        </Select>
-                    </div>
+                   
                     <div>
                         <button type="button" onClick={this.tijaio}>提交</button>
                     </div>
                 </div>
             </footer>
+
+
+                   {/* 删除模态框 */}
+                                   <Modal
+                                        title="Title"
+                                        visible={this.state.delvis}
+                                        onOk={this.delhandok}
+                                        confirmLoading={this.state.confirmLoading}
+                                        onCancel={this.handleCancel}
+                                        >
+                                           <p>是否确认删除</p>
+                                        </Modal>
+
         </div>
     )
 }

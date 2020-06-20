@@ -25,7 +25,10 @@ export default class Custype extends Component {
             tianjia:[],
             addmodels:false,
             fujity:[],
-            kehu:[]
+            kehu:[],
+            delvis: false,
+            confirmLoading: false,
+            delid:''
         };
     }
     editfuji = (v) => {
@@ -232,30 +235,54 @@ export default class Custype extends Component {
 
      dellist =(row)=>{
 
+        this.setState({
+            delvis: true,
+          })
          const list = this.state.orderList.filter((v,i) => {
                return v.customer_type_id == row.customer_type_id
          })
 
          const id = list[0].customer_type_id
 
-         const tokens= localStorage.getItem('token')
-         axios({
-            method: tokens,
+         this.setState({
+            delid:id,
+            delvis: true,
+        })
+
+
+          
+
+     }
+
+
+     delhandok =()=>{
+        const tokens= localStorage.getItem('token')
+        axios({
+            method: 'POST',
             url: 'http://172.16.6.27:8080/customer_type/delete',
             data:{
                 token:tokens,
-                customer_type_id:id
+                customer_type_id:this.state.delid
             }
         })
             .then(res => {
+                this.setState({
+                    confirmLoading: true,
+                })
+                setTimeout(() => {
+                    this.setState({
+                      delvis: false,
+                      confirmLoading: false,
+                    });
+                  }, 1000);
                 console.log(res.message ,'成功');
+                console.log(this,'this')
                 this.componentDidMount() 
             })
             .catch(err => {
                 console.log(err);
-            })   
-
-     }
+            })  
+}
 
     // onSelectChange = selectedRowKeys => {
     //     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -381,6 +408,18 @@ export default class Custype extends Component {
 							</input>
 						</div>
 					</Modal>
+
+
+                   {/* 删除模态框 */}
+                               <Modal
+                                        title="Title"
+                                        visible={this.state.delvis}
+                                        onOk={this.delhandok}
+                                        confirmLoading={this.state.confirmLoading}
+                                        onCancel={this.handleCancel}
+                                        >
+                                           <p>是否确认删除</p>
+                                        </Modal>
 
                    
                 </div>
