@@ -6,6 +6,7 @@ import {
     PlusOutlined
 } from '@ant-design/icons'
 import { Select, Input, Button, Upload } from 'antd'
+import axios from '../../plugins/axios'
 
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -24,8 +25,91 @@ class AddGoods extends React.Component {
             previewImage: '',
             previewTitle: '',
             fileList: [],
-            pic1:''
+            pic1:'',
+            goodsName:'', // 商品名称
+            goodsMiaoshu:'', //商品描述
+            bUnitSP:'', // 大单位规格
+            sUnitSP:'', // 小单位规格
+            ShelfLife:'', // 保质期
+            ratio:6, // 换算比
+            BUnitCost:'', // 大单位成本价
+            SUnitCost:'', // 小单位成本价
+            bUnitSupply:'', // 大单位供货价
+            sUnitSupply:'', // 小单位供货价
+            proPrice:'', // 保护价
+            lockState:0, // 价格锁定
+            TwoPiJia:0, // 二批价
+            goodsTypeList:[], // 商品类型数组
+            goodType:'', //商品类型
+            gonghuoList:[],
+            gonghuo:'', 
+            bigUnitList:[],
+            bigUnit:'',
+            smallUnitList:[],
+            smallUnit:''
         }
+    }
+    async componentWillMount() {
+        await axios({ // 类型
+            method:'POST',
+            url:'/combobox/commodity_level',
+            data:{
+                token:'dsada'
+            }
+        })
+        .then(res => {
+            this.setState({
+                goodsTypeList:res.data.data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        await axios({ // 供货商
+            method:'POST',
+            url:'/combobox/supplier',
+            data:{
+                token:'dsada'
+            }
+        })
+        .then(res => {
+            this.setState({
+                gonghuoList:res.data.data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        await axios({ // 大单位
+            method:'POST',
+            url:'/combobox/unit_big',
+            data:{
+                token:'dsada'
+            }
+        })
+        .then(res => {
+            this.setState({
+                bigUnitList:res.data.data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        await axios({ // 小单位
+            method:'POST',
+            url:'/combobox/unit_small',
+            data:{
+                token:'dsada'
+            }
+        })
+        .then(res => {
+            this.setState({
+                smallUnitList:res.data.data
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
 
     handleCancel = () => this.setState({ previewVisible: false })
@@ -76,15 +160,141 @@ class AddGoods extends React.Component {
             fileList:newArr
         })
     }
+    // 数据双向绑定
+    changeGName = (e) => { // 商品名称
+        this.setState({
+            goodsName:e.target.value
+        })
+    }
+    changeMiaoshu = (e) => { // 商品描述
+        this.setState({
+            goodsMiaoshu:e.target.value
+        })
+    }
+    changebUnitSP = (e) => { // 大单位规格
+        this.setState({
+            bUnitSP:e.target.value
+        })
+    }
+    changesUnitSP = (e) => { // 小单位规格
+        this.setState({
+            sUnitSP:e.target.value
+        })
+    }
+    changeShelf = (e) => { // 保质期
+        this.setState({
+            ShelfLife:e.target.value
+        })
+    }
+    changeRatio = (e) => { // 换算比
+        this.setState({
+            ratio:e.target.value
+        })
+    }
+    changeBUnitCost = (e) => { // 大单位成本价
+        this.setState({
+            BUnitCost:e.target.value
+        })
+    }
+    changeSUnitCost = (e) => { // 小单位成本价
+        this.setState({
+            SUnitCost:e.target.value
+        })
+    }
+    changebUnitSupply = (e) => { // 大单位供货价
+        this.setState({
+            bUnitSupply:e.target.value
+        })
+    }
+    changesUnitSupply = (e) => { // 小单位供货价
+        this.setState({
+            sUnitSupply:e.target.value
+        })
+    }
+    changeproPrice = (e) => { // 保护价
+        this.setState({
+            proPrice:e.target.value
+        })
+    }
+    changeproPrice = (e) => { //价格体系
+        this.setState({
+            TwoPiJia:e.target.value
+        })
+    }
+    changeType = (value) => { //商品类型
+        this.setState({
+            goodType:value
+        })
+    }
+    changeGonghuo = (value) => { // 供货商
+        this.setState({
+            gonghuo:value
+        })
+    }
+    changeBunit = (value) => { // 大单位
+        this.setState({
+            bigUnit:value
+        })
+    }
+    changeSunit = (value) => { // 小单位
+        this.setState({
+            smallUnit:value
+        })
+    }
+
+
     // 提交
     toSubmit = () => {
-        console.log(this.state.fileList)
+        const { goodsName, goodsMiaoshu, bUnitSP, sUnitSP, ShelfLife, ratio, BUnitCost,
+            SUnitCost, bUnitSupply, sUnitSupply, goodType, gonghuo, bigUnit, smallUnit } = this.state
+        axios({
+            method:'POST',
+            url:'/goods/add_subordinate',
+            data:{
+                token:'dsada',
+                supplier_id:gonghuo,
+                commodity_level_id:goodType,
+                goods_name:goodsName,
+                goods_remarks:goodsMiaoshu,
+                unit_id_big:bigUnit,
+                unit_id_small:smallUnit,
+                gu_specifications_big:bUnitSP,
+                gu_specifications_small:sUnitSP,
+                goods_guarantee_period:ShelfLife,
+                goods_matrixing:ratio,
+                gu_cost_price_big:BUnitCost,
+                gu_cost_price_small:SUnitCost,
+                gu_supply_price_big:bUnitSupply,
+                gu_supply_price_small:sUnitSupply,
+            }
+        })
+        .then(res => {
+            console.log(res, '添加成功')
+            this.props.his.push('/home/system/Cominfo')
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
 
     render() {
         const { Option } = Select
         const { TextArea } = Input
-        const { fileList } = this.state
+        const { fileList, goodsName, goodsMiaoshu, bUnitSP, sUnitSP, ShelfLife, ratio, BUnitCost,
+                SUnitCost, bUnitSupply, sUnitSupply, proPrice, TwoPiJia, goodsTypeList, gonghuoList,
+                bigUnitList, smallUnitList } = this.state
+        let typeDom = goodsTypeList.map(item => {
+            return <Option value={item.commodity_level_id}>{item.commodity_level_name}</Option>
+        })
+        let gonghuoDom = gonghuoList.map(item => {
+            return <Option value={item.supplier_id}>{item.supplier_name}</Option>
+        })
+        let bUnitDom = bigUnitList.map(item => {
+            return <Option value={item.unit_id_big}>{item.unit_name_big}</Option>
+        })
+        let sUnitDom = smallUnitList.map(item => {
+            return <Option value={item.unit_id_small}>{item.unit_name_small}</Option>
+        })
         return (
             <div className='addgoods'>
                 <div className='dynamic-top'>
@@ -113,24 +323,39 @@ class AddGoods extends React.Component {
                         </div>
                         <div className='second'>
                             <div className='second-item'>
-                                <span>供货商：</span>
-                                <Select defaultValue="请选择供货商" style={{ width: 200 }} size='large'>
-                                    <Option value="lucy">Lucy</Option>
+                                <span className='span-import'>供货商：</span>
+                                <Select 
+                                    defaultValue="请选择供货商" 
+                                    style={{ width: 200 }} 
+                                    size='large'
+                                    onChange={(value) => this.changeGonghuo(value)}>
+                                    {gonghuoDom}
                                 </Select>
                             </div>
                             <div className='second-item'>
-                                <span>商品类型：</span>
-                                <Select defaultValue="请选择类型" style={{ width: 200 }} size='large'>
-                                    <Option value="lucy">Lucy</Option>
+                                <span className='span-import'>商品类型：</span>
+                                <Select 
+                                    defaultValue="请选择类型" 
+                                    style={{ width: 200 }} 
+                                    size='large'
+                                    onChange={(value) => this.changeType(value)}>
+                                    {typeDom}
                                 </Select>
                             </div>
                             <div className='second-item'>
-                                <span>商品名称：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <span className='span-import'>商品名称：</span>
+                                <Input 
+                                    size="large" 
+                                    style={{ width: 200 }}
+                                    value={goodsName}
+                                    onChange={(e) => this.changeGName(e)}/>
                             </div>
                             <div className='second-item item-area'>
                                 <span>商品描述：</span>
-                                <TextArea style={{ width: '80%',height:80 }} />
+                                <TextArea 
+                                    style={{ width: '80%',height:80 }}
+                                    value={goodsMiaoshu}
+                                    onChange={(e) => this.changeMiaoshu(e)} />
                             </div>
                         </div>
                     </div>
@@ -147,42 +372,60 @@ class AddGoods extends React.Component {
                         </div>
                         <div className='second another'>
                             <div className='second-item'>
-                                <span>大单位：</span>
-                                <Select defaultValue="请选择单位，例：箱" style={{ width: 200 }} size='large'>
-                                    <Option value="xiang">箱</Option>
+                                <span className='span-import'>大单位：</span>
+                                <Select 
+                                    defaultValue="请选择单位，例：箱" 
+                                    style={{ width: 200 }} 
+                                    size='large'
+                                    onChange={(value) => this.changeBunit(value)}>
+                                    {bUnitDom}
                                 </Select>
                             </div>
                             <div className='second-item'>
-                                <span>小单位：</span>
-                                <Select defaultValue="请选择单位，例：盒" style={{ width: 200 }} size='large'>
-                                    <Option value="he">盒</Option>
-                                    <Option value="zhi">支</Option>
-                                    <Option value="ping">瓶</Option>
+                                <span className='span-import'>小单位：</span>
+                                <Select 
+                                    defaultValue="请选择单位，例：盒" 
+                                    style={{ width: 200 }} 
+                                    size='large'
+                                    onChange={(value) => this.changeSunit(value)}>
+                                    {sUnitDom}
                                 </Select>
                             </div>
                             <div className='second-item'>
-                                <span>大单位规格：</span>
-                                <Input size="large" placeholder="1500ml" style={{ width: 200 }}/>
+                                <span className='span-import'>大单位规格：</span>
+                                <Input 
+                                    size="large" 
+                                    placeholder="1500ml" 
+                                    style={{ width: 200 }}
+                                    value={bUnitSP}
+                                    onChange={(e) => this.changebUnitSP(e)}/>
                             </div>
                             <div className='second-item'>
-                                <span>小单位规格：</span>
-                                <Input size="large" placeholder="250ml" style={{ width: 200 }}/>
+                                <span className='span-import'>小单位规格：</span>
+                                <Input 
+                                    size="large" 
+                                    placeholder="250ml" 
+                                    style={{ width: 200 }}
+                                    value = {sUnitSP}
+                                    onChange={(e) => this.changesUnitSP(e)}/>
                             </div>
                             <div className='second-item'>
-                                <span>保质期：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <span className='span-import'>保质期：</span>
+                                <Input 
+                                    size="large" 
+                                    placeholder="3个月" 
+                                    style={{ width: 200 }}
+                                    value={ShelfLife}
+                                    onChange={(e) => this.changeShelf(e)}/>
                             </div>
                             <div className='second-item'>
-                                <span>换算比：</span>
-                                <Input size="large" placeholder="6" style={{ width: 200 }}/>
-                            </div>
-                            <div className='second-item'>
-                                <span>打印名称：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
-                            </div>
-                            <div className='second-item'>
-                                <span>排序：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <span className='span-import'>换算比：</span>
+                                <Input 
+                                    size="large" 
+                                    placeholder={ratio} 
+                                    style={{ width: 200 }}
+                                    value={ratio}
+                                    onChange={(e) => this.changeRatio(e)}/>
                             </div>
                         </div>
                     </div>
@@ -199,28 +442,54 @@ class AddGoods extends React.Component {
                         </div>
                         <div className='second another'>
                             <div className='second-item'>
-                                <span>大单位成本价：</span>
-                                <Input size="large" placeholder="600.00" style={{ width: 200 }}/>
+                                <span className='span-import'>大单位成本价：</span>
+                                <Input 
+                                    size="large" 
+                                    placeholder="600.00" 
+                                    style={{ width: 200 }}
+                                    value={BUnitCost}
+                                    onChange={(e) => this.changeBUnitCost(e)}/>
                             </div>
                             <div className='second-item'>
-                                <span>小单位成本价：</span>
-                                <Input size="large" placeholder="100.00" style={{ width: 200 }}/>
+                                <span className='span-import'>小单位成本价：</span>
+                                <Input 
+                                    size="large" 
+                                    placeholder="100.00" 
+                                    style={{ width: 200 }}
+                                    value={SUnitCost}
+                                    onChange={(e) => this.changeSUnitCost(e)}/>
                             </div>
                             <div className='second-item'>
-                                <span>大单位供货价：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <span className='span-import'>大单位供货价：</span>
+                                <Input 
+                                    size="large" 
+                                    placeholder="200.00" 
+                                    style={{ width: 200 }}
+                                    value={bUnitSupply}
+                                    onChange={(e) => this.changebUnitSupply(e)}
+                                    />
                             </div>
                             <div className='second-item'>
-                                <span>小单位供货价：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <span className='span-import'>小单位供货价：</span>
+                                <Input 
+                                    size="large" 
+                                    placeholder="200.00" 
+                                    style={{ width: 200 }}
+                                    value={sUnitSupply}
+                                    onChange={(e) => this.changesUnitSupply(e)}/>
                             </div>
                             <div className='second-item'>
                                 <span>保护价：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <Input 
+                                    size="large" 
+                                    placeholder="200.00" 
+                                    style={{ width: 200 }}
+                                    value={proPrice}
+                                    onChange={(e) => this.changeproPrice(e)}/>
                             </div>
                             <div className='second-item'>
                                 <span>价格锁定：</span>
-                                <Select defaultValue="否" style={{ width: 200 }} size='large'>
+                                <Select defaultValue="否" disabled style={{ width: 200 }} size='large'>
                                     <Option value="lockTrue">是</Option>
                                     <Option value="lockFalse">否</Option>
                                 </Select>
@@ -241,31 +510,66 @@ class AddGoods extends React.Component {
                         <div className='second another'>
                             <div className='second-item'>
                                 <span>二批价：</span>
-                                <Input size="large" placeholder="00.00" style={{ width: 200 }}/>
+                                <Input 
+                                    size="large" 
+                                    placeholder="00.00" 
+                                    style={{ width: 200 }}
+                                    value={TwoPiJia}
+                                    onChange={(e) => this.changeproPrice(e)}/>
                             </div>
                             <div className='second-item'>
                                 <span>特通价：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <Input 
+                                    size="large" 
+                                    placeholder="large size" 
+                                    style={{ width: 200 }}
+                                    value={TwoPiJia}
+                                    onChange={(e) => this.changeproPrice(e)}/>
                             </div>
                             <div className='second-item'>
                                 <span>终端价：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <Input 
+                                    size="large" 
+                                    placeholder="large size" 
+                                    style={{ width: 200 }}
+                                    value={TwoPiJia}
+                                    onChange={(e) => this.changeproPrice(e)}/>
                             </div>
                             <div className='second-item'>
                                 <span>商超价：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <Input 
+                                    size="large" 
+                                    placeholder="large size" 
+                                    style={{ width: 200 }}
+                                    value={TwoPiJia}
+                                    onChange={(e) => this.changeproPrice(e)}/>
                             </div>
                             <div className='second-item'>
                                 <span>连锁超市：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <Input 
+                                    size="large" 
+                                    placeholder="large size" 
+                                    style={{ width: 200 }}
+                                    value={TwoPiJia}
+                                    onChange={(e) => this.changeproPrice(e)}/>
                             </div>
                             <div className='second-item'>
                                 <span>A类店：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <Input 
+                                    size="large" 
+                                    placeholder="large size" 
+                                    style={{ width: 200 }}
+                                    value={TwoPiJia}
+                                    onChange={(e) => this.changeproPrice(e)}/>
                             </div>
                             <div className='second-item'>
                                 <span>KA卖场：</span>
-                                <Input size="large" placeholder="large size" style={{ width: 200 }}/>
+                                <Input 
+                                    size="large" 
+                                    placeholder="large size" 
+                                    style={{ width: 200 }}
+                                    value={TwoPiJia}
+                                    onChange={(e) => this.changeproPrice(e)}/>
                             </div>
                         </div>
                     </div>
@@ -360,7 +664,7 @@ class AddGoods extends React.Component {
                                     type="primary" 
                                     size='large' 
                                     style={{width:200}}
-                                    onClick={this.toSubmit}>提交</Button>
+                                    onClick={() => this.toSubmit()}>提交</Button>
                             </div>
                         </div>
                     </div>
