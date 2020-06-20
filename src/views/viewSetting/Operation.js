@@ -58,7 +58,7 @@ export default class Operation extends Component {
         isSearch:true,
         searchInfo:{
             emp_id:null,
-            log_time:null
+            log_time:null,
         },
         log_time:'',
         eachPage:5,
@@ -67,7 +67,8 @@ export default class Operation extends Component {
 
     async componentDidMount() {
         // const {data:operaData} = await axios.post('/log/gettingOperator')
-        const {data} = await axios.post('/log/querylogbycondition',this.state.searchInfo)
+        console.log(this.state.searchInfo,'didMount')
+        const {data} = await axios.post('/log/querylogbycondition',{...this.state.searchInfo})
         const {data:res} = data
         console.log(res);
 
@@ -148,6 +149,7 @@ export default class Operation extends Component {
     }
 
     searching = () => {
+        console.log(this.state.searchInfo,'searching')
         this.componentDidMount()
     }
 
@@ -171,14 +173,15 @@ export default class Operation extends Component {
     }
 
     delLogs = async() =>{
-        console.log(this.state.log_time);
+        console.log(this.state.log_time,'time');
         
-        const {data:res} = await axios.post('/log/deletelogbycondition',this.state.log_time)
+        const {data:res} = await axios.post('/log/deletelogbycondition',{log_time:this.state.log_time})
         if(res.code !== 200 ) return message.error('删除日志失败!')
         this.setState({
             log_time:''
         })
         message.success('删除日志成功')
+        this.dateChange(0)
         this.componentDidMount()
     }
     
@@ -244,7 +247,7 @@ export default class Operation extends Component {
                                 <Option value="3">一年前</Option>
                             </Select>
                             </div>
-                            <div className="searchResult" style={{padding:'4px 0'}} onclick={this.delLogs}>确认</div>
+                            <div className="searchResult" style={{padding:'4px 0'}} onClick={this.delLogs}>确认</div>
                             <Select
                                 defaultValue="显示条数"
                                 style={{ width: 100 }}
