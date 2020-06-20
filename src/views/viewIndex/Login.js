@@ -1,75 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { loginActionSync, powerAction } from "../../store/user/userActions";
+import { loginActionSync } from "../../store/user/userActions";
+import { reTreeNode } from '../../store/user/selector'
 import '../../assets/css/huang/login.css'
 import axios from '../../plugins/axios'
-
-const checkedList = [{
-    power_id:0,
-    power_name:'基本信息',
-    children:[{
-        power_id:1,
-        power_name:'商品管理',
-        power_path:'/home/system',
-        parent_id:0,
-        children:[
-            {power_id:2,
-            power_name:'商品管理添加',
-            power_path:'/home/system',},
-            {power_id:5,
-            power_name:'商品管理查询',
-            power_path:'/home/system',},
-            {power_id:6,
-            power_name:'商品管理查看',
-            power_path:'/home/system',},
-            {power_id:7,
-            power_name:'商品管理的撒看见',
-            power_path:'/home/system',},
-        ]
-    },{
-        power_id:8,
-        power_name:'职位管理',
-        power_path:'/home/system/Position',
-        parent_id:0,
-        children:[
-            {power_id:9,
-            power_name:'职位管理添加',
-            power_path:'/home/system',},
-            {power_id:10,
-            power_name:'职位管理删除',
-            power_path:'/home/system',},
-            {power_id:11,
-            power_name:'职位管理编辑',
-            power_path:'/home/system',},
-            {power_id:12,
-            power_name:'职位管理查询',
-            power_path:'/home/system',},
-        ]
-    }]
-},{
-    power_id:13,
-    power_name:'测试',
-    children:[{
-        power_id:14,
-        power_name:'测试管理',
-        power_path:'/home/system',
-        parent_id:13,
-        children:[
-            {power_id:15,
-            power_name:'测试管理添加',
-            power_path:'/home/system',},
-            {power_id:16,
-            power_name:'测试管理查询',
-            power_path:'/home/system',},
-            {power_id:17,
-            power_name:'测试管理查看',
-            power_path:'/home/system',},
-            {power_id:18,
-            power_name:'测试管理的撒看见',
-            power_path:'/home/system',},
-        ]
-    }]
-}]
 
 
 class Login extends React.Component {
@@ -105,22 +39,26 @@ class Login extends React.Component {
       }
 	  })
 	  .then(res=> {
-		  console.log(res.data)
-		  this.setState({
-			  token:res.data.token
+        console.log(res.data,'res.data')
+        this.setState({
+            token:res.data.token
         })
-      localStorage.setItem('token',this.state.token)
-      localStorage.setItem('username',this.state.username)
 
-        console.log(checkedList,'loginCheck')
+        localStorage.setItem('token',this.state.token)
+        localStorage.setItem('username',this.state.username)
 
-      this.props.loginHandler(
-        {
-          username: this.state.username
-        },
-        this.props.history,
-        checkedList
-      );
+        // console.log(reTreeNode,'reTreeNode')
+        let checkedList = reTreeNode(res.data.permissionDate,0)
+
+        // console.log(checkedList,'loginCheck')
+
+        this.props.loginHandler(
+            {
+            username: this.state.username
+            },
+            this.props.history,
+            checkedList
+        );
 
 	  })
 	  .catch(err=> {

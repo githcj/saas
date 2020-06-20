@@ -4,7 +4,7 @@ import '../../assets/css/viewSetting/Power.css'
 import { Checkbox,Button, message } from 'antd'
 import PowerTable from '../../components/PowerTable'
 import {connect} from 'react-redux'
-import {getSecondChildrenList} from '../../store/user/selector'
+import {getSecondChildrenList,reTreeNode} from '../../store/user/selector'
 import axios from '../../plugins/axios'
 
 let index = 0
@@ -99,7 +99,10 @@ class Quanxian extends Component{
     
     async componentWillMount () {
         const {data:res} = await axios.post('/position/getpermission')
-        res.data = getSecondChildrenList(res.data)
+        console.log(res.data)
+        let powerList = reTreeNode(res.data,0)
+        console.log(powerList)
+        powerList = getSecondChildrenList(powerList)
         console.log(res.data,'powerList')
         this.setState({
             powerList:res.data

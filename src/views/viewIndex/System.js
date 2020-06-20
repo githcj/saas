@@ -31,35 +31,38 @@ const System = (props) => {
     
     const { match, history } = props;
     
-    const [activeKey,setactiveKey] = useState(['1'])
+    const [activeKey,setactiveKey] = useState(['/home/system'])
     
     useEffect(()=>{
         setactiveKey([sessionStorage.getItem('activeKey')])
     },[])
 
-    console.log("system:", match.url);
+    // console.log("system:", match.url);
     // console.log(props,'SystemProps')
     const {checkedList} = props.state.userReducer//获取列表
-    let sysList = getLimitList(checkedList,-1,14)//该页权限列表
+    let sysList = getLimitList(checkedList,-1,4)//该页权限列表
 
-    console.log(sysList,'SysList')
+    // console.log(sysList,'SysList')
 
-    const menuDOM = sysList.map(item => {//节点生成
-        return (<Menu.ItemGroup title={item.power_name}>
-            {item.children.map(cItem => {
+    const menuDOM = sysList.map((item,index) => {//节点生成
+        // console.log(item,'item')
+        return (<Menu.ItemGroup title={item.power_name} key={index}>
+            { !item.children ? '':
+                item.children.map(cItem => {
                 return (
-                    <Menu.Item key={cItem.power_id}>
+                    <Menu.Item key={cItem.power_id} key={cItem.power_path}>
                         <NavLink to={cItem.power_path}>{cItem.power_name}</NavLink>
                     </Menu.Item>
                 )
-            })}
+                })}
         </Menu.ItemGroup>)
     })
 
     //当前点击
     const changeActiveKey = (e) => {
+        // console.log(props.location)
         sessionStorage.setItem('activeKey',e.key)
-        console.log(e,props.location.pathname,'点击的节点')
+        // console.log(e,props.location.pathname,'点击的节点')
         setactiveKey([e.key])
     }
 
@@ -68,8 +71,8 @@ const System = (props) => {
 			<Row>
 				<Col span={4}>
 					<div className='system-nav'>
-						<Menu style={{ background: '#f3f3f3' }} selectedKeys={activeKey} onClick={changeActiveKey}>
-							<Menu.ItemGroup title="基本资料">
+						<Menu style={{ background: '#f3f3f3' }} selectedKeys={[props.location.pathname]} onClick={changeActiveKey}>
+							{/* <Menu.ItemGroup title="基本资料">
 								<Menu.Item key="1">
 									<NavLink to={match.url}>公司信息</NavLink>
 								</Menu.Item>
@@ -113,10 +116,10 @@ const System = (props) => {
 								<Menu.Item key="13">
 									<NavLink to={match.url + "/Cominfo"}>商品信息</NavLink>
 								</Menu.Item>
-							</Menu.ItemGroup>
+							</Menu.ItemGroup> */}
 
                             {/* 权限渲染节点 */}
-                            {/* {menuDOM} */}
+                            {menuDOM}
 						</Menu>
 					</div>
 				</Col>

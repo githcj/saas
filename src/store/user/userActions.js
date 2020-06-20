@@ -17,6 +17,7 @@ export const loginAction = (user,checkedList)=>{
 export const loginActionSync = function(user, history,checkedList) {
   return function(dispatch) {
     setTimeout(()=> {
+        console.log(history,'actionHistory')
       dispatch(loginAction(user,checkedList))
       history.push('/home')
     }, 200)
