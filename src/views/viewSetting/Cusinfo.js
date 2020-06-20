@@ -30,7 +30,11 @@ export default class Cusinfo extends Component {
             fuzeperson:[],
             value:0,
             usertype:0,
-            date:''
+            date:'',
+            delvis: false,
+            confirmLoading: false,
+            delid:''
+
         };
     }
 
@@ -129,18 +133,26 @@ export default class Cusinfo extends Component {
 	handleCancel = e => {
 		console.log(e);
 		this.setState({
-		  	visible: false,
+              visible: false,
+              delvis:false
 		});
     }
     
     
 
    async  componentDidMount() {
+    const tokens= localStorage.getItem('token')
+    
          await  axios({
                 method: 'POST',
                 url: 'http://172.16.6.27:8080/customer/queryall',
+                data:{
+                    token:tokens
+                }
             })
            .then(res => {
+               console.log(res.data.data,'客户数据请求');
+               
                   this.setState({
                     orderList: res.data.data
                 })
@@ -159,6 +171,9 @@ export default class Cusinfo extends Component {
             await   axios({
                 method: 'POST',
                 url: 'http://172.16.6.27:8080/combobox/customer',
+                data:{
+                    token:tokens
+                }
             })
                 .then(res => {
                     this.setState({
@@ -173,6 +188,9 @@ export default class Cusinfo extends Component {
                 axios({
                     method: 'POST',
                     url: 'http://172.16.6.27:8080/person/in_charge',
+                    data:{
+                        token:tokens
+                    }
                 })
                     .then(res => {
                         this.setState({
@@ -251,35 +269,56 @@ export default class Cusinfo extends Component {
             })
          
         }
-        delkehu =(row)=>{
-            console.log(row,'row');
-            
+
+
+           delkehu =(row)=>{
+              this.setState({
+                delvis: true,
+              })
+             
+
              const id=this.state.orderList.filter((v,i)=>{
                   return v.customer_id == row.customer_id
-             })
-            console.log(id,'id');
+              })
+             console.log(id,'id');
             
-             const ids=id[0].customer_id
-             console.log(ids,'ids');
-             const tokens= localStorage.getItem('token')
-            axios({
-                method: 'POST',
-                url: 'http://172.16.6.27:8080/customer/delete',
-                data:{
-                    token:tokens,
-                    customer_id:ids
-                }
-            })
-                .then(res => {
-                    console.log(res.message ,'成功');
-                    console.log(this,'this')
-                    this.componentDidMount() 
-                })
-                .catch(err => {
-                    console.log(err);
-                })     
+              const ids=id[0].customer_id
+            //  console.log(ids,'ids');
+             this.setState({
+                 delid:ids
+             })
+
+             
         }
 
+        delhandok =()=>{
+                  const tokens= localStorage.getItem('token')
+                    axios({
+                        method: 'POST',
+                        url: 'http://172.16.6.27:8080/customer/delete',
+                        data:{
+                            token:tokens,
+                            customer_id:this.state.delid
+                        }
+                    })
+                        .then(res => {
+                            this.setState({
+                                confirmLoading: true,
+                            })
+                            setTimeout(() => {
+                                this.setState({
+                                  delvis: false,
+                                  confirmLoading: false,
+                                });
+                              }, 1000);
+                            console.log(res.message ,'成功');
+                            console.log(this,'this')
+                            this.componentDidMount() 
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })   
+        }
 
     render() {
         const { orderList,phone ,sousuo,kehutype , fuzeperson,dates ,eachPage,bianji } = this.state;
@@ -328,7 +367,6 @@ export default class Cusinfo extends Component {
                 render: (text,row,index) => (
                   <span className="order-axios">
                        <a onClick={()=> this.showModal(row)}>编辑</a>
-                       <a onClick={()=> this.delkehu(row)}>删除</a>
                   </span>
                 )
             },
@@ -402,6 +440,18 @@ export default class Cusinfo extends Component {
                         }}
                     />
                 </div>
+
+
+                     {/* 删除模态框 */}
+                                    <Modal
+                                        title="Title"
+                                        visible={this.state.delvis}
+                                        onOk={this.delhandok}
+                                        confirmLoading={this.state.confirmLoading}
+                                        onCancel={this.handleCancel}
+                                        >
+                                           <p>是否确认删除</p>
+                                        </Modal>
 
 
                 
