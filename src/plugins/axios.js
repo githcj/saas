@@ -4,12 +4,15 @@ import {Modal} from 'antd'
 
 let config = {
     // baseURL: "http://119.23.228.238:3031/mock/47",
-    // baseURL:'http://172.16.6.30:8080',
-    baseURL:'http://172.16.6.27:8080',
+    // baseURL:'http://172.16.6.30:8080',//黄文璟
+    // baseURL:'http://172.16.6.27:8080',//侯山川
+    baseURL:'http://47.114.36.172:8080',//云地址
     timeout: 60*1000, // Timeout
 };
 
 const _axios = axios.create(config);
+
+axios.defaults.withCredentials = true;
 
 // 设置post请求头
 _axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'

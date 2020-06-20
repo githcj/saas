@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, NavLink, Redirect, Link } from "react-router-dom";
+import { Route, NavLink, Redirect, Link ,Switch} from "react-router-dom";
 import Caigou from "./Caigou";
 import Xiaoshou from "./Xiaoshou";
 import Kucun from "./Kucun";
@@ -15,7 +15,6 @@ import {
   BellFilled,
   CloseCircleOutlined,
 } from "@ant-design/icons";
-import { logoutAction } from "../../store/user/userActions";
 
 export default class Home extends Component {
   constructor(props) {
@@ -31,15 +30,10 @@ export default class Home extends Component {
       });
   };
 
-  //获取点击地址
-  getPathName = () => {
-      sessionStorage.setItem('activePath',this.props.location.pathname)
-      console.log(this.props.location.pathname,'homePathName')
-  }
-
-  clearActiveKey = () => {
-      sessionStorage.removeItem('activeKey')
-  }
+  //清除地址
+    clearActiveKey = () => {
+        sessionStorage.removeItem('activeKey')
+    }
   
   render() {
     const { match,history } = this.props;
@@ -99,13 +93,15 @@ export default class Home extends Component {
         </Row>
         <Row>
           <div onClick={this.getPathName}>
-            <Redirect from={match.url} exact to={ match.url + "/system"} />
+            {/* <Switch> */}
+            <Redirect to={ sessionStorage.getItem('activeKey') || match.url + "/system"} />
             <Route path={match.url + "/system"} component={System}></Route>
             <Route path={match.url + "/Caigou"} component={Caigou} />
             <Route path={match.url + "/Xiaoshou"} component={Xiaoshou} />
             <Route path={match.url + "/Kucun"} component={Kucun} />
             <Route path={match.url + "/Zijin"} component={Zijin} />
             <Route path={match.url + "/Dongtai"} component={Dongtai} />
+            {/* </Switch> */}
           </div>
         </Row>
       </div>
