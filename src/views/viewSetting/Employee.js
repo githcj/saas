@@ -20,7 +20,7 @@ export default class Employee extends Component{
             title:'修改密码',
             emp_id:0,
             searchInfo:{
-                info:'',
+                emp_name:'',
                 dep_id:null,
             },
             ModalVisible:false,
@@ -84,7 +84,8 @@ export default class Employee extends Component{
                 searchInfo
             })
         }
-        const {data} = await axios.post('/employee/queEmpByEmpid',this.state.searchInfo)
+        console.log(this.state.searchInfo,'info')
+        const {data} = await axios.post('/employee/queEmpbyCondition',{...this.state.searchInfo})
         console.log(data);
         
         const {data:res} = data
@@ -193,31 +194,7 @@ export default class Employee extends Component{
             ModalVisible:false
         })
     }
-    // 搜索状态
-    changeIsSearch = () => {
-        let isSearch = this.state.isSearch
-        this.setState({
-            isSearch: !isSearch
-        })
-    }
 
-    // 搜索
-    async toSearch(e) {
-        if(e.keyCode == 13) {
-            if(e.target.value.trim()){
-                let searchInfo = this.state.searchInfo
-                searchInfo.info = e.target.value.trim()
-                this.setState({
-                    searchInfo
-                })
-                this.componentDidMount()
-            }
-        }
-    }
-
-    searching = () => {
-        this.componentDidMount()
-    }
     //部门改变
     depChange = (value)=>{
         let searchInfo = this.state.searchInfo
@@ -260,14 +237,12 @@ export default class Employee extends Component{
 
     // 搜索
     async toSearch(e) {
-        console.log(e.keyCode);
-        
         if(e.keyCode == 13) {
             console.log('?');
             
             if(e.target.value.trim()){
                 let searchInfo = this.state.searchInfo
-                searchInfo.ware_name = e.target.value.trim()
+                searchInfo.emp_name = e.target.value.trim()
                 this.setState({
                     searchInfo
                 })

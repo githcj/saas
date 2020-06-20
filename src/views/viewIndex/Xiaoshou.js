@@ -23,17 +23,17 @@ const Xiaoshou = (props) => {
 
     console.log(sysList,'SysList')
 
-    const menuDOM = sysList.map(item => {//节点生成
-        return (<Menu.ItemGroup title={item.power_name}>
-            {item.children.map(cItem => {
-                return (
-                    <Menu.Item key={cItem.power_id}>
-                        <NavLink to={cItem.power_path}>{cItem.power_name}</NavLink>
-                    </Menu.Item>
-                )
-            })}
-        </Menu.ItemGroup>)
-    })
+    // const menuDOM = sysList.map(item => {//节点生成
+    //     return (<Menu.ItemGroup title={item.power_name}>
+    //         {item.children.map(cItem => {
+    //             return (
+    //                 <Menu.Item key={cItem.power_id}>
+    //                     <NavLink to={cItem.power_path}>{cItem.power_name}</NavLink>
+    //                 </Menu.Item>
+    //             )
+    //         })}
+    //     </Menu.ItemGroup>)
+    // })
 
     //当前点击
     const changeActiveKey = (e) => {

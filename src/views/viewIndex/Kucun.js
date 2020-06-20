@@ -41,9 +41,9 @@ const Stock = (props) => {
 
     //当前点击
     const changeActiveKey = (e) => {
-        sessionStorage.setItem('activeKey',e.key)
-        console.log(e,props.location.pathname,'点击的节点')
-        setactiveKey([e.key])
+        // sessionStorage.setItem('activeKey',e.key)
+        // console.log(e,props.location.pathname,'点击的节点')
+        // setactiveKey([e.key])
     }
 
 

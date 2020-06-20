@@ -1,12 +1,14 @@
-export const getSecondChildrenList = state => {
-    let orgList = state.userReducer.checkedList
+export const getSecondChildrenList = listArr => {
+    let orgList = listArr
     // orgList = JSON.parse(orgList)
-    console.log(orgList,'selector')
+    // console.log(orgList,'selector')
     let secondList = []
     orgList.map(item => {
-        item.children.map(lItem =>{
-            secondList.push(lItem)
-        })
+        if(item.children){
+            item.children.map(lItem =>{
+                secondList.push(lItem)
+            })
+        }
     })
     return secondList
 }

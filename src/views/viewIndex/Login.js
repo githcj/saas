@@ -3,9 +3,7 @@ import { connect } from "react-redux";
 import { loginActionSync } from "../../store/user/userActions";
 import { reTreeNode } from '../../store/user/selector'
 import '../../assets/css/huang/login.css'
-// import axios from '../../plugins/axios'
-import axios from 'axios'
-
+import axios from '../../plugins/axios'
 
 class Login extends React.Component {
   constructor(props) {
@@ -30,13 +28,14 @@ class Login extends React.Component {
   };
 
   getLogin = async () => {
+      console.log(this.state,'LoginState')
 	  await axios({
 		  method:'POST',
 		  url:'/login/login',
 		  data:{
-			  emp_account:this.state.username,
-        emp_password:this.state.password,
-        emp_last_time:new Date()
+            emp_account:this.state.username,
+            emp_password:this.state.password,
+            emp_last_time:new Date()
       }
 	  })
 	  .then(res=> {

@@ -3,7 +3,7 @@ import ConTitle from '../../components/ConTitle'
 import '../../assets/css/viewSetting/Power.css'
 import { Checkbox,Button, message } from 'antd'
 import PowerTable from '../../components/PowerTable'
-import {connect} from 'react-redux'
+// import {connect} from 'react-redux'
 import {getSecondChildrenList,reTreeNode} from '../../store/user/selector'
 import axios from '../../plugins/axios'
 
@@ -14,144 +14,95 @@ class Quanxian extends Component{
         super(props)
         this.state = {
             rowInfo:{},
-            // powerList:[{
-            //     power_id:1,
-            //     parent_id:0,
-            //     power_name:'商品管理',
-            //     power_path:'/home/system',
-            //     children:[
-            //         {power_id:2,
-            //         power_name:'商品管理添加',
-            //         power_path:'/home/system',},
-            //         {power_id:3,
-            //         power_name:'商品管理删除',
-            //         power_path:'/home/system',},
-            //         {power_id:4,
-            //         power_name:'商品管理编辑',
-            //         power_path:'/home/system',},
-            //         {power_id:5,
-            //         power_name:'商品管理查询',
-            //         power_path:'/home/system',},
-            //         {power_id:6,
-            //         power_name:'商品管理查看',
-            //         power_path:'/home/system',},
-            //         {power_id:7,
-            //         power_name:'商品管理的撒看见',
-            //         power_path:'/home/system',},
-            //     ]
-            // },{
-            //     power_id:8,
-            //     parent_id:0,
-            //     power_name:'职位管理',
-            //     power_path:'/home/system',
-            //     children:[
-            //         {power_id:9,
-            //         power_name:'职位管理添加',
-            //         power_path:'/home/system',},
-            //         {power_id:10,
-            //         power_name:'职位管理删除',
-            //         power_path:'/home/system',},
-            //         {power_id:11,
-            //         power_name:'职位管理编辑',
-            //         power_path:'/home/system',},
-            //         {power_id:12,
-            //         power_name:'职位管理查询',
-            //         power_path:'/home/system',},
-            //         {power_id:13,
-            //         power_name:'职位管理查看',
-            //         power_path:'/home/system',},
-            //         {power_id:14,
-            //         power_name:'职位管理的撒看见',
-            //         power_path:'/home/system',},
-            //     ]
-            // },{
-            //     power_id:14,
-            //     parent_id:13,
-            //     power_name:'权限管理',
-            //     power_path:'/home/system',
-            //     children:[
-            //         {power_id:16,
-            //         power_name:'权限管理添加',
-            //         power_path:'/home/system',},
-            //         {power_id:17,
-            //         power_name:'权限管理删除',
-            //         power_path:'/home/system',},
-            //         {power_id:18,
-            //         power_name:'权限管理编辑',
-            //         power_path:'/home/system',},
-            //         {power_id:19,
-            //         power_name:'权限管理查询',
-            //         power_path:'/home/system',},
-            //         {power_id:20,
-            //         power_name:'权限管理查看',
-            //         power_path:'/home/system',},
-            //         {power_id:21,
-            //         power_name:'权限管理的撒看见',
-            //         power_path:'/home/system',},
-            //     ] 
-            // }],
-            
+            powerList:[],//所有权限
+            checkList:[],//选择的权限
             indeterminate:true,
             checkAll:false,
-            checkList:[],
         }
     }
-    
-    async componentWillMount () {
-        const {data:res} = await axios.post('/position/getpermission')
-        console.log(res.data)
-        let powerList = reTreeNode(res.data,0)
-        console.log(powerList)
-        powerList = getSecondChildrenList(powerList)
-        console.log(res.data,'powerList')
-        this.setState({
-            powerList:res.data
-        })
-        console.log(this.props.checkedList,'props')
-        this.proData(this.props.checkedList)
-    }
 
-    componentDidMount() {
+    async componentDidMount() {
+        
+        const {data:res} = await axios.post('/position/getpermission')//获取所有权限列表
+        // console.log(res,'res for Quanxian')
+        let powerList = reTreeNode(res.data,0)
+        // console.log(powerList,'this state powerList')
+        powerList = getSecondChildrenList(powerList)//得到二级权限
+        // // console.log(powerList,'powerList')
+
         const rowInfo = this.props.location.params
-        this.setState({
+        // console.log(rowInfo,'Quanxian rowInfo');
+        
+        const {data:empPower} = await axios.post('/position/getEmppermission',{position_id:rowInfo.position_id})//获取当前选择角色权限
+        // console.log(empPower)
+        let checkedList = reTreeNode(empPower.data,0)
+
+        // let checkedList = reTreeNode(JSON.parse(sessionStorage.getItem('checkedList')),0)
+        checkedList = getSecondChildrenList(checkedList)//得到二级权限
+        // console.log(checkedList, this.state.powerList,'checkedList')
+        this.proData(checkedList,powerList)
+        // console.log(this.props.checkList,'props checkList')
+
+        
+        await this.setState({
+            powerList,
             rowInfo
         })
+        // console.log(this.state.powerList,'state.powerList')
+
+        
     }
 
-    proData = (listData)=>{//生成checkList函数
+    proData = (listData,powerList)=>{//生成checkList函数
         const checkList = []
         
-        listData.map(item => {
+        powerList.map(item => {
+            // 子元数组
             let Obj = {}
             Obj.power_id = item.power_id
             Obj.parent_id = item.parent_id
-            // 子元数组
-            Obj.children = item.children.map(items =>{
-                return items.power_id
+
+            let isItem = listData.filter(lItem => {
+                return lItem.power_id === item.power_id
             })
-            // 判断是否全选
-            let ObjLength = this.state.powerList.filter(oItem =>{
-                return item.power_id === oItem.power_id
-            })
-            console.log(ObjLength[0],'error')
-            let length = ObjLength[0].children.length
-            if(length === item.children.length){
-                Obj.indeterminate = false
-                Obj.checked = true
-            }else if(length === 0){
-                Obj.indeterminate = false
-                Obj.checked = false
-            }else{
-                Obj.indeterminate = true
-                Obj.checked = false
+
+            if(isItem.length !== 0){
+                isItem = isItem[0]
+                if(isItem.children){//有子权限
+                    Obj.children = isItem.children.map(items =>{
+                        return items.power_id
+                    })
+                    
+                    // 判断是否全选
+                    let ObjLength = powerList.filter(oItem =>{
+                        return isItem.power_id === oItem.power_id
+                    })
+                    // console.log(item,ObjLength[0],'error')
+                    let length = ObjLength[0].children.length
+                    if(length === item.children.length){
+                        Obj.indeterminate = false
+                        Obj.checked = true
+                    }else if(length === 0){
+                        Obj.indeterminate = false
+                        Obj.checked = false
+                    }else{
+                        Obj.indeterminate = true
+                        Obj.checked = false
+                    }
+                    
+                }else {//无子权限
+                    Obj.indeterminate = false
+                    Obj.checked = false
+                }
             }
+            
 
             checkList.push(Obj)
         })
         this.setState({
             checkList
         })
-        console.log(checkList,'Obj');
+        // console.log(checkList,'Obj');
     }
 
 
@@ -175,9 +126,9 @@ class Quanxian extends Component{
 
     // 选择全部
     onCheckAllChange = (e) =>{
-        console.log(e.target.checked);
+        // console.log(e.target.checked);
         if(e.target.checked) {
-            this.proData(this.state.powerList)
+            this.proData(this.state.powerList,this.state.powerList)
             this.setState({
                 indeterminate:false,
                 checkAll:true
@@ -191,15 +142,15 @@ class Quanxian extends Component{
         }
     }
     // 选择一个表的
-    onCheckOneAllChange = (e,id,listIndex)=>{
+    onCheckOneAllChange = (e,id,listId)=>{
         let isChecked = e.target.checked
-        console.log(e.target.checked,id,index);
+        // console.log(e.target.checked,id,index);
         
         const {checkList,powerList} = this.state
-        console.log(checkList,powerList,'list');
+        // console.log(checkList,powerList,'list');
 
         for(let i=0; i<checkList.length; i++){//查出每个表格对应的全部选项值
-            if(checkList[i].power_id === id && isChecked){
+            if(checkList[i].power_id === id && isChecked){//确定选的那个表且该表全选
                 let poList = powerList.filter(item => {
                     return item.power_id === id
                 })
@@ -219,7 +170,7 @@ class Quanxian extends Component{
         this.setState({
             checkList,
         })
-        index = listIndex
+        index = listId
         
     }
     // 选择一个
@@ -228,7 +179,7 @@ class Quanxian extends Component{
         let Obj = this.state.powerList.filter(item =>{
             return id === item.power_id
         })
-        console.log(Obj)
+        // console.log(Obj)
         let length = Obj[0].children.length
         let checkList = this.state.checkList
         for(let i=0; i<checkList.length; i++){
@@ -249,21 +200,23 @@ class Quanxian extends Component{
         this.setState({
             checkList
         })
-        console.log(this.state.checkList,'checkList');
+        // console.log(this.state.checkList,'checkList');
     }
 
     //权限修改
     editPower = async() =>{
-        console.log('???');
+        // console.log('???');
         let params = {}
         params.powerArr = []
         let {checkList} = this.state
         checkList.map(item => {
-            if(item.children.length !== 0 ) {
-                params.powerArr.push(item.parent_id,item.power_id)
-                item.children.map( cItem =>{
-                    params.powerArr.push(cItem)
-                })
+            if(item.children){
+                if(item.children.length !== 0 ) {
+                    params.powerArr.push(item.parent_id,item.power_id)
+                    item.children.map( cItem =>{
+                        params.powerArr.push(cItem)
+                    })
+                }
             }
         })
         params.position_id = this.state.rowInfo.position_id
@@ -271,7 +224,7 @@ class Quanxian extends Component{
         params.powerArr = this.eddRepeatNum(params.powerArr)
         console.log(params,'2params');
         
-        const {data:res} = await axios.post('/',params)
+        const {data:res} = await axios.post('/position/setpermission',params)
         if(res.code !== 200) return message.error('保存失败')
         message.success('保存成功!')
         this.props.history.push({
@@ -290,23 +243,25 @@ class Quanxian extends Component{
 
     render () {
         const ppList = this.state.powerList
-        console.log(this.state.powerList,'渲染时的powerList')
+        console.log(this.state.checkList,this.state.powerList,'渲染时的checkList')
+
         const listDOM = ppList.map((item) => {
-            if(!this.state.index) {
-                console.log(this.state.checkedList,'renderList');
+            if(item.children) {
+                // if(!this.state.index) {
+
+                    // for(let i=0; i<this.state.checkList.length; i++){
+                    //     if(this.state.checkList[i].power_id === item.power_id){
+                    //        index=i
+                    //     }
+                    // }
+                // }
+                // console.log(item,index,'index');
                 
-                for(let i=0; i<this.state.checkList.length; i++){
-                    if(this.state.checkList[i].power_id === item.power_id){
-                       index=i
-                    }
-                }
+                
+                {/* 选出后渲染DOM */}
+                return <PowerTable checkList={this.state.checkList} item={item} 
+                key={item.power_id} onCheckOneAllChange={this.onCheckOneAllChange} onChange={this.onChange} />
             }
-            console.log(index,'index');
-            
-            
-            {/* 选出后渲染DOM */}
-            return <PowerTable checkList={this.state.checkList} index={index} item={item} 
-            key={index} onCheckOneAllChange={this.onCheckOneAllChange} onChange={this.onChange} />
         })
 
         return (
@@ -316,7 +271,7 @@ class Quanxian extends Component{
                         <ConTitle titleName='权限设置' clickName="返回" />
                     </div>
                 </header>
-                {/* <section id="border-section"> */}
+                
                 <div className='power-title-box'>
                     <div className='power-title'>
                         <span style={{fontSize:'14px'}}>当前职位：{this.state.rowInfo.position_name}</span>
@@ -349,4 +304,4 @@ class Quanxian extends Component{
 }
 
 
-export default connect(state => ({checkedList:getSecondChildrenList(state)}))(Quanxian);
+export default Quanxian;

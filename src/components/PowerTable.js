@@ -3,22 +3,27 @@ import {Row,Col,Checkbox} from 'antd'
 
 const PowerTable = (props) => {
     
-    const {index,item} = props
-    console.log(props,'list')
+    const {item} = props
+    // console.log(props.checkList,'list')
+    let checkItem = props.checkList.filter( it => {
+        return it.power_id === item.power_id
+    })
+    checkItem = checkItem[0]
+    console.log(checkItem,'选择的Item')
 
 
     return (<div className='power-check-box' key={item.power_id}>
             <div className="power-check-title">
                 <Checkbox
-                    indeterminate={props.checkList[index].indeterminate}
-                    onChange={(e)=>props.onCheckOneAllChange(e,item.power_id,index)}
-                    checked={props.checkList[index].checked}
+                    indeterminate={checkItem.indeterminate}
+                    onChange={(e)=>props.onCheckOneAllChange(e,item.power_id,checkItem.power_id)}
+                    checked={checkItem.checked}
                 >
                     {item.power_name}
                 </Checkbox>
             </div>
             <div className="power-check-body">
-                <Checkbox.Group style={{ width: '100%' }} value={props.checkList[index].children} id={index} onChange={(value)=>{props.onChange(value,item.power_id)}}>
+                <Checkbox.Group style={{ width: '100%' }} value={checkItem.children} onChange={(value)=>{props.onChange(value,item.power_id)}}>
                     <Row className="power-check-body">
                     {item.children.map(childItem =>{
                         return  <Col span={8} className="power-check-item-box" key={childItem.power_id}>

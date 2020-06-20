@@ -43,6 +43,7 @@ class AddWare extends Component {
     };
     
     onEditFinish = async values => {
+        console.log(values,'editValues')
         const {data:res}  = await axios.post('/warehouse/updatewarehouse',values)
         if(res.code !== 200) return message.error('编辑仓库信息失败!')
         message.success('编辑仓库信息成功!')
