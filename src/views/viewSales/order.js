@@ -32,7 +32,10 @@ export default class Order extends Component {
             kehutype:[],
             bianji:[],
             z:'',
-            ordercar:[]
+            ordercar:[],
+            delvis: false,
+            confirmLoading: false,
+            delid:''
         };
     }
     editval = (value,index) => {
@@ -87,7 +90,7 @@ export default class Order extends Component {
             data:{
                 token:tokens,
                 sales_id:bianji.sales_id,
-                sales_method_name:bianji.sales_method_name,
+                sales_type_name:bianji.sales_type_name,
                 vehicle_id:bianji.vehicle_id
             }
         })
@@ -104,14 +107,15 @@ export default class Order extends Component {
 		this.setState({
 		  	visible: false,
         });
-        
 	}
 	handleCancel = e => {
 		console.log(e);
 		this.setState({
-		  	visible: false,
+              visible: false,
+              delvis:false
 		});
-	}
+    }
+    
 
   async  componentDidMount() {
        const tokens=localStorage.getItem('token')
@@ -249,23 +253,44 @@ export default class Order extends Component {
      orderdellist =(row)=>{
          const id= row.sales_id
          console.log(id);
-         const tokens=localStorage.getItem('token')
+        this.setState({
+            delid:id,
+            delvis: true,
+        })
+         
+     }
+
+     delhandok =()=>{
+        const tokens= localStorage.getItem('token')
         axios({
             method: 'POST',
             url: 'http://172.16.6.29:8080/sales/deleteSales',
             data:{
                 token:tokens,
-                sales_id:id
+                sales_id:this.state.delid
             }
         })
             .then(res => {
-                 
-               this.componentDidMount()
+                this.setState({
+                    confirmLoading: true,
+                })
+                setTimeout(() => {
+                    this.setState({
+                      delvis: false,
+                      confirmLoading: false,
+                    });
+                  }, 1000);
+                console.log(res.message ,'成功');
+                console.log(this,'this')
+                this.componentDidMount() 
             })
             .catch(err => {
                 console.log(err);
             })  
-     }
+}
+
+
+
 
 
     onSelectChange = selectedRowKeys => {
@@ -507,6 +532,17 @@ export default class Order extends Component {
                             pageSize:eachPage
                         }}
                     />
+
+                    {/* 删除模态框 */}
+                                     <Modal
+                                        title="Title"
+                                        visible={this.state.delvis}
+                                        onOk={this.delhandok}
+                                        confirmLoading={this.state.confirmLoading}
+                                        onCancel={this.handleCancel}
+                                        >
+                                           <p>是否确认删除</p>
+                                        </Modal>
 
                       <Modal
 						title="编辑"
