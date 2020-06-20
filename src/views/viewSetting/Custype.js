@@ -174,6 +174,9 @@ export default class Custype extends Component {
             await  axios({
                 method: 'POST',
                 url: 'http://172.16.6.27:8080/combobox/queryfather',
+                data:{
+                    token:tokens
+                }
             })
                 .then(res => {
                     console.log(res.data.data,'data');
@@ -191,6 +194,9 @@ export default class Custype extends Component {
             await  axios({
                 method: 'POST',
                 url: 'http://172.16.6.27:8080/combobox/customer',
+                data:{
+                    token:tokens
+                }
             })
                 .then(res => {
                     this.setState({
@@ -237,7 +243,7 @@ export default class Custype extends Component {
             method: tokens,
             url: 'http://172.16.6.27:8080/customer_type/delete',
             data:{
-                token:'123',
+                token:tokens,
                 customer_type_id:id
             }
         })
