@@ -136,11 +136,18 @@ export default class Cusinfo extends Component {
     
 
    async  componentDidMount() {
+    const tokens= localStorage.getItem('token')
+    
          await  axios({
                 method: 'POST',
                 url: 'http://172.16.6.27:8080/customer/queryall',
+                data:{
+                    token:tokens
+                }
             })
            .then(res => {
+               console.log(res.data.data,'客户数据请求');
+               
                   this.setState({
                     orderList: res.data.data
                 })
@@ -159,6 +166,9 @@ export default class Cusinfo extends Component {
             await   axios({
                 method: 'POST',
                 url: 'http://172.16.6.27:8080/combobox/customer',
+                data:{
+                    token:tokens
+                }
             })
                 .then(res => {
                     this.setState({
@@ -173,6 +183,9 @@ export default class Cusinfo extends Component {
                 axios({
                     method: 'POST',
                     url: 'http://172.16.6.27:8080/person/in_charge',
+                    data:{
+                        token:tokens
+                    }
                 })
                     .then(res => {
                         this.setState({
