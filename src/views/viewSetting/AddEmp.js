@@ -53,9 +53,10 @@ class AddEmp extends Component {
     onEditFinish = async values => {
         console.log(values,'values要传的参数');
         
+        values.emp_id = this.state.rowInfo.emp_id
         const {data:res}  = await axios.post('/employee/updEmp',values)
-        if(res.code !== 200) return message.error('编辑用户信息失败!')
-        message.success('编辑用户信息成功!')
+        if(res.code !== 200) return message.error('编辑员工信息失败!')
+        message.success('编辑员工信息成功!')
         this.props.history.push({
             pathname:'/home/system/Employee'
         })
