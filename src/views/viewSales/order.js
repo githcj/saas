@@ -1,7 +1,7 @@
 // import React, { useState,useEffect } from 'react'
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import axios from 'axios'
+import axios from '../../plugins/axios'
 import '../../assets/css/sales/order.css'
 import { Table, Button,Select,Modal ,input, Input} from 'antd';
 import { Route, NavLink } from 'react-router-dom';
@@ -86,7 +86,7 @@ export default class Order extends Component {
         console.log(e);
         axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/customer/update',
+            url: '/sales/editSales',
             data:{
                 token:tokens,
                 sales_id:bianji.sales_id,
@@ -121,7 +121,7 @@ export default class Order extends Component {
        const tokens=localStorage.getItem('token')
        await axios({
             method: 'POST',
-            url: 'http://172.16.6.29:8080/sales/querySalesList',
+            url: '/sales/querySalesList',
             data:{
                 token:tokens
             }
@@ -144,7 +144,7 @@ export default class Order extends Component {
 
      await  axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/combobox/customer', 
+            url: '/combobox/customer', 
         })    
            .then(res =>{
 
@@ -158,9 +158,11 @@ export default class Order extends Component {
 
       await axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/combobox/sales_method', 
+            url: '/combobox/sales_method', 
         })    
            .then(res =>{
+               console.log(res.data.data,'销售类型22');
+               
                this.setState({
                      xiaoshoutype:res.data.data
                })
@@ -171,7 +173,7 @@ export default class Order extends Component {
 
            await axios({
             method: 'POST',
-            url: 'http://172.16.6.29:8080/driver/queryVehicleList', 
+            url: '/driver/queryVehicleList', 
         })    
            .then(res =>{
                
@@ -226,7 +228,7 @@ export default class Order extends Component {
         console.log(this.state.sousuo); 
          axios({
              method: 'POST',
-             url: 'http://172.16.6.29:8080/sales/querySalesList',
+             url: '/sales/querySalesList',
              data:{
                  token:tokens,
                  start_time:this.state.orderDate,
@@ -264,7 +266,7 @@ export default class Order extends Component {
         const tokens= localStorage.getItem('token')
         axios({
             method: 'POST',
-            url: 'http://172.16.6.29:8080/sales/deleteSales',
+            url: '/sales/deleteSales',
             data:{
                 token:tokens,
                 sales_id:this.state.delid
@@ -322,12 +324,12 @@ export default class Order extends Component {
         const newData = [...this.state.orderList]
         if(value === 'saleLowHight') {
             newData.sort((a, b) => {
-                return a.jine - b.jine
+                return a.sales_payable - b.sales_payable
             })
         }
         if(value === 'saleHightLow') {
             newData.sort((a, b) => {
-                return b.jine - a.jine
+                return b.sales_payable - a.sales_payable
             })
         }
         this.setState({
@@ -344,8 +346,8 @@ export default class Order extends Component {
         };
         // const hasSelected = selectedRowKeys.length > 0;
          const xiaoshou =xiaoshoutype.map((item,index)=>(
-             <Option value={item.brand_id}>
-                 {item.brand_name}
+             <Option value={item.sales_method_name}>
+                 {item.sales_method_name}
             </Option>
          ))
 
@@ -366,7 +368,13 @@ export default class Order extends Component {
             {
                 title: '编号',
                 align:'center',
+        
                 dataIndex: 'sales_id',
+                render: (text, record) => (
+                    <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
+                      {text}
+                    </div>
+                  ),
             },
             {
                 title: '销售类型',
@@ -488,9 +496,7 @@ export default class Order extends Component {
                             {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
                         </span> */}
                         {/* <div className="quire-title ">
-                        <div>数据列表</div>
-                       
-                        
+                        <div>数据列表</div> 
                         </div> */}
                         <div className='order-quire'>
                     <div className='dynamic-left-title'>

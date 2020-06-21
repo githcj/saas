@@ -24,7 +24,10 @@ const Stock = (props) => {
     // console.log(props,'SystemProps')
     const {checkedList} = props.state.userReducer//获取列表
     let sysList = getLimitList(checkedList,5,7)//该页权限列表
-
+    let cukuList = getLimitList(checkedList,9,11)
+    if(cukuList.length !== 0){
+        sysList.push(cukuList[0])
+    }
     console.log(sysList,'SysList')
 
     const menuDOM = sysList.map((item,index) => {//节点生成
@@ -49,7 +52,8 @@ const Stock = (props) => {
         setactiveKey([e.key])
     }
 
-
+    
+     
 
     return (
         <div className="stock">

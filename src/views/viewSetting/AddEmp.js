@@ -36,6 +36,8 @@ class AddEmp extends Component {
     onAddFinish = async values => {
         values.emp_birth = moment(values.emp_birth).format()
         values.emp_entry_time = moment(values.emp_entry_time).format()
+        //  values.emp_id=this.props.location.params.emp_id
+
 
         console.log(values,this.props.location.params.row);
         
@@ -49,6 +51,8 @@ class AddEmp extends Component {
     };
     
     onEditFinish = async values => {
+        console.log(values,'values要传的参数');
+        
         const {data:res}  = await axios.post('/employee/updEmp',values)
         if(res.code !== 200) return message.error('编辑用户信息失败!')
         message.success('编辑用户信息成功!')
@@ -60,6 +64,8 @@ class AddEmp extends Component {
     // 组件加载完毕请求数据
 
     async componentDidMount() {
+        console.log(this.props.location.params,'编辑传过来的数据');
+        
         if(this.props.location.params.row){
             this.setState({
                 finishFun:this.onEditFinish,

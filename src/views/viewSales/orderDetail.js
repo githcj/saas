@@ -8,7 +8,7 @@ import {
     UpOutlined,
     UnorderedListOutlined,
 } from '@ant-design/icons'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 const { Option } = Select
 
 
@@ -31,19 +31,20 @@ export default class OrderDetail extends Component {
         //   console.log(location.params,'params');
           
        
-        componentDidMount(){
+        componentDidMount(){ 
             const tokens=localStorage.getItem('token')
             const {location} =this.props
+            console.log(location.params,'parms');
              axios({
                 method: 'POST',
-                url: 'http://172.16.6.29:8080/sales/querySales', 
+                url: '/sales/querySales', 
                 data:{
                     token:tokens,
                     sales_id: location.params
                 }
             })    
            .then(res =>{
-               console.log(res.data,'详情');
+               console.log(res.data,'详情2222222222222222222222');
                
                 this.setState({
                     z:res.data,

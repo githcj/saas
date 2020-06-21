@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import '../../assets/css/wang/apply.css'
 import { Select, Table, message } from 'antd'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 const { Option } = Select;
 
 
@@ -28,7 +28,7 @@ export default class purchaseApply extends Component {
     getAllData = () => {
         axios({
             method: 'POST',
-            url: 'http://172.16.6.126:8080/purchase/queryProductionByCondition',
+            url: '/purchase/queryProductionByCondition',
             data: {
                 token: 'bchjhxzz',
             }
@@ -56,7 +56,7 @@ export default class purchaseApply extends Component {
 
         await axios({
             method: 'POST',
-            url: 'http://172.16.6.126:8080/purchase/querySupplier',
+            url: '/purchase/querySupplier',
         })
             .then(res => {
                 console.log(res.data.data, 'query')
@@ -69,7 +69,7 @@ export default class purchaseApply extends Component {
             })
         await axios({
             method: 'POST',
-            url: 'http://172.16.6.126:8080/purchase/queryPayType',
+            url: '/purchase/queryPayType',
         })
             .then(res => {
                 console.log(res.data.data, '支付')
@@ -82,7 +82,7 @@ export default class purchaseApply extends Component {
             })
         await axios({
             method: 'POST',
-            url: 'http://172.16.6.126:8080/purchase/queryCheckPerson',
+            url: '/purchase/queryCheckPerson',
         })
             .then(res => {
                 console.log(res.data.data, '审批')
@@ -128,7 +128,7 @@ export default class purchaseApply extends Component {
     submit = () => {
         axios({
             method: 'POST',
-            url: 'http://172.16.6.126:8080/purchase/addPurchase',
+            url: '/purchase/addPurchase',
             data: {
                 supplier_id: this.state.changShang,
                 pay_type_id: this.state.fuKuan,
@@ -244,7 +244,7 @@ export default class purchaseApply extends Component {
         console.log('搜索')
         axios({
             method: 'POST',
-            url: 'http://172.16.6.126:8080/purchase/queryProductionByCondition',
+            url: '/purchase/queryProductionByCondition',
             data: {
                 token: 'bchjhxzz',
                 goods_name: this.state.searchVal

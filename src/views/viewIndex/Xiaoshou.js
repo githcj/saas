@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from "react";
 import { Route, NavLink } from "react-router-dom";
 import Order from "../viewSales/order";
-import newOrder from "../viewSales/newOrder";
+import NewOrder from "../viewSales/newOrder";
 import orderDetail from '../viewSales/orderDetail'
 import { Row, Col, Menu } from "antd";
 import {connect} from 'react-redux'
@@ -70,7 +70,9 @@ const Xiaoshou = (props) => {
           <Route path={match.url} exact component={Order} >
               <Order msg={match.url} his={props.history}></Order>
           </Route>
-          <Route path={match.url + "/newOrder"} component={newOrder} />
+          <Route path={match.url + "/newOrder"} component={NewOrder} >
+               <NewOrder his={props.history}></NewOrder>
+          </Route>
           <Route path={match.url + '/orderDetail'} component={orderDetail}></Route>
         </Col>
       </Row>

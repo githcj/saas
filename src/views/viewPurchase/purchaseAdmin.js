@@ -8,7 +8,7 @@ import {
     UnorderedListOutlined,
 } from '@ant-design/icons';
 // import axios from '../../plugins/axios'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 
 function onChange(value, dateString) {
     console.log('Selected Time: ', value);
@@ -40,10 +40,10 @@ class purchaseAdmin extends React.Component {
    async componentWillMount() {
      await axios({
             method: 'POST',
-            url: 'http://172.16.6.126:8080/purchase/queryPurchaseList',
+            url: '/purchase/queryPurchaseList',
         })
         .then(res => {
-            console.log(res)
+            console.log(res,'采购')
             this.setState({
                 data: res.data.data
             })
@@ -54,7 +54,7 @@ class purchaseAdmin extends React.Component {
 
      await axios({
             method:'POST',
-            url:'http://172.16.6.126:8080/purchase/querySupplier',
+            url:'/purchase/querySupplier',
         })
         .then(res=>{
             console.log(res.data.data,'query')

@@ -57,7 +57,7 @@ export default class StockIn extends Component{
         //供货厂商
         axios({
             method:"POST",
-            url:'http://172.16.6.27:8080/combobox/supplier'
+            url:'/combobox/supplier'
         })
         .then(res => {
             console.log(res.data.data)
@@ -71,7 +71,7 @@ export default class StockIn extends Component{
         //进货仓库
         axios({
             method:'POST',
-            url:'http://172.16.6.27:8080/combobox/warehouse'
+            url:'/combobox/warehouse'
         })
         .then(res => {
             console.log(res)
@@ -111,7 +111,7 @@ export default class StockIn extends Component{
     agree = (id) => {
         axios({
             method:'POST',
-            url:'http://172.16.6.27:8080/entry/eckEnterWare',
+            url:'/entry/eckEnterWare',
             data:{
                 approval_opinion:this.state.approveIdea,
                 godown_id:id
@@ -135,7 +135,7 @@ export default class StockIn extends Component{
         console.log(id)
         axios({
             method:"POST",
-            url:'http://172.16.6.27:8080/entry/delEnterWare',
+            url:'/entry/delEnterWare',
             data:{
                 godown_id:id
             }
@@ -157,7 +157,7 @@ export default class StockIn extends Component{
     search = () => {
         axios({
             method:'POST',
-            url:'http://172.16.6.27:8080/entry/queryEntryList',
+            url:'/entry/queryEntryList',
             data:{
                 ware_name:'',
                 supplier_name:'',

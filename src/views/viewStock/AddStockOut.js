@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import '../../assets/css/viewStock/add.css'
 import { Select,Table,DatePicker,message } from 'antd'
 // import axios from '../../plugins/axios'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 
 const { Option } = Select;
 export default class AddStockOut extends Component{
@@ -206,7 +206,7 @@ export default class AddStockOut extends Component{
         }
         axios({
             method:'POST',
-            url:'http://172.16.6.29:8080/out/addOut',
+            url:'/out/addOut',
             data:{
                 customer_name:this.state.custom,
                 collect_method:this.state.collect,

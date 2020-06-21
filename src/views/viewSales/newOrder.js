@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 import '../../assets/css/sales/newOrder.css'
-import { Table, Radio, Select, Input,Modal } from 'antd';
+import { Table, Radio, Select, Input,Modal,message } from 'antd';
 const { Option } = Select
 
-export default class newOrder extends Component {
+export default class NewOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -64,7 +64,7 @@ export default class newOrder extends Component {
         
         axios({
             method: 'POST',
-            url: 'http://172.16.6.29:8080/goods/queryGoodsList',
+            url: '/goods/queryGoodsList',
             data:{
                 token:tokens,
                 brand_name:this.state.soupingpai,
@@ -136,7 +136,7 @@ export default class newOrder extends Component {
         const tokens=localStorage.getItem('token')
        await axios({
             method: 'POST',
-            url: 'http://172.16.6.29:8080/goods/queryGoodsList',
+            url: '/goods/queryGoodsList',
             data:{
                 token:tokens
             }
@@ -154,7 +154,7 @@ export default class newOrder extends Component {
 
     await  axios({
         method: 'POST',
-        url: 'http://172.16.6.27:8080/combobox/customer',
+        url: '/combobox/kehumingcheng',
     })
         .then(res => {
             this.setState({
@@ -169,7 +169,7 @@ export default class newOrder extends Component {
 
         await  axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/combobox/sales_method',
+            url: '/combobox/sales_method',
         })
             .then(res => {
                 console.log(res.data.data,'销售类型');
@@ -185,7 +185,7 @@ export default class newOrder extends Component {
             })
         await  axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/person/in_charge',
+            url: '/person/in_charge',
         })
             .then(res => {
                 this.setState({
@@ -200,7 +200,7 @@ export default class newOrder extends Component {
 
             await  axios({
                 method: 'POST',
-                url: 'http://172.16.6.29:8080/driver/queryVehicleList',
+                url: '/driver/queryVehicleList',
             })
                 .then(res => {
                     this.setState({
@@ -215,7 +215,7 @@ export default class newOrder extends Component {
 
                 await  axios({
                     method: 'POST',
-                    url: 'http://172.16.6.27:8080/combobox/brand',
+                    url: '/combobox/brand',
                 })
                     .then(res => {
                         console.log(res.data.data ,'平拍');
@@ -233,7 +233,7 @@ export default class newOrder extends Component {
 
                     await  axios({
                         method: 'POST',
-                        url: 'http://172.16.6.27:8080/combobox/commodity_level',
+                        url: '/combobox/commodity_level',
                     })
                         .then(res => {
                             console.log(res.data.data ,'分类');
@@ -293,7 +293,7 @@ export default class newOrder extends Component {
 
     tijaio =()=>{
         console.log(this.state.adddata,'add');
-        console.log(this.state.adddata[0].total_price,'totalprice');
+     
         console.log(this.state.yewu,'业务');
         
         const tokens=localStorage.getItem('token')
@@ -312,7 +312,7 @@ export default class newOrder extends Component {
         
         axios({
             method: 'POST',
-            url: 'http://172.16.6.29:8080/sales/addSales',
+            url: '/sales/addSales',
             data:{
                 token:tokens,
                 sales_type_name:'普通订单',
@@ -334,7 +334,10 @@ export default class newOrder extends Component {
                 //     kehutype: res.data,
                 // })
                 this.componentDidMount()
-                
+                message.success(res.message)
+                this.props.his.push({
+                    pathname:'/home/xiaoshou'
+                })
             })
             .catch(err => {
                 console.log(err);
@@ -632,8 +635,8 @@ render() {
     ];
 
     const kehu =kehutype.map((item,index)=>{
-        return <Option value={item.customer_type_name}>
-                     {item.customer_type_name}
+        return <Option value={item.customer_name}>
+                     {item.customer_name}
                </Option>
     })
     

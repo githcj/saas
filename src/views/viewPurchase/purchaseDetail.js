@@ -4,7 +4,7 @@ import {
 } from '@ant-design/icons';
 import '../../assets/css/wang/purchase.css'
 import { Table } from 'antd'
-import axios from 'axios';
+import axios from '../../plugins/axios'
 
 
 const columns = [
@@ -99,7 +99,7 @@ class purchaseDetail extends React.Component {
 
             axios({
                 method:'POST',
-                url:'http://172.16.6.126:8080/purchase/queryPurchase',
+                url:'/purchase/queryPurchase',
                 data:{
                     token:'23',
                     purchase_id:location.params.purchase_id

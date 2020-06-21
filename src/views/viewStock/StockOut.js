@@ -52,9 +52,11 @@ export default class StockOut extends Component {
     componentDidMount(){
         axios({
             method:'POST',
-            url:'/outboundManagement'
+            url:'/out/queryOutList',
         })
         .then(res => {
+            console.log(res.data.data,'出库数据');
+            
             const data = res.data.data
             data.map((item,index) => {
                 item.key = index

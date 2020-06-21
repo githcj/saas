@@ -1,6 +1,6 @@
 // import React, { useState,useEffect } from 'react'
 import React, { Component } from 'react'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 import '../../assets/css/sales/order.css'
 import { Table, Button ,Select,Modal,message} from 'antd';
 
@@ -104,7 +104,7 @@ export default class Cusinfo extends Component {
          
         axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/customer/update',
+            url: '/customer/update',
             data:{
                 token:tokens,
                 customer_id:this.state.bianji.customer_id,
@@ -145,7 +145,7 @@ export default class Cusinfo extends Component {
     
          await  axios({
                 method: 'POST',
-                url: 'http://172.16.6.27:8080/customer/queryall',
+                url: '/customer/queryall',
                 data:{
                     token:tokens
                 }
@@ -170,7 +170,7 @@ export default class Cusinfo extends Component {
 
             await   axios({
                 method: 'POST',
-                url: 'http://172.16.6.27:8080/combobox/customer',
+                url: '/combobox/customer',
                 data:{
                     token:tokens
                 }
@@ -187,7 +187,7 @@ export default class Cusinfo extends Component {
 
                 axios({
                     method: 'POST',
-                    url: 'http://172.16.6.27:8080/person/in_charge',
+                    url: '/person/in_charge',
                     data:{
                         token:tokens
                     }
@@ -225,7 +225,7 @@ export default class Cusinfo extends Component {
            console.log(this.state.sousuo); 
             axios({
                 method: 'POST',
-                url: 'http://172.16.6.27:8080/customer/wherequery',
+                url: '/customer/wherequery',
                 data:{
                     token:tokens,
                     customer_name:this.state.sousuo,
@@ -295,7 +295,7 @@ export default class Cusinfo extends Component {
                   const tokens= localStorage.getItem('token')
                     axios({
                         method: 'POST',
-                        url: 'http://172.16.6.27:8080/customer/delete',
+                        url: '/customer/delete',
                         data:{
                             token:tokens,
                             customer_id:this.state.delid
@@ -367,6 +367,7 @@ export default class Cusinfo extends Component {
                 render: (text,row,index) => (
                   <span className="order-axios">
                        <a onClick={()=> this.showModal(row)}>编辑</a>
+                       <a onClick={()=> this.delkehu(row)}>删除</a>
                   </span>
                 )
             },

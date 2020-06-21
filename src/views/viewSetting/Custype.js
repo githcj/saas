@@ -1,6 +1,6 @@
 // import React, { useState,useEffect } from 'react'
 import React, { Component } from 'react'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 import '../../assets/css/sales/order.css'
 import { Table, Button,Modal,Select ,message} from 'antd';
 const { Option } = Select
@@ -43,8 +43,6 @@ export default class Custype extends Component {
      
             const bianji=this.state.bianji
             bianji.customer_type_name=e.target.value
-          
-
           this.setState({
               bianji:bianji
           }) 
@@ -84,7 +82,7 @@ export default class Custype extends Component {
         console.log(e);
         axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/customer_type/update',
+            url: '/customer_type/update',
             data:{
                 token:tokens,
                  customer_type_id:this.state.bianji.customer_type_id,
@@ -119,7 +117,7 @@ export default class Custype extends Component {
         console.log(e);
         axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/customer_type/add',
+            url: '/customer_type/add',
             data:{
                 token:tokens,
                 customer_type_father_id:this.state.addfuji,
@@ -160,7 +158,7 @@ export default class Custype extends Component {
     const tokens= localStorage.getItem('token')
       await  axios({
             method: 'POST',
-            url: 'http://172.16.6.30:8080/customer_type/querysubclass',
+            url: '/customer_type/querysubclass',
             data:{
                 token:tokens
             }
@@ -176,7 +174,7 @@ export default class Custype extends Component {
 
             await  axios({
                 method: 'POST',
-                url: 'http://172.16.6.27:8080/combobox/queryfather',
+                url: '/combobox/queryfather',
                 data:{
                     token:tokens
                 }
@@ -196,7 +194,7 @@ export default class Custype extends Component {
 
             await  axios({
                 method: 'POST',
-                url: 'http://172.16.6.27:8080/combobox/customer',
+                url: '/combobox/customer',
                 data:{
                     token:tokens
                 }
@@ -259,7 +257,7 @@ export default class Custype extends Component {
         const tokens= localStorage.getItem('token')
         axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/customer_type/delete',
+            url: '/customer_type/delete',
             data:{
                 token:tokens,
                 customer_type_id:this.state.delid

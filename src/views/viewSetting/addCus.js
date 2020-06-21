@@ -28,7 +28,7 @@ const AddCus = (props) => {
         const tokens= localStorage.getItem('token')
         axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/customer/add',
+            url: '/customer/add',
             data:{
                 token:tokens,
                 customer_name:values.customer_name,
@@ -60,7 +60,7 @@ const AddCus = (props) => {
     useEffect( ()=>{//async函数会返回一个promise，并且Promise对象的状态值是resolved（成功的） 而effect不允许有返回值
         axios({
         method: 'POST',
-        url: 'http://172.16.6.27:8080/combobox/customer',
+        url: '/combobox/customer',
          })
         .then(res => {
             setKehu(res.data.data)
@@ -71,7 +71,7 @@ const AddCus = (props) => {
 
       axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/person/in_charge',
+            url: '/person/in_charge',
         })
         .then(res => {
             setfuze(res.data.data)
@@ -82,7 +82,7 @@ const AddCus = (props) => {
 
         axios({
             method: 'POST',
-            url: 'http://172.16.6.27:8080/combobox/price_system',
+            url: '/combobox/price_system',
         })
         .then(res => {
             console.log(res,'res');

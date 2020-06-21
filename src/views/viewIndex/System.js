@@ -45,6 +45,7 @@ const System = (props) => {
 
     let sysList = getLimitList(checkedList,-1,4)//该页权限列表
 
+	
     console.log(sysList,'SysList')
 
     const menuDOM = sysList.map((item,index) => {//节点生成
