@@ -28,7 +28,8 @@ export default class purchaseApply extends Component {
     getAllData = () => {
         axios({
             method: 'POST',
-            url: 'http://172.16.6.126:8080/purchase/queryProductionByCondition',
+            // url: 'http://172.16.6.126:8080/purchase/queryProductionByCondition',
+            url:'http://119.23.228.238:3031/mock/47/purchase/addPurchase',
             data: {
                 token: 'bchjhxzz',
             }
@@ -36,7 +37,8 @@ export default class purchaseApply extends Component {
             .then(res => {
                 console.log(res)
                 this.setState({
-                    data: res.data.data
+                    // data: res.data.data,
+                    data:res.data
                 })
             })
             .catch(err => {
@@ -125,7 +127,10 @@ export default class purchaseApply extends Component {
             caiGouDate: e
         })
     }
+    // 提交
     submit = () => {
+        const { detailData } = this.state
+        console.log(detailData)
         axios({
             method: 'POST',
             url: 'http://172.16.6.126:8080/purchase/addPurchase',
@@ -135,7 +140,7 @@ export default class purchaseApply extends Component {
                 founder_id: 0,
                 approver_id: this.state.shenPiren,
                 sum_price: this.state.sum,
-                data: this.state.detailData,
+                data: detailData,
             }
         })
             .then(res => {
@@ -150,6 +155,7 @@ export default class purchaseApply extends Component {
                 message.success('采购单添加失败')
             })
     }
+    // 四个加减按钮
     addbigcount = (i, n) => {
         var suma = 0
         var addcount = this.state.detailData
@@ -162,12 +168,14 @@ export default class purchaseApply extends Component {
                     addcount[i].whole_num = n + 1
                 }
             })
+            // 这个是我加的 四个加减都加上了
             for (let i = 0; i < addcount.length; i++) {
                 addcount[i].total_price =addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
-                }
+            }
             for (var i = 0; i < addcount.length; i++) {
                 suma += addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
             }
+            console.log(addcount)
             this.setState({
                 sum: suma,
                 detailData: addcount
@@ -183,9 +191,14 @@ export default class purchaseApply extends Component {
                     addcount[i].single_num = n + 1
                 }
             })
+            // 这个是我加的 四个加减都加上了
+            for (let i = 0; i < addcount.length; i++) {
+                addcount[i].total_price =addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
+            }
             for (var i = 0; i < addcount.length; i++) {
                 suma += addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
             }
+            console.log(addcount)
             this.setState({
                 sum: suma,
                 detailData: addcount
@@ -201,9 +214,14 @@ export default class purchaseApply extends Component {
                     addcount[i].whole_num = n - 1
                 }
             })
+            // 这个是我加的 四个加减都加上了
+            for (let i = 0; i < addcount.length; i++) {
+                addcount[i].total_price =addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
+            }
             for (var i = 0; i < addcount.length; i++) {
                 suma += addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
             }
+            console.log(addcount)
             this.setState({
                 sum: suma,
                 detailData: addcount
@@ -219,15 +237,21 @@ export default class purchaseApply extends Component {
                     addcount[i].single_num = n - 1
                 }
             })
+            // 这个是我加的 四个加减都加上了
+            for (let i = 0; i < addcount.length; i++) {
+                addcount[i].total_price =addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
+            }
             for (var i = 0; i < addcount.length; i++) {
                 suma += addcount[i].single_num * addcount[i].single_price + addcount[i].whole_num * addcount[i].whole_price
             }
+            console.log(addcount)
             this.setState({
                 sum: suma,
                 detailData: addcount
             })
         }
     }
+    // 删除
     delA = (i) => {
         const delB = this.state.detailData.filter(item => (
             item.key != i
@@ -239,7 +263,7 @@ export default class purchaseApply extends Component {
     handleData = () => {
 
     }
-
+    // 删除
     sousuo = () => {
         console.log('搜索')
         axios({
@@ -260,7 +284,7 @@ export default class purchaseApply extends Component {
                 console.log(err)
             })
     }
-
+    // 添加到订单详情
     add = (record) => {
         var suma = 0
         let newData = [...this.state.detailData]
@@ -292,6 +316,10 @@ export default class purchaseApply extends Component {
         for (var i = 0; i < newData.length; i++) {
             suma += newData[i].single_num * newData[i].single_price + newData[i].whole_num * newData[i].whole_price
         }
+        // 在加到下面详情的时候添加属性total_price ,上面四个加减的时候对他进行改变
+        newData[newData.length - 1].total_price = 
+        newData[newData.length - 1].single_num * newData[newData.length - 1].single_price + 
+        newData[newData.length - 1].whole_num * newData[newData.length - 1].whole_price;
         console.log(newData)
         this.setState({
             sum: suma,

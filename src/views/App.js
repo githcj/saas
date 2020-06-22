@@ -7,7 +7,8 @@ import Home from './viewIndex/Home'
 import Login from './viewIndex/Login'
 
 function App(props) {
-	const token=localStorage.getItem('token')
+	// const token=localStorage.getItem('token')
+	const token = 'dasdasda'
 	return (
 		<div className="App">
 			<Redirect from="/" exact to="/home" />
